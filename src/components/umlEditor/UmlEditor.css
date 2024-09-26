@@ -1,0 +1,15 @@
+canvas {
+    border: 1px solid black;
+}
+
+.active {
+    background-color: gray;
+}
+
+.canvas-edit {
+    cursor: pointer;
+}
+
+.canvas-move {
+    cursor: move;
+}

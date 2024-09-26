@@ -89,6 +89,8 @@ export default {
             if (data.value.type === 'class' && selectedNode.value instanceof ClassNode) {
                 selectedNode.value.name = data.value.name;
                 selectedNode.value.width = data.value.width;
+                selectedNode.value.x = data.value.x;
+                selectedNode.value.y = data.value.y;
                 editor.render();
                 return;
             }
@@ -96,12 +98,13 @@ export default {
             console.error('Unknown or not matching node types');
         };
 
-        const onToolSelect = () => {
-            editor.tool = UmlEditorTool.SELECT;
+        const onToolEditSelected = () => {
+            editor.tool = UmlEditorTool.EDIT;
         };
 
-        const onToolMove = () => {
+        const onToolMoveSelected = () => {
             editor.tool = UmlEditorTool.MOVE;
+            data.value = null;
         };
 
         return {
@@ -109,8 +112,8 @@ export default {
             data,
             tool,
             onSave,
-            onToolSelect,
-            onToolMove
+            onToolEditSelected,
+            onToolMoveSelected
         };
     }
 };

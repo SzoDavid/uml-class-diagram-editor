@@ -2,7 +2,7 @@ import mitt, {Emitter} from 'mitt';
 import {ClassNode, Node} from './umlNodes.util.ts';
 
 export enum UmlEditorTool {
-    SELECT,
+    EDIT,
     MOVE
 }
 
@@ -15,7 +15,7 @@ export class UmlEditorUtil {
     private _selectedNode: Node | null = null;
     private _dragOffsetX: number = 0;
     private _dragOffsetY: number = 0;
-    private _tool: UmlEditorTool = UmlEditorTool.SELECT;
+    private _tool: UmlEditorTool = UmlEditorTool.EDIT;
 
     private readonly _emitter: Emitter<Record<string, EmitType>> = mitt();
 
@@ -93,14 +93,21 @@ export class UmlEditorUtil {
         const { offsetX, offsetY } = event;
 
         this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
-        this._emitter.emit('mouseDown', this._selectedNode);
 
         if (this._selectedNode) {
-            this._selectedNode.isDragging = true;
-            this._dragOffsetX = offsetX - this._selectedNode.x;
-            this._dragOffsetY = offsetY - this._selectedNode.y;
             this._nodes.forEach(node => (node.isSelected = false));
             this._selectedNode.isSelected = true;
+
+            switch (this._tool) {
+                case UmlEditorTool.EDIT:
+                    this._emitter.emit('mouseDown', this._selectedNode);
+                    break;
+                case UmlEditorTool.MOVE:
+                    this._selectedNode.isDragging = true;
+                    this._dragOffsetX = offsetX - this._selectedNode.x;
+                    this._dragOffsetY = offsetY - this._selectedNode.y;
+                    break;
+            }
         } else {
             this._nodes.forEach(node => (node.isSelected = false));
         }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UmlEditor from "./components/umlEditor/UmlEditor.vue";
+import UmlEditor from './components/umlEditor/UmlEditor.vue';
 </script>
 
 <template>
