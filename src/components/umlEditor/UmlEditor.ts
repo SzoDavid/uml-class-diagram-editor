@@ -1,12 +1,26 @@
 import {onMounted, ref} from "vue";
-import {UmlEditorUtil} from "../../utils/umlEditor.util.ts";
-import {ClassNode, Multiplicity, Node, Property, Visibility} from "../../utils/umlNodes.util.ts";
+import {EmitType, UmlEditorTool, UmlEditorUtil} from "../../utils/umlEditor.util.ts";
+import {
+    ClassNode,
+    MultiplicityRange,
+    Node,
+    Operation,
+    Parameter,
+    Property,
+    Visibility,
+} from "../../utils/umlNodes.util.ts";
 
 export default {
+    computed: {
+        UmlEditorTool() {
+            return UmlEditorTool
+        }
+    },
     setup() {
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
         const data = ref<any>(null);
+        const tool = ref<UmlEditorTool|null>(null);
         let editor: UmlEditorUtil;
 
         onMounted(() => {
@@ -17,8 +31,11 @@ export default {
 
             const canvas = umlCanvas.value as HTMLCanvasElement;
             editor = new UmlEditorUtil(canvas);
+            tool.value = editor.tool;
 
-            editor.getEmitter().on("mouseDown", (node: Node | null) => {
+            editor.emitter.on("mouseDown", (node: EmitType) => {
+                if (!(node instanceof Node) && node !== null) return;
+
                 selectedNode.value = node;
 
                 if (node === null) {
@@ -31,12 +48,23 @@ export default {
                 if (node instanceof ClassNode) {
                     data.value.type = 'class';
                     data.value.name = node.name;
+                    data.value.width = node.width;
                     return;
                 }
             });
 
-            editor.addClassNode(50, 50, "ClassA", [new Property('prop', 'type', Visibility.PUBLIC), new Property('prop2', 'value', Visibility.PUBLIC, false, new Multiplicity("*"))], []);
-            editor.addClassNode(300, 200, "ClassB", [], []);
+            editor.emitter.on("toolChange", (newTool: EmitType) => {
+                if (newTool === null || typeof newTool === "object" || !(newTool in UmlEditorTool)) return;
+
+                tool.value = newTool;
+            });
+
+            editor.addNode(new ClassNode("ClassA",
+                [new Property('prop', 'type', Visibility.PUBLIC),
+                    new Property('prop2', 'value', Visibility.PUBLIC, false, new MultiplicityRange("*"))],
+                [new Operation("operationA", [], Visibility.PRIVATE, "string", new MultiplicityRange("*", 1))], 50, 50, 200));
+            editor.addNode(new ClassNode("ClassB", [],
+                [new Operation("operationB", [new Parameter("param", "type")], Visibility.PROTECTED, "string", new MultiplicityRange(5, 1))], 300, 200, 300))
         });
 
         const onSave = () => {
@@ -47,6 +75,7 @@ export default {
 
             if (data.value.type === 'class' && selectedNode.value instanceof ClassNode) {
                 selectedNode.value.name = data.value.name;
+                selectedNode.value.width = data.value.width;
                 editor.render();
                 return;
             }
@@ -54,10 +83,21 @@ export default {
             console.error('Unknown or not matching node types');
         }
 
+        const onToolSelect = () => {
+            editor.tool = UmlEditorTool.SELECT;
+        }
+
+        const onToolMove = () => {
+            editor.tool = UmlEditorTool.MOVE;
+        }
+
         return {
             umlCanvas,
             data,
-            onSave
+            tool,
+            onSave,
+            onToolSelect,
+            onToolMove
         };
     }
 };

@@ -1,3 +1,13 @@
+export enum Visibility {
+    PRIVATE='-',
+    PUBLIC='+',
+    PROTECTED='#',
+    PACKAGE='~'
+}
+
+export type Direction = 'in'|'out'|'inout';
+export type ParameterProperty = 'ordered'|'unordered'|'unique'|'nonunique'|'seq'|'sequence';
+
 export class Node {
     isSelected: boolean = false;
     isDragging: boolean = false;
@@ -14,17 +24,8 @@ export class Node {
     }
 }
 
-export enum Visibility {
-    PRIVATE='-',
-    PUBLIC='+',
-    PROTECTED='#',
-    PACKAGE='~'
-}
-
-export type Direction = 'in'|'out'|'inout';
-
 /**
- * Member of Property.
+ * Member of Property and Parameter.
  *
  * Based on chapter 7.5.4.1 of UML 2.5.1 specification.
  *
@@ -95,11 +96,40 @@ export class Property {
  * [’{’ <parm-property> [’,’ <parm-property>]* ’}’]
  */
 export class Parameter {
-    private _direction: Direction|null;
-    private _name: string;
-    private _type: string;
-    private _multiplicity: MultiplicityRange|null;
+    private readonly _direction: Direction|null;
+    private readonly _name: string;
+    private readonly _type: string;
+    private readonly _multiplicity: MultiplicityRange|null;
+    private readonly _default: string|null;
+    private readonly _properties: ParameterProperty[];
 
+    constructor(name: string,
+                type: string,
+                direction: Direction|null = null,
+                multiplicity: MultiplicityRange|null = null,
+                defaultValue: string|null = null,
+                properties: ParameterProperty[] = []) {
+        this._direction = direction;
+        this._name = name;
+        this._type = type;
+        this._multiplicity = multiplicity;
+        this._default = defaultValue;
+        this._properties = properties;
+    }
+
+    toString(): string {
+        let value = '';
+
+        if (this._direction) value += `${this._direction} `;
+
+        value += `${this._name}: ${this._type}`;
+
+        if (this._multiplicity) value += `[${this._multiplicity.toString()}]`;
+        if (this._default) value += ` = ${this._default}`;
+        if (this._properties.length) value += ` {${this._properties.join(',')}}`;
+
+        return value;
+    }
 }
 
 /**
@@ -109,27 +139,43 @@ export class Parameter {
  *  [‘{‘ <oper-property> [‘,’ <oper-property>
  */
 export class Operation {
-    private readonly visibility: Visibility|null;
-    private readonly name: string;
-    //TODO: finish
-}
+    private readonly _visibility: Visibility|null;
+    private readonly _name: string;
+    private readonly _params: Parameter[];
+    private readonly _returnType: string|null;
+    private readonly _returnMultiplicity: MultiplicityRange|null;
+    //TODO: oper-property
 
-export interface Method {
-    name: string;
-    returns: string;
-    visibility: Visibility;
-    static: boolean;
+    constructor(name: string,
+                params: Parameter[] = [],
+                visibility: Visibility|null = null,
+                returnType: string|null = null,
+                returnMultiplicity: MultiplicityRange|null = null) {
+        this._name = name;
+        this._params = params
+        this._visibility = visibility;
+        this._returnType = returnType;
+        this._returnMultiplicity = returnMultiplicity;
+    }
+
+    toString(): string {
+        let value = `${this._visibility ?? ''}${this._name}(${this._params.join(', ')})`;
+        if (this._returnType) value += `: ${this._returnType}`;
+        if (this._returnMultiplicity) value += `[${this._returnMultiplicity.toString()}]`;
+
+        return value;
+    }
 }
 
 export class ClassNode extends Node {
     name: string;
     properties: Property[];
-    methods: Method[];
+    operations: Operation[];
 
-    constructor(name: string, properties: Property[], methods: Method[],  x: number, y: number, width: number) {
+    constructor(name: string, properties: Property[], operations: Operation[],  x: number, y: number, width: number) {
         super(x, y, width);
         this.name = name;
         this.properties = properties;
-        this.methods = methods;
+        this.operations = operations;
     }
 }

@@ -1,49 +1,64 @@
 import mitt, {Emitter} from "mitt";
-import {ClassNode, Method, Node, Property} from "./umlNodes.util.ts";
+import {ClassNode, Node} from "./umlNodes.util.ts";
+
+export enum UmlEditorTool {
+    SELECT,
+    MOVE
+}
+
+export type EmitType = Node | UmlEditorTool | null;
 
 export class UmlEditorUtil {
-    private canvas: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
-    private nodes: Node[] = [];
-    private selectedNode: Node | null = null;
-    private dragOffsetX: number = 0;
-    private dragOffsetY: number = 0;
-    private readonly emitter: Emitter<any> = mitt();
+    private _canvas: HTMLCanvasElement;
+    private _ctx: CanvasRenderingContext2D;
+    private _nodes: Node[] = [];
+    private _selectedNode: Node | null = null;
+    private _dragOffsetX: number = 0;
+    private _dragOffsetY: number = 0;
+    private _tool: UmlEditorTool = UmlEditorTool.SELECT;
+
+    private readonly _emitter: Emitter<Record<string, EmitType>> = mitt();
 
     private readonly TEXT_SIZE = 16;
     private readonly LINE_HEIGHT = 24;
-    private readonly MARGIN_LEFT = 5;
-    private readonly LINE_WIDTH_FILL_RATIO = 0.9;
+    private readonly LINE_WIDTH_FILL_RATIO = 0.95;
     private readonly BORDER_SIZE = 1;
+    private readonly FILL_COLOR = '#FFF';
+    private readonly FILL_COLOR_SELECTED = '#FEFEFF';
+    private readonly ACCENT_COLOR = '#000';
+    private readonly ACCENT_COLOR_SELECTED = '#66F';
 
     constructor(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
+        this._canvas = canvas;
 
-        this.ctx = this.canvas.getContext("2d")!;
-        this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this));
-        this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this));
-        this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
+        this._ctx = this._canvas.getContext("2d")!;
+        this._canvas.addEventListener("mousedown", this.onMouseDown.bind(this));
+        this._canvas.addEventListener("mouseup", this.onMouseUp.bind(this));
+        this._canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
 
         this.render();
     }
 
-    getEmitter(): Emitter<any> {
-        return this.emitter;
+    public get emitter() {
+        return this._emitter;
     }
 
-    getSelectedNode(): Node | null {
-        return this.selectedNode;
+    public get tool() {
+        return this._tool;
+    }
+
+    public set tool(tool: UmlEditorTool) {
+        this._tool = tool;
+        this._emitter.emit('toolChange', tool);
     }
 
     render(): void {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.nodes.forEach(node => this.drawNode(node));
+        this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        this._nodes.forEach(node => this.drawNode(node));
     }
 
-    addClassNode(x: number, y: number, name: string, properties: Property[], methods: Method[]): void {
-        const newNode = new ClassNode(name, properties, methods, x, y, 150);
-
-        this.nodes.push(newNode);
+    addNode(node: Node): void {
+        this._nodes.push(node);
         this.render();
     }
 
@@ -59,17 +74,17 @@ export class UmlEditorUtil {
                 node.height += this.LINE_HEIGHT * node.properties.length;
 
                 for (const i in node.properties) {
-                    let prop = node.properties[i];
-
-                    this.drawText(prop.toString(), node.x, node.y + this.LINE_HEIGHT + (i * this.LINE_HEIGHT), node.width, node.isSelected);
+                    this.drawText(node.properties[i].toString(), node.x, node.y + ((+i + 1) * this.LINE_HEIGHT), node.width, node.isSelected);
                 }
             }
 
-            if (node.methods.length !== 0) {
-                this.drawRect(node.x, node.y + (this.LINE_HEIGHT * node.properties.length), node.width, this.LINE_HEIGHT * node.methods.length, node.isSelected)
-                node.height += this.LINE_HEIGHT * node.methods.length;
+            if (node.operations.length !== 0) {
+                this.drawRect(node.x, node.y + (this.LINE_HEIGHT * (node.properties.length + 1)), node.width, this.LINE_HEIGHT * node.operations.length, node.isSelected)
+                node.height += this.LINE_HEIGHT * node.operations.length;
 
-                //TODO: render text
+                for (const i in node.operations) {
+                    this.drawText(node.operations[i].toString(), node.x, node.y + ((+i + 1) * this.LINE_HEIGHT) + (this.LINE_HEIGHT * node.properties.length), node.width, node.isSelected);
+                }
             }
         }
     }
@@ -77,40 +92,40 @@ export class UmlEditorUtil {
     private onMouseDown(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
-        this.selectedNode = this.getNodeAtPosition(offsetX, offsetY);
-        this.emitter.emit('mouseDown', this.selectedNode);
+        this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
+        this._emitter.emit('mouseDown', this._selectedNode);
 
-        if (this.selectedNode) {
-            this.selectedNode.isDragging = true;
-            this.dragOffsetX = offsetX - this.selectedNode.x;
-            this.dragOffsetY = offsetY - this.selectedNode.y;
-            this.nodes.forEach(node => (node.isSelected = false));
-            this.selectedNode.isSelected = true;
+        if (this._selectedNode) {
+            this._selectedNode.isDragging = true;
+            this._dragOffsetX = offsetX - this._selectedNode.x;
+            this._dragOffsetY = offsetY - this._selectedNode.y;
+            this._nodes.forEach(node => (node.isSelected = false));
+            this._selectedNode.isSelected = true;
         } else {
-            this.nodes.forEach(node => (node.isSelected = false));
+            this._nodes.forEach(node => (node.isSelected = false));
         }
         this.render();
     }
 
     private onMouseUp(): void {
-        if (this.selectedNode) {
-            this.selectedNode.isDragging = false;
-            this.selectedNode = null;
+        if (this._selectedNode) {
+            this._selectedNode.isDragging = false;
+            this._selectedNode = null;
         }
         this.render();
     }
 
     private onMouseMove(event: MouseEvent): void {
-        if (this.selectedNode && this.selectedNode.isDragging) {
+        if (this._selectedNode && this._selectedNode.isDragging) {
             const { offsetX, offsetY } = event;
-            this.selectedNode.x = offsetX - this.dragOffsetX;
-            this.selectedNode.y = offsetY - this.dragOffsetY;
+            this._selectedNode.x = offsetX - this._dragOffsetX;
+            this._selectedNode.y = offsetY - this._dragOffsetY;
             this.render();
         }
     }
 
     private getNodeAtPosition(x: number, y: number): Node | null {
-        for (const node of this.nodes) {
+        for (const node of this._nodes) {
             if (
                 x >= node.x &&
                 x <= node.x + node.width &&
@@ -124,32 +139,32 @@ export class UmlEditorUtil {
     }
 
     private drawRect(x: number, y: number, width: number, height: number, isSelected=false): void {
-        this.ctx.beginPath();
-        this.ctx.rect(x, y, width, height);
+        this._ctx.beginPath();
+        this._ctx.rect(x, y, width, height);
 
-        this.ctx.fillStyle = isSelected ? "#DDDDFF" : "#FFFFFF";
-        this.ctx.fill();
-        this.ctx.lineWidth = this.BORDER_SIZE;
-        this.ctx.strokeStyle = isSelected ? "#6666FF" : "#000000";
-        this.ctx.stroke();
+        this._ctx.fillStyle = isSelected ? this.FILL_COLOR_SELECTED : this.FILL_COLOR;
+        this._ctx.fill();
+        this._ctx.lineWidth = this.BORDER_SIZE;
+        this._ctx.strokeStyle = isSelected ? this.ACCENT_COLOR_SELECTED : this.ACCENT_COLOR;
+        this._ctx.stroke();
     }
 
     private drawText(text: string, x: number, y: number, width: number, isSelected=false, textAlign: CanvasTextAlign="left"): void {
-        this.ctx.beginPath();
-        this.ctx.fillStyle = isSelected ? "#6666FF" : "#000000";
-        this.ctx.font = `${this.TEXT_SIZE}px Arial`;
-        this.ctx.textAlign = textAlign;
-        this.ctx.textBaseline = "middle";
+        this._ctx.beginPath();
+        this._ctx.fillStyle = isSelected ? this.ACCENT_COLOR_SELECTED : this.ACCENT_COLOR;
+        this._ctx.font = `${this.TEXT_SIZE}px Arial`;
+        this._ctx.textAlign = textAlign;
+        this._ctx.textBaseline = "middle";
 
         switch (textAlign) {
             case "center":
-                this.ctx.fillText(text, x + (width / 2), y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
+                this._ctx.fillText(text, x + (width / 2), y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
                 break
             case "left":
-                this.ctx.fillText(text, x + this.MARGIN_LEFT, y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
+                this._ctx.fillText(text, x + (width * (1 - this.LINE_WIDTH_FILL_RATIO)) / 2, y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
                 break;
             default:
-                this.ctx.fillText(text, x, y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
+                this._ctx.fillText(text, x, y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
                 break;
         }
     }
