@@ -1,5 +1,5 @@
-import mitt, {Emitter} from "mitt";
-import {ClassNode, Node} from "./umlNodes.util.ts";
+import mitt, {Emitter} from 'mitt';
+import {ClassNode, Node} from './umlNodes.util.ts';
 
 export enum UmlEditorTool {
     SELECT,
@@ -31,10 +31,10 @@ export class UmlEditorUtil {
     constructor(canvas: HTMLCanvasElement) {
         this._canvas = canvas;
 
-        this._ctx = this._canvas.getContext("2d")!;
-        this._canvas.addEventListener("mousedown", this.onMouseDown.bind(this));
-        this._canvas.addEventListener("mouseup", this.onMouseUp.bind(this));
-        this._canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
+        this._ctx = this._canvas.getContext('2d')!;
+        this._canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
+        this._canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
+        this._canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
 
         this.render();
     }
@@ -67,10 +67,10 @@ export class UmlEditorUtil {
             this.drawRect(node.x, node.y, node.width, this.LINE_HEIGHT, node.isSelected);
             node.height = this.LINE_HEIGHT;
 
-            this.drawText(node.name, node.x, node.y, node.width, node.isSelected, 'center')
+            this.drawText(node.name, node.x, node.y, node.width, node.isSelected, 'center');
 
             if (node.properties.length !== 0) {
-                this.drawRect(node.x, node.y + this.LINE_HEIGHT, node.width, this.LINE_HEIGHT * node.properties.length, node.isSelected)
+                this.drawRect(node.x, node.y + this.LINE_HEIGHT, node.width, this.LINE_HEIGHT * node.properties.length, node.isSelected);
                 node.height += this.LINE_HEIGHT * node.properties.length;
 
                 for (const i in node.properties) {
@@ -79,7 +79,7 @@ export class UmlEditorUtil {
             }
 
             if (node.operations.length !== 0) {
-                this.drawRect(node.x, node.y + (this.LINE_HEIGHT * (node.properties.length + 1)), node.width, this.LINE_HEIGHT * node.operations.length, node.isSelected)
+                this.drawRect(node.x, node.y + (this.LINE_HEIGHT * (node.properties.length + 1)), node.width, this.LINE_HEIGHT * node.operations.length, node.isSelected);
                 node.height += this.LINE_HEIGHT * node.operations.length;
 
                 for (const i in node.operations) {
@@ -149,18 +149,18 @@ export class UmlEditorUtil {
         this._ctx.stroke();
     }
 
-    private drawText(text: string, x: number, y: number, width: number, isSelected=false, textAlign: CanvasTextAlign="left"): void {
+    private drawText(text: string, x: number, y: number, width: number, isSelected=false, textAlign: CanvasTextAlign='left'): void {
         this._ctx.beginPath();
         this._ctx.fillStyle = isSelected ? this.ACCENT_COLOR_SELECTED : this.ACCENT_COLOR;
         this._ctx.font = `${this.TEXT_SIZE}px Arial`;
         this._ctx.textAlign = textAlign;
-        this._ctx.textBaseline = "middle";
+        this._ctx.textBaseline = 'middle';
 
         switch (textAlign) {
-            case "center":
+            case 'center':
                 this._ctx.fillText(text, x + (width / 2), y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
-                break
-            case "left":
+                break;
+            case 'left':
                 this._ctx.fillText(text, x + (width * (1 - this.LINE_WIDTH_FILL_RATIO)) / 2, y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
                 break;
             default:

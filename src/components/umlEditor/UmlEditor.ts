@@ -1,5 +1,5 @@
-import {onMounted, ref} from "vue";
-import {EmitType, UmlEditorTool, UmlEditorUtil} from "../../utils/umlEditor.util.ts";
+import {onMounted, ref} from 'vue';
+import {EmitType, UmlEditorTool, UmlEditorUtil} from '../../utils/umlEditor.util.ts';
 import {
     ClassNode,
     MultiplicityRange,
@@ -8,24 +8,34 @@ import {
     Parameter,
     Property,
     Visibility,
-} from "../../utils/umlNodes.util.ts";
+} from '../../utils/umlNodes.util.ts';
+
+interface ClassNodeData {
+    type: 'class';
+    x: number;
+    y: number;
+    width: number;
+    name: string;
+}
+
+type DataType = ClassNodeData | null;
 
 export default {
     computed: {
         UmlEditorTool() {
-            return UmlEditorTool
+            return UmlEditorTool;
         }
     },
     setup() {
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
-        const data = ref<any>(null);
+        const data = ref<DataType>(null);
         const tool = ref<UmlEditorTool|null>(null);
         let editor: UmlEditorUtil;
 
         onMounted(() => {
             if (umlCanvas.value === null) {
-                console.error("UmlEditorUtil can't be mounted");
+                console.error('UmlEditorUtil can\'t be mounted');
                 return;
             }
 
@@ -33,7 +43,7 @@ export default {
             editor = new UmlEditorUtil(canvas);
             tool.value = editor.tool;
 
-            editor.emitter.on("mouseDown", (node: EmitType) => {
+            editor.emitter.on('mouseDown', (node: EmitType) => {
                 if (!(node instanceof Node) && node !== null) return;
 
                 selectedNode.value = node;
@@ -43,33 +53,36 @@ export default {
                     return;
                 }
 
-                data.value = {};
-
                 if (node instanceof ClassNode) {
-                    data.value.type = 'class';
-                    data.value.name = node.name;
-                    data.value.width = node.width;
+                    data.value = {
+                        type: 'class',
+                        x: node.x,
+                        y: node.y,
+                        width: node.width,
+                        name: node.name
+                    };
+
                     return;
                 }
             });
 
-            editor.emitter.on("toolChange", (newTool: EmitType) => {
-                if (newTool === null || typeof newTool === "object" || !(newTool in UmlEditorTool)) return;
+            editor.emitter.on('toolChange', (newTool: EmitType) => {
+                if (newTool === null || typeof newTool === 'object' || !(newTool in UmlEditorTool)) return;
 
                 tool.value = newTool;
             });
 
-            editor.addNode(new ClassNode("ClassA",
-                [new Property('prop', 'type', Visibility.PUBLIC),
-                    new Property('prop2', 'value', Visibility.PUBLIC, false, new MultiplicityRange("*"))],
-                [new Operation("operationA", [], Visibility.PRIVATE, "string", new MultiplicityRange("*", 1))], 50, 50, 200));
-            editor.addNode(new ClassNode("ClassB", [],
-                [new Operation("operationB", [new Parameter("param", "type")], Visibility.PROTECTED, "string", new MultiplicityRange(5, 1))], 300, 200, 300))
+            editor.addNode(new ClassNode('ClassA',
+                                         [new Property('prop', 'type', Visibility.PUBLIC),
+                                             new Property('prop2', 'value', Visibility.PUBLIC, false, new MultiplicityRange('*'))],
+                                         [new Operation('operationA', [], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))], 50, 50, 200));
+            editor.addNode(new ClassNode('ClassB', [],
+                                         [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))], 300, 200, 300));
         });
 
         const onSave = () => {
-            if (selectedNode.value === null) {
-                console.error("Cannot save: no selected node");
+            if (selectedNode.value === null || data.value === null) {
+                console.error('Cannot save: no selected node');
                 return;
             }
 
@@ -81,15 +94,15 @@ export default {
             }
 
             console.error('Unknown or not matching node types');
-        }
+        };
 
         const onToolSelect = () => {
             editor.tool = UmlEditorTool.SELECT;
-        }
+        };
 
         const onToolMove = () => {
             editor.tool = UmlEditorTool.MOVE;
-        }
+        };
 
         return {
             umlCanvas,

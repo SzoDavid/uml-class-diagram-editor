@@ -152,7 +152,7 @@ export class Operation {
                 returnType: string|null = null,
                 returnMultiplicity: MultiplicityRange|null = null) {
         this._name = name;
-        this._params = params
+        this._params = params;
         this._visibility = visibility;
         this._returnType = returnType;
         this._returnMultiplicity = returnMultiplicity;
