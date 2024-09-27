@@ -8,6 +8,12 @@ export enum Visibility {
 export type Direction = 'in'|'out'|'inout';
 export type ParameterProperty = 'ordered'|'unordered'|'unique'|'nonunique'|'sequence';
 
+export interface StaticString {
+    prefix: string;
+    name: string;
+    value: string;
+}
+
 export class Node {
     isSelected: boolean = false;
     isDragging: boolean = false;
@@ -59,6 +65,7 @@ export class Property {
     type: string|null;
     multiplicity: MultiplicityRange|null;
     defaultValue: string|null;
+    isStatic: boolean;
     // TODO: implement modifiers
 
     constructor(name: string,
@@ -66,23 +73,30 @@ export class Property {
                 visibility: Visibility|null = null,
                 isDerived: boolean = false,
                 multiplicity: MultiplicityRange|null = null,
-                defaultValue: string|null = null) {
+                defaultValue: string|null = null,
+                isStatic: boolean = false) {
         this.visibility = visibility;
         this.name = name;
         this.type = type;
         this.isDerived = isDerived;
         this.multiplicity = multiplicity;
         this.defaultValue = defaultValue;
+        this.isStatic = isStatic;
     }
 
-    toString(): string {
-        let value = `${this.visibility ?? ''}${this.isDerived ? '/' : ''}${this.name}`;
+    toString(): string | StaticString {
+        const prefix = `${this.visibility ?? ''}${this.isDerived ? '/' : ''}`;
 
-        if (this.type) value += `: ${this.type}`;
-        if (this.multiplicity && this.multiplicity.upper) value += `[${this.multiplicity.toString()}]`;
-        if (this.defaultValue) value += ` = ${this.defaultValue}`;
+        let postfix = '';
+        if (this.type) postfix += `: ${this.type}`;
+        if (this.multiplicity && this.multiplicity.upper) postfix += `[${this.multiplicity.toString()}]`;
+        if (this.defaultValue) postfix += ` = ${this.defaultValue}`;
 
-        return value;
+        return this.isStatic ? {
+            prefix: prefix,
+            name: this.name,
+            value: `${prefix}${this.name}${postfix}`
+        } : `${prefix}${this.name}${postfix}`;
     }
 
 }
@@ -144,26 +158,34 @@ export class Operation {
     params: Parameter[];
     returnType: string|null;
     returnMultiplicity: MultiplicityRange|null;
+    isStatic: boolean;
     //TODO: oper-property
 
     constructor(name: string,
                 params: Parameter[] = [],
                 visibility: Visibility|null = null,
                 returnType: string|null = null,
-                returnMultiplicity: MultiplicityRange|null = null) {
+                returnMultiplicity: MultiplicityRange|null = null,
+                isStatic: boolean = false) {
         this.name = name;
         this.params = params;
         this.visibility = visibility;
         this.returnType = returnType;
         this.returnMultiplicity = returnMultiplicity;
+        this.isStatic = isStatic;
     }
 
-    toString(): string {
-        let value = `${this.visibility ?? ''}${this.name}(${this.params.join(', ')})`;
-        if (this.returnType) value += `: ${this.returnType}`;
-        if (this.returnMultiplicity && this.returnMultiplicity.upper) value += `[${this.returnMultiplicity.toString()}]`;
+    toString(): string | StaticString {
+        const prefix = this.visibility ?? '';
+        let postfix = `(${this.params.join(', ')})`;
+        if (this.returnType) postfix += `: ${this.returnType}`;
+        if (this.returnMultiplicity && this.returnMultiplicity.upper) postfix += `[${this.returnMultiplicity.toString()}]`;
 
-        return value;
+        return this.isStatic ? {
+            prefix: prefix,
+            name: this.name,
+            value: `${prefix}${this.name}${postfix}`
+        } : `${prefix}${this.name}${postfix}`;
     }
 }
 

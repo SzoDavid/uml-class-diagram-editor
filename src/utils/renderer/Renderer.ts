@@ -1,5 +1,5 @@
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {ClassNode, Node} from '../umlNodes.ts';
+import {ClassNode, Node, StaticString} from '../umlNodes.ts';
 
 type TextWeight = 'normal' | 'bold';
 
@@ -61,12 +61,14 @@ export class Renderer {
         this._ctx.stroke();
     }
 
-    private drawText(text: string, x: number, y: number, width: number, isSelected=false, textWeight: TextWeight='normal', textAlign: CanvasTextAlign='left'): void {
+    private drawText(content: string|StaticString, x: number, y: number, width: number, isSelected=false, textWeight: TextWeight='normal', textAlign: CanvasTextAlign='left'): void {
         this._ctx.beginPath();
         this._ctx.fillStyle = isSelected ? this._rc.accentColorSelected : this._rc.accentColor;
         this._ctx.font = `${textWeight} ${this._rc.textSize}px Arial`;
         this._ctx.textAlign = textAlign;
         this._ctx.textBaseline = 'middle';
+
+        const text = typeof content === 'object' ? content.value : content;
 
         switch (textAlign) {
             case 'center':
@@ -74,10 +76,25 @@ export class Renderer {
                 break;
             case 'left':
                 this._ctx.fillText(text, x + this._rc.lineMargin, y + (this._rc.lineHeight / 2),  width - 2 * this._rc.lineMargin);
+
+                // TODO: refactor this to a generic underlining function
+                if (typeof content === 'object') {
+                    this._ctx.beginPath();
+                    this._ctx.moveTo(x + this._rc.lineMargin + this._ctx.measureText(content.prefix).width,
+                                     y + (this._rc.lineHeight / 2) + (this._rc.textSize / 2) + this._rc.underlineDelta);
+                    this._ctx.lineTo(x + this._rc.lineMargin + this._ctx.measureText(content.prefix).width + this._ctx.measureText(content.name).width,
+                                     y + (this._rc.lineHeight / 2) + (this._rc.textSize / 2) + this._rc.underlineDelta);
+                    this._ctx.lineWidth = this._rc.borderSize;
+                    this._ctx.strokeStyle = isSelected ? this._rc.accentColorSelected : this._rc.accentColor;
+                    this._ctx.stroke();
+                }
+
                 break;
             default:
                 this._ctx.fillText(text, x, y + (this._rc.lineHeight / 2), width - 2 * this._rc.lineMargin);
                 break;
         }
+
+
     }
 }

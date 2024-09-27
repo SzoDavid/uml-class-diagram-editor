@@ -22,6 +22,9 @@ Then the site will be accessible at [localhost:80](http://localhost:80)
 
 - validators for nodes
 - in classes add grouping attributes and operations by visibility
-- static
 - class stereotypes
 - grid size when moving
+- property modifiers
+- oper-property
+- tests
+- option to show that there are other, not shown features in class

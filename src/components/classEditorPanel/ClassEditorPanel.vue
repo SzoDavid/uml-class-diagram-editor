@@ -44,8 +44,11 @@
           <label :for="`propDefault${index}`">Default value: </label>
           <input :id="`propDefault${index}`" type="text" v-model="prop.defaultValue">
 
+          <label :for="`propStatic${index}`">Static: </label>
+          <input type="checkbox" :id="`propStatic${index}`" v-model="prop.isStatic">
+
           <label :for="`propDerived${index}`">Derived: </label>
-          <input :type="`checkbox${index}`" id="propDerived" v-model="prop.isDerived">
+          <input type="checkbox" :id="`propDerived${index}`" v-model="prop.isDerived">
         </div>
 
         <fieldset>
@@ -82,6 +85,9 @@
 
           <label :for="`operationReturnType${index}`">Return type: </label>
           <input :id="`operationReturnType${index}`" type="text" v-model="operation.returnType">
+
+          <label :for="`operationStatic${index}`">Static: </label>
+          <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">
         </div>
 
         <fieldset>

@@ -4,6 +4,7 @@ import {ClassNode, MultiplicityRange, Node, Operation, Parameter, Property, Visi
 import {DataContext} from '../../utils/types.ts';
 import ClassEditorPanel from '../classEditorPanel/ClassEditorPanel.vue';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
+import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
 
 export default {
     components: {ClassEditorPanel},
@@ -26,16 +27,7 @@ export default {
             }
 
             const canvas = umlCanvas.value as HTMLCanvasElement;
-            editor = new UmlEditorService(canvas, new Renderer(canvas, {
-                textSize: 16,
-                lineHeight: 24,
-                lineMargin: 5,
-                borderSize: 1,
-                fillColor: '#FFF',
-                fillColorSelected: '#FEFEFF',
-                accentColor: '#000',
-                accentColorSelected: '#66F'
-            }));
+            editor = new UmlEditorService(canvas, new Renderer(canvas, defaultRenderConfiguration));
             tool.value = editor.tool;
 
             window.addEventListener('keydown', onKeyPress);
