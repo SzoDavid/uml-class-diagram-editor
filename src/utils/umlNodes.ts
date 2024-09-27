@@ -33,9 +33,9 @@ export class Node {
  */
 export class MultiplicityRange {
     lower: number|null;
-    upper: number|'*';
+    upper: number|'*'|null; // TODO: when validating null is not allowed
 
-    constructor(upper: number|'*',
+    constructor(upper: number|'*'|null,
                 lower: number|null = null) {
         this.lower = lower;
         this.upper = upper;
@@ -79,7 +79,7 @@ export class Property {
         let value = `${this.visibility ?? ''}${this.isDerived ? '/' : ''}${this.name}`;
 
         if (this.type) value += `: ${this.type}`;
-        if (this.multiplicity) value += `[${this.multiplicity.toString()}]`;
+        if (this.multiplicity && this.multiplicity.upper) value += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) value += ` = ${this.defaultValue}`;
 
         return value;
@@ -124,7 +124,7 @@ export class Parameter {
 
         value += `${this.name}: ${this.type}`;
 
-        if (this.multiplicity) value += `[${this.multiplicity.toString()}]`;
+        if (this.multiplicity && this.multiplicity.upper) value += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) value += ` = ${this.defaultValue}`;
         if (this.properties.length) value += ` {${this.properties.join(',')}}`;
 
@@ -136,7 +136,7 @@ export class Parameter {
  * Based on chapter 9.6.4 of UML 2.5.1 specification.
  *
  * [<visibility>] <name> ‘(‘ [<parameter-list>] ‘)’ [‘:’ [<return-type>] [‘[‘ <multiplicity-range> ‘]’]
- *  [‘{‘ <oper-property> [‘,’ <oper-property>
+ *  [‘{‘ <oper-property> [‘,’ <oper-property> ]* '}'
  */
 export class Operation {
     visibility: Visibility|null;
@@ -161,7 +161,7 @@ export class Operation {
     toString(): string {
         let value = `${this.visibility ?? ''}${this.name}(${this.params.join(', ')})`;
         if (this.returnType) value += `: ${this.returnType}`;
-        if (this.returnMultiplicity) value += `[${this.returnMultiplicity.toString()}]`;
+        if (this.returnMultiplicity && this.returnMultiplicity.upper) value += `[${this.returnMultiplicity.toString()}]`;
 
         return value;
     }

@@ -24,14 +24,8 @@
 
     <fieldset>
       <legend>Properties</legend>
-      <div class="sep" v-for="(prop, index) in data['properties']" :key="prop.name">
+      <div class="sep" v-for="(prop, index) in data['properties']" :key="index">
         <div class="grid-form">
-          <label for="propName">Name: </label>
-          <input id="propName" type="text" v-model="prop.name">
-
-          <label for="propType">Type: </label>
-          <input id="propType" type="text" v-model="prop.type">
-
           <label for="propVisibility">Visibility: </label>
           <select id="propVisibility" v-model="prop.visibility">
             <option :value="null">--</option>
@@ -41,12 +35,29 @@
             <option :value="Visibility.PACKAGE">Package (~)</option>
           </select>
 
+          <label for="propName">Name: </label>
+          <input id="propName" type="text" v-model="prop.name">
+
+          <label for="propType">Type: </label>
+          <input id="propType" type="text" v-model="prop.type">
+
           <label for="propDefault">Default value: </label>
           <input id="propDefault" type="text" v-model="prop.defaultValue">
 
           <label for="propDerived">Derived: </label>
           <input type="checkbox" id="propDerived" v-model="prop.isDerived">
         </div>
+
+        <fieldset>
+          <legend>Multiplicity</legend>
+          <div class="grid-form">
+            <label for="propMultiUpper">Upper: </label>
+            <input id="propMultiUpper" type="text" v-model="prop.multiplicity.upper">
+
+            <label for="propMultiLower">Lower: </label>
+            <input id="propMultiLower" type="number" v-model="prop.multiplicity.lower">
+          </div>
+        </fieldset>
 
         <button class="rm" @click="onRemoveClicked('prop', index)">Remove</button>
       </div>
@@ -55,14 +66,8 @@
 
     <fieldset>
       <legend>Operations</legend>
-      <div class="sep" v-for="(operation, index) in data['operations']" :key="operation.name">
+      <div class="sep" v-for="(operation, index) in data['operations']" :key="index">
         <div class="grid-form">
-          <label for="operationName">Name: </label>
-          <input id="operationName" type="text" v-model="operation.name">
-
-          <label for="operationReturnType">Return type: </label>
-          <input id="operationReturnType" type="text" v-model="operation.returnType">
-
           <label for="operationVisibility">Visibility: </label>
           <select id="operationVisibility" v-model="operation.visibility">
             <option :value="null">--</option>
@@ -71,12 +76,29 @@
             <option :value="Visibility.PROTECTED">Protected (#)</option>
             <option :value="Visibility.PACKAGE">Package (~)</option>
           </select>
+
+          <label for="operationName">Name: </label>
+          <input id="operationName" type="text" v-model="operation.name">
+
+          <label for="operationReturnType">Return type: </label>
+          <input id="operationReturnType" type="text" v-model="operation.returnType">
         </div>
+
+        <fieldset>
+          <legend>Return multiplicity</legend>
+          <div class="grid-form">
+            <label for="returnMultiUpper">Upper: </label>
+            <input id="returnMultiUpper" type="text" v-model="operation.returnMultiplicity.upper">
+
+            <label for="returnMultiLower">Lower: </label>
+            <input id="returnMultiLower" type="number" v-model="operation.returnMultiplicity.lower">
+          </div>
+        </fieldset>
 
         <fieldset>
           <legend>Parameters</legend>
 
-          <div class="sep" v-for="(param, pIndex) in operation.params" :key="param.name">
+          <div class="sep" v-for="(param, pIndex) in operation.params" :key="pIndex">
             <div class="grid-form">
               <label for="paramName">Name: </label>
               <input id="paramName" type="text" v-model="param.name">
@@ -104,6 +126,17 @@
                 <option value="sequence">sequence</option>
               </select>
             </div>
+
+            <fieldset>
+              <legend>Multiplicity</legend>
+              <div class="grid-form">
+                <label for="paramMultiUpper">Upper: </label>
+                <input id="paramMultiUpper" type="text" v-model="param.multiplicity.upper">
+
+                <label for="paramMultiLower">Lower: </label>
+                <input id="paramMultiLower" type="number" v-model="param.multiplicity.lower">
+              </div>
+            </fieldset>
 
             <button class="rm" @click="onRemoveClicked('param', pIndex, index)">Remove</button>
           </div>

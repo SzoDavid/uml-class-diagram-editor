@@ -61,8 +61,20 @@ export default {
                 selectedNode.value.width = data.width;
                 selectedNode.value.x = data.x;
                 selectedNode.value.y = data.y;
+
+                data.properties.forEach((property) => {
+                    if (property.multiplicity === null || property.multiplicity.upper !== null ) return;
+                    property.multiplicity = null;
+                });
+
+                data.operations.forEach((operation) => operation.params.forEach((param) => {
+                    if (param.multiplicity === null || param.multiplicity.upper !== null) return;
+                    param.multiplicity = null;
+                }));
+
                 selectedNode.value.properties = data.properties;
                 selectedNode.value.operations = data.operations;
+
                 editor.render();
                 return;
             }
@@ -87,6 +99,16 @@ export default {
                     properties: node.properties,
                     operations: node.operations
                 };
+
+                data.value.properties.forEach((property) => {
+                    if (property.multiplicity !== null) return;
+                    property.multiplicity = new MultiplicityRange(null);
+                });
+
+                data.value.operations.forEach((operation) => operation.params.forEach((param) => {
+                    if (param.multiplicity !== null) return;
+                    param.multiplicity = new MultiplicityRange(null);
+                }));
 
                 return;
             }
