@@ -24,3 +24,4 @@ Then the site will be accessible at [localhost:80](http://localhost:80)
 - in classes add grouping attributes and operations by visibility
 - static
 - class stereotypes
+- grid size when moving

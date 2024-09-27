@@ -1,8 +1,9 @@
 import {onMounted, ref} from 'vue';
-import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/umlEditorService.ts';
+import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/UmlEditorService.ts';
 import {ClassNode, MultiplicityRange, Node, Operation, Parameter, Property, Visibility,} from '../../utils/umlNodes.ts';
 import {DataContext} from '../../utils/types.ts';
 import ClassEditorPanel from '../classEditorPanel/ClassEditorPanel.vue';
+import {Renderer} from '../../utils/renderer/Renderer.ts';
 
 export default {
     components: {ClassEditorPanel},
@@ -25,7 +26,16 @@ export default {
             }
 
             const canvas = umlCanvas.value as HTMLCanvasElement;
-            editor = new UmlEditorService(canvas);
+            editor = new UmlEditorService(canvas, new Renderer(canvas, {
+                textSize: 16,
+                lineHeight: 24,
+                lineMargin: 5,
+                borderSize: 1,
+                fillColor: '#FFF',
+                fillColorSelected: '#FEFEFF',
+                accentColor: '#000',
+                accentColorSelected: '#66F'
+            }));
             tool.value = editor.tool;
 
             window.addEventListener('keydown', onKeyPress);
