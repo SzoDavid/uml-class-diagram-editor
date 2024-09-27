@@ -1,14 +1,16 @@
 import mitt, {Emitter} from 'mitt';
-import {ClassNode, Node} from './umlNodes.util.ts';
+import {ClassNode, Node} from './umlNodes.ts';
 
 export enum UmlEditorTool {
     EDIT,
-    MOVE
+    MOVE,
+    ADD_CLASS
 }
 
 export type EmitType = Node | UmlEditorTool | null;
+export type TextWeight = 'normal' | 'bold';
 
-export class UmlEditorUtil {
+export class UmlEditorService {
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
     private _nodes: Node[] = [];
@@ -43,6 +45,10 @@ export class UmlEditorUtil {
         return this._emitter;
     }
 
+    public get selectedNode() {
+        return this._selectedNode;
+    }
+
     public get tool() {
         return this._tool;
     }
@@ -67,7 +73,7 @@ export class UmlEditorUtil {
             this.drawRect(node.x, node.y, node.width, this.LINE_HEIGHT, node.isSelected);
             node.height = this.LINE_HEIGHT;
 
-            this.drawText(node.name, node.x, node.y, node.width, node.isSelected, 'center');
+            this.drawText(node.name, node.x, node.y, node.width, node.isSelected, 'bold', 'center');
 
             if (node.properties.length !== 0) {
                 this.drawRect(node.x, node.y + this.LINE_HEIGHT, node.width, this.LINE_HEIGHT * node.properties.length, node.isSelected);
@@ -91,6 +97,10 @@ export class UmlEditorUtil {
 
     private onMouseDown(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
+
+        if (this._tool === UmlEditorTool.ADD_CLASS) {
+            this.addNode(new ClassNode('Class', offsetX, offsetY));
+        }
 
         this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
 
@@ -117,7 +127,6 @@ export class UmlEditorUtil {
     private onMouseUp(): void {
         if (this._selectedNode) {
             this._selectedNode.isDragging = false;
-            this._selectedNode = null;
         }
         this.render();
     }
@@ -156,10 +165,10 @@ export class UmlEditorUtil {
         this._ctx.stroke();
     }
 
-    private drawText(text: string, x: number, y: number, width: number, isSelected=false, textAlign: CanvasTextAlign='left'): void {
+    private drawText(text: string, x: number, y: number, width: number, isSelected=false, textWeight: TextWeight='normal', textAlign: CanvasTextAlign='left'): void {
         this._ctx.beginPath();
         this._ctx.fillStyle = isSelected ? this.ACCENT_COLOR_SELECTED : this.ACCENT_COLOR;
-        this._ctx.font = `${this.TEXT_SIZE}px Arial`;
+        this._ctx.font = `${textWeight} ${this.TEXT_SIZE}px Arial`;
         this._ctx.textAlign = textAlign;
         this._ctx.textBaseline = 'middle';
 

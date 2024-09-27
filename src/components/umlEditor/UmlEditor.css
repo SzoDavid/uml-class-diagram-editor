@@ -1,9 +1,17 @@
 canvas {
     border: 1px solid black;
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .active {
     background-color: gray;
+}
+
+.rm {
+    background-color: red;
+    color: white;
 }
 
 .canvas-edit {
@@ -12,4 +20,38 @@ canvas {
 
 .canvas-move {
     cursor: move;
+}
+
+.editor-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+#tools {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-form {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 10px 2px;
+    align-items: center;
+}
+
+.sep {
+    border-bottom: 1px solid gray;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+#editor input {
+    width: 100%;
+}
+
+#editor input[type=checkbox] {
+    width: fit-content;
 }
