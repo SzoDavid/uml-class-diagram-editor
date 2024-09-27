@@ -4,7 +4,8 @@ import {ClassNode, Node} from './umlNodes.ts';
 export enum UmlEditorTool {
     EDIT,
     MOVE,
-    ADD_CLASS
+    ADD_CLASS,
+    REMOVE
 }
 
 export type EmitType = Node | UmlEditorTool | null;
@@ -55,6 +56,12 @@ export class UmlEditorService {
 
     public set tool(tool: UmlEditorTool) {
         this._tool = tool;
+
+        if (tool !== UmlEditorTool.EDIT) {
+            this._nodes.forEach(node => (node.isSelected = false));
+            this.render();
+        }
+
         this._emitter.emit('toolChange', tool);
     }
 
@@ -116,6 +123,10 @@ export class UmlEditorService {
                     this._selectedNode.isDragging = true;
                     this._dragOffsetX = offsetX - this._selectedNode.x;
                     this._dragOffsetY = offsetY - this._selectedNode.y;
+                    break;
+                case UmlEditorTool.REMOVE:
+                    this._nodes.splice(this._nodes.indexOf(this._selectedNode), 1);
+                    this._selectedNode = null;
                     break;
             }
         } else {

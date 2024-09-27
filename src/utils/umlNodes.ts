@@ -6,7 +6,7 @@ export enum Visibility {
 }
 
 export type Direction = 'in'|'out'|'inout';
-export type ParameterProperty = 'ordered'|'unordered'|'unique'|'nonunique'|'seq'|'sequence';
+export type ParameterProperty = 'ordered'|'unordered'|'unique'|'nonunique'|'sequence';
 
 export class Node {
     isSelected: boolean = false;
@@ -100,7 +100,7 @@ export class Parameter {
     name: string;
     type: string;
     multiplicity: MultiplicityRange|null;
-    default: string|null;
+    defaultValue: string|null;
     properties: ParameterProperty[];
 
     constructor(name: string,
@@ -113,7 +113,7 @@ export class Parameter {
         this.name = name;
         this.type = type;
         this.multiplicity = multiplicity;
-        this.default = defaultValue;
+        this.defaultValue = defaultValue;
         this.properties = properties;
     }
 
@@ -125,7 +125,7 @@ export class Parameter {
         value += `${this.name}: ${this.type}`;
 
         if (this.multiplicity) value += `[${this.multiplicity.toString()}]`;
-        if (this.default) value += ` = ${this.default}`;
+        if (this.defaultValue) value += ` = ${this.defaultValue}`;
         if (this.properties.length) value += ` {${this.properties.join(',')}}`;
 
         return value;

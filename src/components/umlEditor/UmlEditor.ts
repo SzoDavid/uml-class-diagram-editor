@@ -1,25 +1,12 @@
 import {onMounted, ref} from 'vue';
 import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/umlEditorService.ts';
 import {ClassNode, MultiplicityRange, Node, Operation, Parameter, Property, Visibility,} from '../../utils/umlNodes.ts';
-
-interface ClassNodeData {
-    type: 'class';
-    x: number;
-    y: number;
-    width: number;
-    name: string;
-    properties: Property[];
-    operations: Operation[];
-}
-
-type DataContext = ClassNodeData | null;
-type ClickContext = 'prop' | 'operation';
+import {DataContext} from '../../utils/types.ts';
+import ClassEditorPanel from '../classEditorPanel/ClassEditorPanel.vue';
 
 export default {
+    components: {ClassEditorPanel},
     computed: {
-        Visibility() {
-            return Visibility;
-        },
         UmlEditorTool() {
             return UmlEditorTool;
         }
@@ -63,19 +50,19 @@ export default {
                                          [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))], 300));
         });
 
-        const onSave = () => {
-            if (selectedNode.value === null || data.value === null) {
+        const onSave = (data: DataContext) => {
+            if (selectedNode.value === null || data === null) {
                 console.error('Cannot save: no selected node');
                 return;
             }
 
-            if (data.value.type === 'class' && selectedNode.value instanceof ClassNode) {
-                selectedNode.value.name = data.value.name;
-                selectedNode.value.width = data.value.width;
-                selectedNode.value.x = data.value.x;
-                selectedNode.value.y = data.value.y;
-                selectedNode.value.properties = data.value.properties;
-                selectedNode.value.operations = data.value.operations;
+            if (data.type === 'class' && selectedNode.value instanceof ClassNode) {
+                selectedNode.value.name = data.name;
+                selectedNode.value.width = data.width;
+                selectedNode.value.x = data.x;
+                selectedNode.value.y = data.y;
+                selectedNode.value.properties = data.properties;
+                selectedNode.value.operations = data.operations;
                 editor.render();
                 return;
             }
@@ -114,36 +101,9 @@ export default {
                     break;
                 case UmlEditorTool.MOVE:
                 case UmlEditorTool.ADD_CLASS:
+                case UmlEditorTool.REMOVE:
                     data.value = null;
                     break;}
-        };
-
-        const onAddClicked = (context: ClickContext) => {
-            if (data.value === null || data.value.type !== 'class') return;
-
-            switch (context) {
-                case 'prop':
-                    data.value.properties.push(new Property(''));
-                    break;
-                case 'operation':
-                    data.value.operations.push(new Operation(''));
-                    break;
-            }
-        };
-
-        const onRemoveClicked = (context: ClickContext, index: string | number) => {
-            if (typeof index !== 'number') return;
-
-            if (data.value === null || data.value.type !== 'class') return;
-
-            switch (context) {
-                case 'prop':
-                    data.value.properties.splice(index, 1);
-                    break;
-                case 'operation':
-                    data.value.operations.splice(index, 1);
-                    break;
-            }
         };
 
         const onKeyPress = (event: KeyboardEvent) => {
@@ -156,6 +116,12 @@ export default {
                 case 'e':
                     onToolSelected(UmlEditorTool.EDIT);
                     break;
+                case 'c':
+                    onToolSelected(UmlEditorTool.ADD_CLASS);
+                    break;
+                case 'r':
+                    onToolSelected(UmlEditorTool.REMOVE);
+                    break;
             }
         };
 
@@ -165,8 +131,6 @@ export default {
             tool,
             onSave,
             onToolSelected,
-            onAddClicked,
-            onRemoveClicked,
         };
     }
 };
