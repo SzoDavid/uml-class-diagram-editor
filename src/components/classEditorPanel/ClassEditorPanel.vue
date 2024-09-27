@@ -26,8 +26,8 @@
       <legend>Properties</legend>
       <div class="sep" v-for="(prop, index) in data['properties']" :key="index">
         <div class="grid-form">
-          <label for="propVisibility">Visibility: </label>
-          <select id="propVisibility" v-model="prop.visibility">
+          <label :for="`propVisibility${index}`">Visibility: </label>
+          <select :id="`propVisibility${index}`" v-model="prop.visibility">
             <option :value="null">--</option>
             <option :value="Visibility.PUBLIC">Public (+)</option>
             <option :value="Visibility.PRIVATE">Private (-)</option>
@@ -35,27 +35,27 @@
             <option :value="Visibility.PACKAGE">Package (~)</option>
           </select>
 
-          <label for="propName">Name: </label>
-          <input id="propName" type="text" v-model="prop.name">
+          <label :for="`propName${index}`">Name: </label>
+          <input :id="`propName${index}`" type="text" v-model="prop.name">
 
-          <label for="propType">Type: </label>
-          <input id="propType" type="text" v-model="prop.type">
+          <label :for="`propType${index}`">Type: </label>
+          <input :id="`propType${index}`" type="text" v-model="prop.type">
 
-          <label for="propDefault">Default value: </label>
-          <input id="propDefault" type="text" v-model="prop.defaultValue">
+          <label :for="`propDefault${index}`">Default value: </label>
+          <input :id="`propDefault${index}`" type="text" v-model="prop.defaultValue">
 
-          <label for="propDerived">Derived: </label>
-          <input type="checkbox" id="propDerived" v-model="prop.isDerived">
+          <label :for="`propDerived${index}`">Derived: </label>
+          <input :type="`checkbox${index}`" id="propDerived" v-model="prop.isDerived">
         </div>
 
         <fieldset>
           <legend>Multiplicity</legend>
           <div class="grid-form">
-            <label for="propMultiUpper">Upper: </label>
-            <input id="propMultiUpper" type="text" v-model="prop.multiplicity.upper">
+            <label :for="`propMultiUpper${index}`">Upper: </label>
+            <input :id="`propMultiUpper${index}`" type="text" v-model="prop.multiplicity.upper">
 
-            <label for="propMultiLower">Lower: </label>
-            <input id="propMultiLower" type="number" v-model="prop.multiplicity.lower">
+            <label :for="`propMultiLower${index}`">Lower: </label>
+            <input :id="`propMultiLower${index}`" type="number" v-model="prop.multiplicity.lower">
           </div>
         </fieldset>
 
@@ -68,8 +68,8 @@
       <legend>Operations</legend>
       <div class="sep" v-for="(operation, index) in data['operations']" :key="index">
         <div class="grid-form">
-          <label for="operationVisibility">Visibility: </label>
-          <select id="operationVisibility" v-model="operation.visibility">
+          <label :for="`operationVisibility${index}`">Visibility: </label>
+          <select :id="`operationVisibility${index}`" v-model="operation.visibility">
             <option :value="null">--</option>
             <option :value="Visibility.PUBLIC">Public (+)</option>
             <option :value="Visibility.PRIVATE">Private (-)</option>
@@ -77,21 +77,21 @@
             <option :value="Visibility.PACKAGE">Package (~)</option>
           </select>
 
-          <label for="operationName">Name: </label>
-          <input id="operationName" type="text" v-model="operation.name">
+          <label :for="`operationName${index}`">Name: </label>
+          <input :id="`operationName${index}`" type="text" v-model="operation.name">
 
-          <label for="operationReturnType">Return type: </label>
-          <input id="operationReturnType" type="text" v-model="operation.returnType">
+          <label :for="`operationReturnType${index}`">Return type: </label>
+          <input :id="`operationReturnType${index}`" type="text" v-model="operation.returnType">
         </div>
 
         <fieldset>
           <legend>Return multiplicity</legend>
           <div class="grid-form">
-            <label for="returnMultiUpper">Upper: </label>
-            <input id="returnMultiUpper" type="text" v-model="operation.returnMultiplicity.upper">
+            <label :for="`returnMultiUpper${index}`">Upper: </label>
+            <input :id="`returnMultiUpper${index}`" type="text" v-model="operation.returnMultiplicity.upper">
 
-            <label for="returnMultiLower">Lower: </label>
-            <input id="returnMultiLower" type="number" v-model="operation.returnMultiplicity.lower">
+            <label :for="`returnMultiLower${index}`">Lower: </label>
+            <input :id="`returnMultiLower${index}`" type="number" v-model="operation.returnMultiplicity.lower">
           </div>
         </fieldset>
 
@@ -100,25 +100,25 @@
 
           <div class="sep" v-for="(param, pIndex) in operation.params" :key="pIndex">
             <div class="grid-form">
-              <label for="paramName">Name: </label>
-              <input id="paramName" type="text" v-model="param.name">
+              <label :for="`paramName${index}${pIndex}`">Name: </label>
+              <input :id="`paramName${index}${pIndex}`" type="text" v-model="param.name">
 
-              <label for="paramType">Type: </label>
-              <input id="paramType" type="text" v-model="param.type">
+              <label :for="`paramType${index}${pIndex}`">Type: </label>
+              <input :id="`paramType${index}${pIndex}`" type="text" v-model="param.type">
 
-              <label for="paramDefault">Default value: </label>
-              <input id="paramDefault" type="text" v-model="param.defaultValue">
+              <label :for="`paramDefault${index}${pIndex}`">Default value: </label>
+              <input :id="`paramDefault${index}${pIndex}`" type="text" v-model="param.defaultValue">
 
-              <label for="paramDirection">Direction: </label>
-              <select id="paramDirection" v-model="param.direction">
+              <label :for="`paramDirection${index}${pIndex}`">Direction: </label>
+              <select :id="`paramDirection${index}${pIndex}`" v-model="param.direction">
                 <option :value="null">--</option>
                 <option value="in">in</option>
                 <option value="out">out</option>
                 <option value="inout">inout</option>
               </select>
 
-              <label for="paramProps">Properties: </label>
-              <select multiple id="paramProps" v-model="param.properties">
+              <label :for="`paramProps${index}${pIndex}`">Properties: </label>
+              <select multiple :id="`paramProps${index}${pIndex}`" v-model="param.properties">
                 <option value="ordered">ordered</option>
                 <option value="unordered">unordered</option>
                 <option value="unique">unique</option>
@@ -130,11 +130,11 @@
             <fieldset>
               <legend>Multiplicity</legend>
               <div class="grid-form">
-                <label for="paramMultiUpper">Upper: </label>
-                <input id="paramMultiUpper" type="text" v-model="param.multiplicity.upper">
+                <label :for="`paramMultiUpper${index}${pIndex}`">Upper: </label>
+                <input :id="`paramMultiUpper${index}${pIndex}`" type="text" v-model="param.multiplicity.upper">
 
-                <label for="paramMultiLower">Lower: </label>
-                <input id="paramMultiLower" type="number" v-model="param.multiplicity.lower">
+                <label :for="`paramMultiLower${index}${pIndex}`">Lower: </label>
+                <input :id="`paramMultiLower${index}${pIndex}`" type="number" v-model="param.multiplicity.lower">
               </div>
             </fieldset>
 

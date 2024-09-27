@@ -24,7 +24,7 @@ export class UmlEditorService {
 
     private readonly TEXT_SIZE = 16;
     private readonly LINE_HEIGHT = 24;
-    private readonly LINE_WIDTH_FILL_RATIO = 0.95;
+    private readonly LINE_MARGIN = 5;
     private readonly BORDER_SIZE = 1;
     private readonly FILL_COLOR = '#FFF';
     private readonly FILL_COLOR_SELECTED = '#FEFEFF';
@@ -185,13 +185,13 @@ export class UmlEditorService {
 
         switch (textAlign) {
             case 'center':
-                this._ctx.fillText(text, x + (width / 2), y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
+                this._ctx.fillText(text, x + (width / 2), y + (this.LINE_HEIGHT / 2),  width - 2 * this.LINE_MARGIN);
                 break;
             case 'left':
-                this._ctx.fillText(text, x + (width * (1 - this.LINE_WIDTH_FILL_RATIO)) / 2, y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
+                this._ctx.fillText(text, x + this.LINE_MARGIN, y + (this.LINE_HEIGHT / 2),  width - 2 * this.LINE_MARGIN);
                 break;
             default:
-                this._ctx.fillText(text, x, y + (this.LINE_HEIGHT / 2), width * this.LINE_WIDTH_FILL_RATIO);
+                this._ctx.fillText(text, x, y + (this.LINE_HEIGHT / 2), width - 2 * this.LINE_MARGIN);
                 break;
         }
     }

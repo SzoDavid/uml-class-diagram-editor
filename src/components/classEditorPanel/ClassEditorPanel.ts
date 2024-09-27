@@ -1,4 +1,4 @@
-import {Operation, Parameter, Property, Visibility} from '../../utils/umlNodes.ts';
+import {MultiplicityRange, Operation, Parameter, Property, Visibility} from '../../utils/umlNodes.ts';
 import {ClickContext, DataContext} from '../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
 
@@ -42,16 +42,26 @@ export default defineComponent({
             if (data.value === null || data.value.type !== 'class') return;
 
             switch (context) {
-                case 'prop':
-                    data.value.properties.push(new Property(''));
+                case 'prop': {
+                    const prop = new Property('');
+                    prop.multiplicity = new MultiplicityRange(null);
+                    data.value.properties.push(prop);
                     break;
-                case 'operation':
-                    data.value.operations.push(new Operation(''));
+                }
+                case 'operation': {
+                    const operation = new Operation('');
+                    operation.returnMultiplicity = new MultiplicityRange(null);
+                    data.value.operations.push(operation);
                     break;
-                case 'param':
+                }
+                case 'param': {
                     if (typeof parentIndex !== 'number') return;
-                    data.value.operations[parentIndex].params.push(new Parameter('', ''));
+
+                    const param = new Parameter('', '');
+                    param.multiplicity = new MultiplicityRange(null);
+                    data.value.operations[parentIndex].params.push(param);
                     break;
+                }
             }
         };
 
