@@ -9,9 +9,6 @@
 
       <label for="y">y: </label>
       <input id="y" type="number" v-model="data['y']">
-
-      <label for="width">Width: </label>
-      <input id="width" type="number" min="50" v-model="data['width']">
     </div>
   </fieldset>
 
@@ -88,6 +85,9 @@
 
           <label :for="`operationStatic${index}`">Static: </label>
           <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">
+
+          <label :for="`operationAbstract${index}`">Abstract: </label>
+          <input :id="`operationAbstract${index}`" type="checkbox" v-model="operation.isAbstract">
         </div>
 
         <fieldset>

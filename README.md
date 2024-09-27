@@ -28,3 +28,4 @@ Then the site will be accessible at [localhost:80](http://localhost:80)
 - oper-property
 - tests
 - option to show that there are other, not shown features in class
+- show abstract with keyword

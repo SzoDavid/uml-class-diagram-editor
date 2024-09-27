@@ -18,15 +18,14 @@ export class Node {
     isSelected: boolean = false;
     isDragging: boolean = false;
     height: number = 0;
+    width: number = 0;
 
     x: number;
     y: number;
-    width: number;
 
-    constructor(x: number, y: number, width: number) {
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-        this.width = width;
     }
 }
 
@@ -159,6 +158,7 @@ export class Operation {
     returnType: string|null;
     returnMultiplicity: MultiplicityRange|null;
     isStatic: boolean;
+    isAbstract: boolean; // NOTE: at validation it can be either static or abstract
     //TODO: oper-property
 
     constructor(name: string,
@@ -166,13 +166,15 @@ export class Operation {
                 visibility: Visibility|null = null,
                 returnType: string|null = null,
                 returnMultiplicity: MultiplicityRange|null = null,
-                isStatic: boolean = false) {
+                isStatic: boolean = false,
+                isAbstract: boolean = false) {
         this.name = name;
         this.params = params;
         this.visibility = visibility;
         this.returnType = returnType;
         this.returnMultiplicity = returnMultiplicity;
         this.isStatic = isStatic;
+        this.isAbstract = isAbstract;
     }
 
     toString(): string | StaticString {
@@ -180,6 +182,7 @@ export class Operation {
         let postfix = `(${this.params.join(', ')})`;
         if (this.returnType) postfix += `: ${this.returnType}`;
         if (this.returnMultiplicity && this.returnMultiplicity.upper) postfix += `[${this.returnMultiplicity.toString()}]`;
+        if (this.isAbstract) postfix += ' {abstract}';
 
         return this.isStatic ? {
             prefix: prefix,
@@ -198,11 +201,17 @@ export class ClassNode extends Node {
                 x: number,
                 y: number,
                 properties: Property[]=[],
-                operations: Operation[]=[],
-                width: number=100) {
-        super(x, y, width);
+                operations: Operation[]=[]) {
+        super(x, y);
         this.name = name;
         this.properties = properties;
         this.operations = operations;
+    }
+
+    public isAbstract(): boolean {
+        for (const operation of this.operations) {
+            if (operation.isAbstract) return true;
+        }
+        return false;
     }
 }

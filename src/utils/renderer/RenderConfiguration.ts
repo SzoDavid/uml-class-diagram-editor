@@ -1,5 +1,6 @@
 export interface RenderConfiguration {
     textSize: number,
+    defaultWidth: number,
     lineHeight: number,
     lineMargin: number,
     borderSize: number,
@@ -11,8 +12,9 @@ export interface RenderConfiguration {
     accentColorSelected: string
 }
 
-export const defaultRenderConfiguration = {
+export const defaultRenderConfiguration: RenderConfiguration = {
     textSize: 16,
+    defaultWidth: 100,
     lineHeight: 24,
     lineMargin: 5,
     borderSize: 1,

@@ -46,10 +46,10 @@ export default {
 
             editor.addNode(new ClassNode('ClassA', 50, 50,
                                          [new Property('prop', 'type', Visibility.PUBLIC),
-                                             new Property('prop2', 'value', Visibility.PUBLIC, false, new MultiplicityRange('*'))],
-                                         [new Operation('operationA', [], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))], 200));
+                                             new Property('prop2', 'type', Visibility.PUBLIC, false, new MultiplicityRange('*'), 'value', true)],
+                                         [new Operation('operationA', [], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
             editor.addNode(new ClassNode('ClassB', 300, 200, [],
-                                         [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))], 300));
+                                         [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))]));
         });
 
         const onSave = (data: DataContext) => {
@@ -60,7 +60,6 @@ export default {
 
             if (data.type === 'class' && selectedNode.value instanceof ClassNode) {
                 selectedNode.value.name = data.name;
-                selectedNode.value.width = data.width;
                 selectedNode.value.x = data.x;
                 selectedNode.value.y = data.y;
 
@@ -96,7 +95,6 @@ export default {
                     type: 'class',
                     x: node.x,
                     y: node.y,
-                    width: node.width,
                     name: node.name,
                     properties: node.properties,
                     operations: node.operations

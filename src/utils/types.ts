@@ -4,7 +4,6 @@ export interface ClassNodeData {
     type: 'class';
     x: number;
     y: number;
-    width: number;
     name: string;
     properties: Property[];
     operations: Operation[];

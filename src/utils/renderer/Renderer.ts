@@ -26,10 +26,27 @@ export class Renderer {
     }
 
     private drawClassNode(node: ClassNode) {
+        node.width = this._rc.defaultWidth;
+
+        this._ctx.font = `${this._rc.textSize}px Arial`;
+        for (const property of node.properties) {
+            const propT = property.toString();
+            const propW = this._ctx.measureText(typeof propT === 'object' ? propT.value : propT).width + 2 * this._rc.lineMargin;
+
+            if (propW > node.width) node.width = propW;
+        }
+
+        for (const operation of node.operations) {
+            const operationT = operation.toString();
+            const operationW = this._ctx.measureText(typeof operationT === 'object' ? operationT.value : operationT).width + 2 * this._rc.lineMargin;
+
+            if (operationW > node.width) node.width = operationW;
+        }
+
         this.drawRect(node.x, node.y, node.width, this._rc.lineHeight, node.isSelected);
         node.height = this._rc.lineHeight;
 
-        this.drawText(node.name, node.x, node.y, node.width, node.isSelected, 'bold', 'center');
+        this.drawText(node.name, node.x, node.y, node.width, node.isSelected, 'bold', node.isAbstract(), 'center');
 
         if (node.properties.length !== 0) {
             this.drawRect(node.x, node.y + this._rc.lineHeight, node.width, this._rc.lineHeight * node.properties.length, node.isSelected);
@@ -61,10 +78,17 @@ export class Renderer {
         this._ctx.stroke();
     }
 
-    private drawText(content: string|StaticString, x: number, y: number, width: number, isSelected=false, textWeight: TextWeight='normal', textAlign: CanvasTextAlign='left'): void {
+    private drawText(content: string|StaticString,
+                     x: number,
+                     y: number,
+                     width: number,
+                     isSelected=false,
+                     textWeight: TextWeight='normal',
+                     italic: boolean = false,
+                     textAlign: CanvasTextAlign='left'): void {
         this._ctx.beginPath();
         this._ctx.fillStyle = isSelected ? this._rc.accentColorSelected : this._rc.accentColor;
-        this._ctx.font = `${textWeight} ${this._rc.textSize}px Arial`;
+        this._ctx.font = `${italic ? 'italic ' : ''}${textWeight} ${this._rc.textSize}px Arial`;
         this._ctx.textAlign = textAlign;
         this._ctx.textBaseline = 'middle';
 
