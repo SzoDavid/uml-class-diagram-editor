@@ -135,6 +135,11 @@ export class Property {
             else if (!Validator.isAlphanumeric(this.type)) errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
         }
 
+        if (this.defaultValue) {
+            if (this.defaultValue === '') errors.push({parameter: 'defaultValue', message: 'Default value is required'});
+            else if (!Validator.isAlphanumeric(this.defaultValue)) errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
+        }
+
         if (this.multiplicity) {
             const multiErrors = this.multiplicity.validate();
             if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'Multiplicity is invalid', context: multiErrors});

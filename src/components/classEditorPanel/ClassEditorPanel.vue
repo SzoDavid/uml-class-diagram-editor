@@ -40,12 +40,15 @@
 
             <label :for="`propName${index}`">Name: </label>
             <input :id="`propName${index}`" type="text" v-model="prop.name">
+            <span v-if="getError('properties', index, 'name')" class="error" style="grid-column: span 2;">{{ getError('properties', index, 'name') }}</span>
 
             <label :for="`propType${index}`">Type: </label>
             <input :id="`propType${index}`" type="text" v-model="prop.type">
+            <span v-if="getError('properties', index, 'type')" class="error" style="grid-column: span 2;">{{ getError('properties', index, 'type') }}</span>
 
             <label :for="`propDefault${index}`">Default value: </label>
             <input :id="`propDefault${index}`" type="text" v-model="prop.defaultValue">
+            <span v-if="getError('properties', index, 'defaultValue')" class="error" style="grid-column: span 2;">{{ getError('properties', index, 'defaultValue') }}</span>
 
             <label :for="`propStatic${index}`">Static: </label>
             <input type="checkbox" :id="`propStatic${index}`" v-model="prop.isStatic">
@@ -91,9 +94,11 @@
 
             <label :for="`operationName${index}`">Name: </label>
             <input :id="`operationName${index}`" type="text" v-model="operation.name">
+            <span v-if="getError('operations', index, 'name')" class="error" style="grid-column: span 2;">{{ getError('operations', index, 'name') }}</span>
 
             <label :for="`operationReturnType${index}`">Return type: </label>
             <input :id="`operationReturnType${index}`" type="text" v-model="operation.returnType">
+            <span v-if="getError('operations', index, 'returnType')" class="error" style="grid-column: span 2;">{{ getError('operations', index, 'returnType') }}</span>
 
             <label :for="`operationStatic${index}`">Static: </label>
             <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">

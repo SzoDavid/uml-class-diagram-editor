@@ -109,7 +109,8 @@ export default defineComponent({
             }
         };
 
-        const getError = (parameter: string, index: string|number = '') => {
+        //TODO: refactor for proper nesting
+        const getError = (parameter: string, index: string|number = '', subParameter: string = '') => {
             if (data.value === null || data.value.type !== 'class') return null;
 
             if (typeof index !== 'number') {
@@ -117,8 +118,13 @@ export default defineComponent({
                 return error ? error.message : null;
             }
 
+            if (subParameter === '') {
+                const error = data.value.errors.find(error => error.parameter === parameter && error.index === index);
+                return error ? error.message : null;
+            }
+
             const error = data.value.errors.find(error => error.parameter === parameter && error.index === index);
-            return error ? error.message : null;
+            return error ? error.context?.find(ctxError => ctxError.parameter === subParameter)?.message : null;
         };
 
         return {
