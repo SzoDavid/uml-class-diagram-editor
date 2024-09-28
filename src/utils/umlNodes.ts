@@ -17,7 +17,6 @@ interface InvalidNodeParameterCause {
     context?: InvalidNodeParameterCause[]
 }
 
-
 export interface StaticString {
     prefix: string;
     name: string;
