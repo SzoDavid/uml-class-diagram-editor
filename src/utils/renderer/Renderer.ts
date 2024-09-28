@@ -1,7 +1,21 @@
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {ClassNode, Node, StaticString} from '../umlNodes.ts';
+import {ClassNode, Node} from '../umlNodes.ts';
 
 type TextWeight = 'normal' | 'bold';
+
+interface PartialUnderlineContext {
+    prefix: string;
+    underlined: string;
+}
+
+interface TextProperties {
+    isSelected?: boolean,
+    isInvalid?: boolean,
+    textWeight?: TextWeight,
+    italic?: boolean,
+    textAlign?: CanvasTextAlign,
+    puc?: PartialUnderlineContext|null
+}
 
 export class Renderer {
     private readonly _canvas: HTMLCanvasElement;
@@ -30,22 +44,20 @@ export class Renderer {
         const nodeErrors = node.validate();
         if (nodeErrors.length > 0) {
             console.error({message: 'Node is invalid', node: node, errors: nodeErrors});
-            invalid = true;
+            if (this._rc.showInvalidity) invalid = true;
         }
 
         node.width = this._rc.defaultWidth;
 
         this._ctx.font = `${this._rc.textSize}px Arial`;
         for (const property of node.properties) {
-            const propT = property.toString();
-            const propW = this._ctx.measureText(typeof propT === 'object' ? propT.value : propT).width + 2 * this._rc.lineMargin;
+            const propW = this._ctx.measureText(property.toString()).width + 2 * this._rc.lineMargin;
 
             if (propW > node.width) node.width = propW;
         }
 
         for (const operation of node.operations) {
-            const operationT = operation.toString();
-            const operationW = this._ctx.measureText(typeof operationT === 'object' ? operationT.value : operationT).width + 2 * this._rc.lineMargin;
+            const operationW = this._ctx.measureText(operation.toString()).width + 2 * this._rc.lineMargin;
 
             if (operationW > node.width) node.width = operationW;
         }
@@ -53,24 +65,33 @@ export class Renderer {
         this.drawRect(node.x, node.y, node.width, this._rc.lineHeight, node.isSelected, invalid);
         node.height = this._rc.lineHeight;
 
-        this.drawText(node.name, node.x, node.y, node.width, node.isSelected, invalid, 'bold', node.isAbstract(), 'center');
+        this.drawText(node.name, node.x, node.y, node.width, {
+            isSelected: node.isSelected,
+            isInvalid: invalid,
+            textWeight: 'bold',
+            italic: node.isAbstract(),
+            textAlign: 'center' });
 
         if (node.properties.length !== 0) {
             this.drawRect(node.x, node.y + this._rc.lineHeight, node.width, this._rc.lineHeight * node.properties.length, node.isSelected, invalid);
             node.height += this._rc.lineHeight * node.properties.length;
 
-            for (const i in node.properties) {
-                this.drawText(node.properties[i].toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight), node.width, node.isSelected, invalid);
-            }
+            node.properties.forEach((prop, i) => this.drawText(prop.toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight), node.width, {
+                isSelected: node.isSelected,
+                isInvalid: invalid,
+                puc: prop.isStatic ? { prefix: prop.prefix, underlined: prop.name } : null
+            }));
         }
 
         if (node.operations.length !== 0) {
             this.drawRect(node.x, node.y + (this._rc.lineHeight * (node.properties.length + 1)), node.width, this._rc.lineHeight * node.operations.length, node.isSelected, invalid);
             node.height += this._rc.lineHeight * node.operations.length;
 
-            for (const i in node.operations) {
-                this.drawText(node.operations[i].toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight) + (this._rc.lineHeight * node.properties.length), node.width, node.isSelected, invalid);
-            }
+            node.operations.forEach((operation, i) => this.drawText(operation.toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight) + (this._rc.lineHeight * node.properties.length), node.width, {
+                isSelected: node.isSelected,
+                isInvalid: invalid,
+                puc: operation.isStatic ? { prefix: operation.prefix, underlined: operation.name } : null
+            }));
         }
     }
 
@@ -87,23 +108,25 @@ export class Renderer {
         this._ctx.stroke();
     }
 
-    private drawText(content: string|StaticString,
+    private drawText(text: string,
                      x: number,
                      y: number,
                      width: number,
-                     isSelected=false,
-                     isInvalid=false,
-                     textWeight: TextWeight='normal',
-                     italic: boolean = false,
-                     textAlign: CanvasTextAlign='left'): void {
+                     {
+                         isSelected = false,
+                         isInvalid = false,
+                         textWeight = 'normal',
+                         italic = false,
+                         textAlign ='left',
+                         puc = null
+                     }: TextProperties = {}): void {
+
         this._ctx.beginPath();
         this._ctx.fillStyle = isSelected ? (isInvalid ? this._rc.accentColorInvalidSelected : this._rc.accentColorSelected)
             : (isInvalid ? this._rc.accentColorInvalid : this._rc.accentColor);
         this._ctx.font = `${italic ? 'italic ' : ''}${textWeight} ${this._rc.textSize}px Arial`;
         this._ctx.textAlign = textAlign;
         this._ctx.textBaseline = 'middle';
-
-        const text = typeof content === 'object' ? content.value : content;
 
         switch (textAlign) {
             case 'center':
@@ -113,11 +136,11 @@ export class Renderer {
                 this._ctx.fillText(text, x + this._rc.lineMargin, y + (this._rc.lineHeight / 2),  width - 2 * this._rc.lineMargin);
 
                 // TODO: refactor this to a generic underlining function
-                if (typeof content === 'object') {
+                if (puc) {
                     this._ctx.beginPath();
-                    this._ctx.moveTo(x + this._rc.lineMargin + this._ctx.measureText(content.prefix).width,
+                    this._ctx.moveTo(x + this._rc.lineMargin + this._ctx.measureText(puc.prefix).width,
                                      y + (this._rc.lineHeight / 2) + (this._rc.textSize / 2) + this._rc.underlineDelta);
-                    this._ctx.lineTo(x + this._rc.lineMargin + this._ctx.measureText(content.prefix).width + this._ctx.measureText(content.name).width,
+                    this._ctx.lineTo(x + this._rc.lineMargin + this._ctx.measureText(puc.prefix).width + this._ctx.measureText(puc.underlined).width,
                                      y + (this._rc.lineHeight / 2) + (this._rc.textSize / 2) + this._rc.underlineDelta);
                     this._ctx.lineWidth = this._rc.borderSize;
                     this._ctx.strokeStyle = isSelected ? (isInvalid ? this._rc.accentColorInvalidSelected : this._rc.accentColorSelected)
@@ -130,7 +153,5 @@ export class Renderer {
                 this._ctx.fillText(text, x, y + (this._rc.lineHeight / 2), width - 2 * this._rc.lineMargin);
                 break;
         }
-
-
     }
 }

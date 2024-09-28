@@ -114,20 +114,21 @@ export class Property {
         this.isStatic = isStatic;
     }
 
-    toString(): string | StaticString {
-        const prefix = `${this.visibility ?? ''}${this.isDerived ? '/' : ''}`;
+    get prefix(): string {
+        return `${this.visibility ?? ''}${this.isDerived ? '/' : ''}`;
+    }
 
+    get postfix(): string {
         let postfix = '';
         if (this.type) postfix += `: ${this.type}`;
         if (this.multiplicity && this.multiplicity.upper) postfix += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) postfix += ` = ${this.defaultValue}`;
 
-        // TODO: separate this logic
-        return this.isStatic ? {
-            prefix: prefix,
-            name: this.name,
-            value: `${prefix}${this.name}${postfix}`
-        } : `${prefix}${this.name}${postfix}`;
+        return postfix;
+    }
+
+    toString(): string {
+        return `${this.prefix}${this.name}${this.postfix}`;
     }
 
     validate(): InvalidNodeParameterCause[] {
@@ -251,18 +252,21 @@ export class Operation {
         this.isAbstract = isAbstract;
     }
 
-    toString(): string | StaticString {
-        const prefix = this.visibility ?? '';
+    get prefix() {
+        return this.visibility ?? '';
+    }
+
+    get postfix() {
         let postfix = `(${this.params.join(', ')})`;
         if (this.returnType) postfix += `: ${this.returnType}`;
         if (this.returnMultiplicity && this.returnMultiplicity.upper) postfix += `[${this.returnMultiplicity.toString()}]`;
         if (this.isAbstract) postfix += ' {abstract}';
 
-        return this.isStatic ? {
-            prefix: prefix,
-            name: this.name,
-            value: `${prefix}${this.name}${postfix}`
-        } : `${prefix}${this.name}${postfix}`;
+        return postfix;
+    }
+
+    toString(): string {
+        return `${this.prefix}${this.name}${this.postfix}`;
     }
 
     validate(): InvalidNodeParameterCause[] {
