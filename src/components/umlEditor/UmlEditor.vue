@@ -1,5 +1,5 @@
 <script lang="ts" src="./UmlEditor.ts" />
-<style src="./UmlEditor.css" />
+<style scoped src="./UmlEditor.css" />
 
 <template>
   <div class="editor-container">

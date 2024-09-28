@@ -18,15 +18,7 @@ docker run --rm -p 80:80 class-diagram-editor
 
 Then the site will be accessible at [localhost:80](http://localhost:80)
 
-## TODOs
+## References
 
-- display validation errors
-- in classes add grouping attributes and operations by visibility
-- class stereotypes
-- grid size when moving
-- property modifiers
-- oper-property
-- tests
-- option to show that there are other, not shown features in class
-- show abstract with keyword
-- if operation has many properties, display it in multiple columns
+[uml-diagrams.org Authored by Kirill Fakhroutdinov](https://www.uml-diagrams.org/class-diagrams-overview.html)
+[UML 2.5.1 specifications](https://www.omg.org/spec/UML/2.5.1/PDF)

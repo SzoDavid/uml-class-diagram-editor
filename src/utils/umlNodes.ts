@@ -10,17 +10,11 @@ export enum Visibility {
 export type Direction = 'in'|'out'|'inout';
 export type ParameterProperty = 'ordered'|'unordered'|'unique'|'nonunique'|'sequence';
 
-interface InvalidNodeParameterCause {
+export interface InvalidNodeParameterCause {
     parameter: string;
     message: string;
     index?: number;
     context?: InvalidNodeParameterCause[]
-}
-
-export interface StaticString {
-    prefix: string;
-    name: string;
-    value: string;
 }
 
 export class Node {
@@ -329,7 +323,7 @@ export class ClassNode extends Node {
 
         this.operations.forEach((operation, i) => {
             const operationErrors = operation.validate();
-            if (operationErrors.length > 0) errors.push({parameter: 'properties', index: i, message: 'Property is invalid', context: operationErrors});
+            if (operationErrors.length > 0) errors.push({parameter: 'operations', index: i, message: 'Property is invalid', context: operationErrors});
         });
 
         return errors;

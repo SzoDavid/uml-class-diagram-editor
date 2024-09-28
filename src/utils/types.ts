@@ -1,4 +1,4 @@
-import {Operation, Property} from './umlNodes.ts';
+import {InvalidNodeParameterCause, Operation, Property} from './umlNodes.ts';
 
 export interface ClassNodeData {
     type: 'class';
@@ -7,6 +7,7 @@ export interface ClassNodeData {
     name: string;
     properties: Property[];
     operations: Operation[];
+    errors: InvalidNodeParameterCause[];
 }
 
 export type DataContext = ClassNodeData | null;

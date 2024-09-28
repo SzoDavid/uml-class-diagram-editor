@@ -25,6 +25,7 @@ export default defineComponent({
     },
     setup(props: ClassEditorPanelProperties, { emit }: { emit: ClassEditorPanelEmits}) {
         const data = ref<DataContext>(null);
+        const renderKey = ref<number>(0);
 
         watch(
             () => props.classData,
@@ -84,11 +85,50 @@ export default defineComponent({
             }
         };
 
+        const onCollapseClicked = (context: ClickContext, index: string|number, parentIndex: string|number = '') => {
+            if (typeof index !== 'number') return null;
+
+            if (data.value === null || data.value.type !== 'class') return null;
+
+            let element = null;
+            switch (context) {
+                case 'prop':
+                    element = document.getElementById(`property${index}`);
+                    break;
+                case 'operation':
+                    element = document.getElementById(`operation${index}`);
+                    break;
+                case 'param':
+                    if (typeof parentIndex !== 'number') return;
+                    element = document.getElementById(`parameter${parentIndex}${index}`);
+                    break;
+            }
+
+            if (element) {
+                element.classList.toggle('collapsed');
+            }
+        };
+
+        const getError = (parameter: string, index: string|number = '') => {
+            if (data.value === null || data.value.type !== 'class') return null;
+
+            if (typeof index !== 'number') {
+                const error = data.value.errors.find(error => error.parameter === parameter);
+                return error ? error.message : null;
+            }
+
+            const error = data.value.errors.find(error => error.parameter === parameter && error.index === index);
+            return error ? error.message : null;
+        };
+
         return {
             data,
+            renderKey,
             onSave,
             onAddClicked,
-            onRemoveClicked
+            onRemoveClicked,
+            onCollapseClicked,
+            getError
         };
     }
 });
