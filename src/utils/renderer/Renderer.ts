@@ -26,6 +26,13 @@ export class Renderer {
     }
 
     private drawClassNode(node: ClassNode) {
+        let invalid = false;
+        const nodeErrors = node.validate();
+        if (nodeErrors.length > 0) {
+            console.error({message: 'Node is invalid', node: node, errors: nodeErrors});
+            invalid = true;
+        }
+
         node.width = this._rc.defaultWidth;
 
         this._ctx.font = `${this._rc.textSize}px Arial`;
@@ -43,38 +50,40 @@ export class Renderer {
             if (operationW > node.width) node.width = operationW;
         }
 
-        this.drawRect(node.x, node.y, node.width, this._rc.lineHeight, node.isSelected);
+        this.drawRect(node.x, node.y, node.width, this._rc.lineHeight, node.isSelected, invalid);
         node.height = this._rc.lineHeight;
 
-        this.drawText(node.name, node.x, node.y, node.width, node.isSelected, 'bold', node.isAbstract(), 'center');
+        this.drawText(node.name, node.x, node.y, node.width, node.isSelected, invalid, 'bold', node.isAbstract(), 'center');
 
         if (node.properties.length !== 0) {
-            this.drawRect(node.x, node.y + this._rc.lineHeight, node.width, this._rc.lineHeight * node.properties.length, node.isSelected);
+            this.drawRect(node.x, node.y + this._rc.lineHeight, node.width, this._rc.lineHeight * node.properties.length, node.isSelected, invalid);
             node.height += this._rc.lineHeight * node.properties.length;
 
             for (const i in node.properties) {
-                this.drawText(node.properties[i].toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight), node.width, node.isSelected);
+                this.drawText(node.properties[i].toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight), node.width, node.isSelected, invalid);
             }
         }
 
         if (node.operations.length !== 0) {
-            this.drawRect(node.x, node.y + (this._rc.lineHeight * (node.properties.length + 1)), node.width, this._rc.lineHeight * node.operations.length, node.isSelected);
+            this.drawRect(node.x, node.y + (this._rc.lineHeight * (node.properties.length + 1)), node.width, this._rc.lineHeight * node.operations.length, node.isSelected, invalid);
             node.height += this._rc.lineHeight * node.operations.length;
 
             for (const i in node.operations) {
-                this.drawText(node.operations[i].toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight) + (this._rc.lineHeight * node.properties.length), node.width, node.isSelected);
+                this.drawText(node.operations[i].toString(), node.x, node.y + ((+i + 1) * this._rc.lineHeight) + (this._rc.lineHeight * node.properties.length), node.width, node.isSelected, invalid);
             }
         }
     }
 
-    private drawRect(x: number, y: number, width: number, height: number, isSelected=false): void {
+    private drawRect(x: number, y: number, width: number, height: number, isSelected=false, isInvalid=false): void {
         this._ctx.beginPath();
         this._ctx.rect(x, y, width, height);
 
-        this._ctx.fillStyle = isSelected ? this._rc.fillColorSelected : this._rc.fillColor;
+        this._ctx.fillStyle = isSelected ? (isInvalid ? this._rc.fillColorInvalidSelected : this._rc.fillColorSelected)
+            : (isInvalid ? this._rc.fillColorInvalid : this._rc.fillColor);
         this._ctx.fill();
         this._ctx.lineWidth = this._rc.borderSize;
-        this._ctx.strokeStyle = isSelected ? this._rc.accentColorSelected : this._rc.accentColor;
+        this._ctx.strokeStyle = isSelected ? (isInvalid ? this._rc.accentColorInvalidSelected : this._rc.accentColorSelected)
+            : (isInvalid ? this._rc.accentColorInvalid : this._rc.accentColor);
         this._ctx.stroke();
     }
 
@@ -83,11 +92,13 @@ export class Renderer {
                      y: number,
                      width: number,
                      isSelected=false,
+                     isInvalid=false,
                      textWeight: TextWeight='normal',
                      italic: boolean = false,
                      textAlign: CanvasTextAlign='left'): void {
         this._ctx.beginPath();
-        this._ctx.fillStyle = isSelected ? this._rc.accentColorSelected : this._rc.accentColor;
+        this._ctx.fillStyle = isSelected ? (isInvalid ? this._rc.accentColorInvalidSelected : this._rc.accentColorSelected)
+            : (isInvalid ? this._rc.accentColorInvalid : this._rc.accentColor);
         this._ctx.font = `${italic ? 'italic ' : ''}${textWeight} ${this._rc.textSize}px Arial`;
         this._ctx.textAlign = textAlign;
         this._ctx.textBaseline = 'middle';
@@ -109,7 +120,8 @@ export class Renderer {
                     this._ctx.lineTo(x + this._rc.lineMargin + this._ctx.measureText(content.prefix).width + this._ctx.measureText(content.name).width,
                                      y + (this._rc.lineHeight / 2) + (this._rc.textSize / 2) + this._rc.underlineDelta);
                     this._ctx.lineWidth = this._rc.borderSize;
-                    this._ctx.strokeStyle = isSelected ? this._rc.accentColorSelected : this._rc.accentColor;
+                    this._ctx.strokeStyle = isSelected ? (isInvalid ? this._rc.accentColorInvalidSelected : this._rc.accentColorSelected)
+                        : (isInvalid ? this._rc.accentColorInvalid : this._rc.accentColor);
                     this._ctx.stroke();
                 }
 

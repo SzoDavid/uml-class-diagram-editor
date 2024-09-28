@@ -8,8 +8,12 @@ export interface RenderConfiguration {
     underlineWidth: number,
     fillColor: string,
     fillColorSelected: string,
+    fillColorInvalid: string,
+    fillColorInvalidSelected: string,
     accentColor: string,
-    accentColorSelected: string
+    accentColorSelected: string,
+    accentColorInvalid: string,
+    accentColorInvalidSelected: string,
 }
 
 export const defaultRenderConfiguration: RenderConfiguration = {
@@ -22,6 +26,10 @@ export const defaultRenderConfiguration: RenderConfiguration = {
     underlineWidth: 1,
     fillColor: '#FFF',
     fillColorSelected: '#FEFEFF',
+    fillColorInvalid: '#FFEFEF',
+    fillColorInvalidSelected: '#FFFEFF',
     accentColor: '#000',
-    accentColorSelected: '#66F'
+    accentColorSelected: '#66F',
+    accentColorInvalid: '#F00',
+    accentColorInvalidSelected: '#F06'
 };

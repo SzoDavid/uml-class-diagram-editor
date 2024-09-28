@@ -20,7 +20,8 @@ Then the site will be accessible at [localhost:80](http://localhost:80)
 
 ## TODOs
 
-- validators for nodes
+- separate staticString logic
+- display validation errors
 - in classes add grouping attributes and operations by visibility
 - class stereotypes
 - grid size when moving
@@ -29,3 +30,4 @@ Then the site will be accessible at [localhost:80](http://localhost:80)
 - tests
 - option to show that there are other, not shown features in class
 - show abstract with keyword
+- if operation has many properties, display it in multiple columnsF

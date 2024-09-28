@@ -1,3 +1,5 @@
+import {Validator} from './Validator.ts';
+
 export enum Visibility {
     PRIVATE='-',
     PUBLIC='+',
@@ -7,6 +9,14 @@ export enum Visibility {
 
 export type Direction = 'in'|'out'|'inout';
 export type ParameterProperty = 'ordered'|'unordered'|'unique'|'nonunique'|'sequence';
+
+interface InvalidNodeParameterCause {
+    parameter: string;
+    message: string;
+    index?: number;
+    context?: InvalidNodeParameterCause[]
+}
+
 
 export interface StaticString {
     prefix: string;
@@ -27,6 +37,10 @@ export class Node {
         this.x = x;
         this.y = y;
     }
+
+    validate(): InvalidNodeParameterCause[] {
+        return [];
+    }
 }
 
 /**
@@ -38,7 +52,7 @@ export class Node {
  */
 export class MultiplicityRange {
     lower: number|null;
-    upper: number|'*'|null; // TODO: when validating null is not allowed
+    upper: number|'*'|null;
 
     constructor(upper: number|'*'|null,
                 lower: number|null = null) {
@@ -48,6 +62,23 @@ export class MultiplicityRange {
 
     toString(): string {
         return `${this.lower ? this.lower + '..' : ''}${this.upper}`;
+    }
+
+    validate(): InvalidNodeParameterCause[] {
+        const errors: InvalidNodeParameterCause[] = [];
+
+        if (this.upper === null) {
+            return errors;
+        }
+
+        if (this.upper !== '*' && this.upper <= 0) errors.push({parameter: 'upper', message: 'Upper limit must be larger than 0'});
+
+        if (this.lower !== null) {
+            if (this.lower < 0) errors.push({parameter: 'lower', message: 'Lower limit must be at least 0'});
+            if (this.upper !== '*' && this.lower >= this.upper) errors.push({parameter: 'lower', message: 'Lower limit must be less than upper'});
+        }
+
+        return errors;
     }
 }
 
@@ -91,6 +122,7 @@ export class Property {
         if (this.multiplicity && this.multiplicity.upper) postfix += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) postfix += ` = ${this.defaultValue}`;
 
+        // TODO: separate this logic
         return this.isStatic ? {
             prefix: prefix,
             name: this.name,
@@ -98,6 +130,24 @@ export class Property {
         } : `${prefix}${this.name}${postfix}`;
     }
 
+    validate(): InvalidNodeParameterCause[] {
+        const errors: InvalidNodeParameterCause[] = [];
+
+        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
+        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+
+        if (this.type) {
+            if (this.type === '') errors.push({parameter: 'type', message: 'Type is required'});
+            else if (!Validator.isAlphanumeric(this.type)) errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
+        }
+
+        if (this.multiplicity) {
+            const multiErrors = this.multiplicity.validate();
+            if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'Multiplicity is invalid', context: multiErrors});
+        }
+
+        return errors;
+    }
 }
 
 /**
@@ -142,6 +192,30 @@ export class Parameter {
         if (this.properties.length) value += ` {${this.properties.join(',')}}`;
 
         return value;
+    }
+
+    validate(): InvalidNodeParameterCause[] {
+        const errors: InvalidNodeParameterCause[] = [];
+
+        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
+        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+
+        if (this.type === '') errors.push({parameter: 'type', message: 'Type is required'});
+        else if (!Validator.isAlphanumeric(this.type)) errors.push({parameter: 'name', message: 'Type must be alphanumeric'});
+
+        if (this.properties.length > 1) {
+            if (this.properties.includes('unique') && this.properties.includes('nonunique'))
+                errors.push({parameter: 'properties', message: 'Property cannot be unique and nonunique in the same time'});
+            if (this.properties.includes('ordered') && this.properties.includes('unordered'))
+                errors.push({parameter: 'properties', message: 'Property cannot be ordered and unordered in the same time'});
+        }
+
+        if (this.multiplicity) {
+            const multiErrors = this.multiplicity.validate();
+            if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'Multiplicity is invalid', context: multiErrors});
+        }
+
+        return errors;
     }
 }
 
@@ -190,6 +264,30 @@ export class Operation {
             value: `${prefix}${this.name}${postfix}`
         } : `${prefix}${this.name}${postfix}`;
     }
+
+    validate(): InvalidNodeParameterCause[] {
+        const errors: InvalidNodeParameterCause[] = [];
+
+        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
+        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+
+        if (this.returnType) {
+            if (this.returnType === '') errors.push({parameter: 'returnType', message: 'Return type is required'});
+            else if (!Validator.isAlphanumeric(this.returnType)) errors.push({parameter: 'returnType', message: 'Return type must be alphanumeric'});
+        }
+
+        this.params.forEach((param, i) => {
+            const paramErrors = param.validate();
+            if (paramErrors.length > 0) errors.push({parameter: 'params', index: i, message: 'Parameter is invalid', context: paramErrors});
+        });
+
+        if (this.returnMultiplicity) {
+            const multiErrors = this.returnMultiplicity.validate();
+            if (multiErrors.length > 0) errors.push({parameter: 'returnMultiplicity', message: 'Return multiplicity is invalid', context: multiErrors});
+        }
+
+        return errors;
+    }
 }
 
 export class ClassNode extends Node {
@@ -213,5 +311,24 @@ export class ClassNode extends Node {
             if (operation.isAbstract) return true;
         }
         return false;
+    }
+
+    validate(): InvalidNodeParameterCause[] {
+        const errors: InvalidNodeParameterCause[] = [];
+
+        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
+        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+
+        this.properties.forEach((prop, i) => {
+            const propErrors = prop.validate();
+            if (propErrors.length > 0) errors.push({parameter: 'properties', index: i, message: 'Property is invalid', context: propErrors});
+        });
+
+        this.operations.forEach((operation, i) => {
+            const operationErrors = operation.validate();
+            if (operationErrors.length > 0) errors.push({parameter: 'properties', index: i, message: 'Property is invalid', context: operationErrors});
+        });
+
+        return errors;
     }
 }
