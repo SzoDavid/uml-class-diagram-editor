@@ -1,4 +1,11 @@
-import {MultiplicityRange, Operation, Parameter, Property, Visibility} from '../../utils/umlNodes.ts';
+import {
+    InvalidNodeParameterCause,
+    MultiplicityRange,
+    Operation,
+    Parameter,
+    Property,
+    Visibility
+} from '../../utils/umlNodes.ts';
 import {ClickContext, DataContext} from '../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
 
@@ -8,6 +15,12 @@ interface ClassEditorPanelProperties {
 
 interface ClassEditorPanelEmits {
     (e: 'save', data: DataContext): void;
+}
+
+interface ErrorContext {
+    parameter: string,
+    index?: number|string,
+    child?: ErrorContext
 }
 
 export default defineComponent({
@@ -109,22 +122,27 @@ export default defineComponent({
             }
         };
 
-        //TODO: refactor for proper nesting
-        const getError = (parameter: string, index: string|number = '', subParameter: string = '') => {
+        const getError = (context: ErrorContext) => {
             if (data.value === null || data.value.type !== 'class') return null;
 
-            if (typeof index !== 'number') {
-                const error = data.value.errors.find(error => error.parameter === parameter);
-                return error ? error.message : null;
+            return findError(data.value.errors, context);
+        };
+
+        const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string|null => {
+            let error;
+
+            if (context.index && typeof context.index === 'number') {
+                error = errors.find(error =>
+                    error.parameter === context.parameter
+                    && error.index === context.index);
+            } else {
+                error = errors.find(error => error.parameter === context.parameter);
             }
 
-            if (subParameter === '') {
-                const error = data.value.errors.find(error => error.parameter === parameter && error.index === index);
-                return error ? error.message : null;
-            }
+            if (!error) return null;
+            if (context.child && error.context) return findError(error.context, context.child);
 
-            const error = data.value.errors.find(error => error.parameter === parameter && error.index === index);
-            return error ? error.context?.find(ctxError => ctxError.parameter === subParameter)?.message : null;
+            return error.message;
         };
 
         return {

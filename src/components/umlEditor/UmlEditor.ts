@@ -64,7 +64,7 @@ export default {
                 selectedNode.value.y = data.y;
 
                 // data.properties.forEach((property) => {
-                //     if (property.multiplicity === null || property.multiplicity.upper !== null ) return;
+                //     if (property.multiplicity === null || property.multiplicity.upper !== null) return;
                 //     property.multiplicity = null;
                 // });
                 //

@@ -200,7 +200,12 @@ export class Parameter {
         else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
 
         if (this.type === '') errors.push({parameter: 'type', message: 'Type is required'});
-        else if (!Validator.isAlphanumeric(this.type)) errors.push({parameter: 'name', message: 'Type must be alphanumeric'});
+        else if (!Validator.isAlphanumeric(this.type)) errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
+
+        if (this.defaultValue) {
+            if (this.defaultValue === '') errors.push({parameter: 'defaultValue', message: 'Default value is required'});
+            else if (!Validator.isAlphanumeric(this.defaultValue)) errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
+        }
 
         if (this.properties.length > 1) {
             if (this.properties.includes('unique') && this.properties.includes('nonunique'))

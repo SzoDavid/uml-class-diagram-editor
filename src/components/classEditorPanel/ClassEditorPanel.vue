@@ -18,13 +18,14 @@
     <div class="grid-form">
       <label for="className">Class Name: </label>
       <input id="className" type="text" v-model="data['name']">
-      <span v-if="getError('name')" class="error" style="grid-column: span 2;">{{ getError('name') }}</span>
+      <span v-if="getError({parameter: 'name'})" class="error" style="grid-column: span 2;">{{ getError({parameter: 'name'}) }}</span>
     </div>
 
     <fieldset>
       <legend>Properties</legend>
       <div :id="`property${index}`" class="collapsed" v-for="(prop, index) in data['properties']" :key="index">
-        <div @click="onCollapseClicked('prop', index)" class="header" :class="{ 'error-header': getError('properties', index) }">
+        <div @click="onCollapseClicked('prop', index)" class="header"
+             :class="{ 'error-header': getError({parameter: 'properties', index: index}) }">
           <span>{{ prop.toString() }}</span>
         </div>
         <div class="details sep">
@@ -40,15 +41,24 @@
 
             <label :for="`propName${index}`">Name: </label>
             <input :id="`propName${index}`" type="text" v-model="prop.name">
-            <span v-if="getError('properties', index, 'name')" class="error" style="grid-column: span 2;">{{ getError('properties', index, 'name') }}</span>
+            <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'name'}})"
+                  class="error" style="grid-column: span 2;">
+              {{ getError({parameter: 'properties', index: index, child: {parameter: 'name'} }) }}
+            </span>
 
             <label :for="`propType${index}`">Type: </label>
             <input :id="`propType${index}`" type="text" v-model="prop.type">
-            <span v-if="getError('properties', index, 'type')" class="error" style="grid-column: span 2;">{{ getError('properties', index, 'type') }}</span>
+            <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'type'}})"
+                  class="error" style="grid-column: span 2;">
+              {{ getError({parameter: 'properties', index: index, child: {parameter: 'type'} }) }}
+            </span>
 
             <label :for="`propDefault${index}`">Default value: </label>
             <input :id="`propDefault${index}`" type="text" v-model="prop.defaultValue">
-            <span v-if="getError('properties', index, 'defaultValue')" class="error" style="grid-column: span 2;">{{ getError('properties', index, 'defaultValue') }}</span>
+            <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}})"
+                  class="error" style="grid-column: span 2;">
+              {{ getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'} }) }}
+            </span>
 
             <label :for="`propStatic${index}`">Static: </label>
             <input type="checkbox" :id="`propStatic${index}`" v-model="prop.isStatic">
@@ -62,9 +72,21 @@
             <div class="grid-form">
               <label :for="`propMultiUpper${index}`">Upper: </label>
               <input :id="`propMultiUpper${index}`" type="text" v-model="prop.multiplicity.upper">
+              <span v-if="getError({parameter: 'properties', index: index, child: 
+                      {parameter: 'multiplicity', child: {parameter: 'upper'}}})"
+                    class="error" style="grid-column: span 2;">
+                {{ getError({parameter: 'properties', index: index, child:
+                  {parameter: 'multiplicity', child: {parameter: 'upper'} } }) }}
+              </span>
 
               <label :for="`propMultiLower${index}`">Lower: </label>
               <input :id="`propMultiLower${index}`" type="number" v-model="prop.multiplicity.lower">
+              <span v-if="getError({parameter: 'properties', index: index, child: 
+                      {parameter: 'multiplicity', child: {parameter: 'lower'}}})"
+                    class="error" style="grid-column: span 2;">
+                {{ getError({parameter: 'properties', index: index, child:
+                  {parameter: 'multiplicity', child: {parameter: 'lower'} } }) }}
+              </span>
             </div>
           </fieldset>
 
@@ -77,7 +99,8 @@
     <fieldset>
       <legend>Operations</legend>
       <div :id="`operation${index}`" class="collapsed" v-for="(operation, index) in data['operations']" :key="index">
-        <div @click="onCollapseClicked('operation', index)" class="header" :class="{ 'error-header': getError('operations', index) }">
+        <div @click="onCollapseClicked('operation', index)" class="header"
+             :class="{ 'error-header': getError({parameter: 'operations', index: index}) }">
           <span>{{ operation.toString() }}</span>
         </div>
 
@@ -94,11 +117,17 @@
 
             <label :for="`operationName${index}`">Name: </label>
             <input :id="`operationName${index}`" type="text" v-model="operation.name">
-            <span v-if="getError('operations', index, 'name')" class="error" style="grid-column: span 2;">{{ getError('operations', index, 'name') }}</span>
+            <span v-if="getError({parameter: 'operations', index: index, child: {parameter:'name'}})"
+                  class="error" style="grid-column: span 2;">
+              {{ getError({parameter: 'operations', index: index, child: {parameter:'name'} }) }}
+            </span>
 
             <label :for="`operationReturnType${index}`">Return type: </label>
             <input :id="`operationReturnType${index}`" type="text" v-model="operation.returnType">
-            <span v-if="getError('operations', index, 'returnType')" class="error" style="grid-column: span 2;">{{ getError('operations', index, 'returnType') }}</span>
+            <span v-if="getError({parameter:'operations', index:index, child:{parameter:'returnType'}})"
+                  class="error" style="grid-column: span 2;">
+              {{ getError({parameter:'operations', index:index, child:{parameter:'returnType'} }) }}
+            </span>
 
             <label :for="`operationStatic${index}`">Static: </label>
             <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">
@@ -112,9 +141,21 @@
             <div class="grid-form">
               <label :for="`returnMultiUpper${index}`">Upper: </label>
               <input :id="`returnMultiUpper${index}`" type="text" v-model="operation.returnMultiplicity.upper">
+              <span v-if="getError({parameter: 'operations', index: index, child:
+                      {parameter: 'returnMultiplicity', child: {parameter: 'upper'}}})"
+                    class="error" style="grid-column: span 2;">
+                {{ getError({parameter: 'operations', index: index, child:
+                  {parameter: 'returnMultiplicity', child: {parameter: 'upper'} } }) }}
+              </span>
 
               <label :for="`returnMultiLower${index}`">Lower: </label>
               <input :id="`returnMultiLower${index}`" type="number" v-model="operation.returnMultiplicity.lower">
+              <span v-if="getError({parameter: 'operations', index: index, child:
+                      {parameter: 'returnMultiplicity', child: {parameter: 'lower'}}})"
+                    class="error" style="grid-column: span 2;">
+                {{ getError({parameter: 'operations', index: index, child:
+                  {parameter: 'returnMultiplicity', child: {parameter: 'lower'} } }) }}
+              </span>
             </div>
           </fieldset>
 
@@ -122,7 +163,8 @@
             <legend>Parameters</legend>
 
             <div :id="`parameter${index}${pIndex}`" class="collapsed" v-for="(param, pIndex) in operation.params" :key="pIndex">
-              <div @click="onCollapseClicked('param', pIndex, index)" class="header">
+              <div @click="onCollapseClicked('param', pIndex, index)" class="header"
+                   :class="{ 'error-header': getError({parameter: 'operations', index: index, child: {parameter: 'params', index: pIndex}}) }">
                 <span>{{ param.toString() }}</span>
               </div>
               
@@ -130,12 +172,31 @@
                 <div class="grid-form">
                   <label :for="`paramName${index}${pIndex}`">Name: </label>
                   <input :id="`paramName${index}${pIndex}`" type="text" v-model="param.name">
+                  <span v-if="getError({parameter: 'operations', index: index, child:
+                          {parameter: 'params', index: pIndex, child: {parameter: 'name'}}})"
+                        class="error" style="grid-column: span 2;">
+                    {{ getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'name'} } }) }}
+                  </span>
 
                   <label :for="`paramType${index}${pIndex}`">Type: </label>
                   <input :id="`paramType${index}${pIndex}`" type="text" v-model="param.type">
+                  <span v-if="getError({parameter: 'operations', index: index, child:
+                          {parameter: 'params', index: pIndex, child: {parameter: 'type'}}})"
+                        class="error" style="grid-column: span 2;">
+                    {{ getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'type'} } }) }}
+                  </span>
+
 
                   <label :for="`paramDefault${index}${pIndex}`">Default value: </label>
                   <input :id="`paramDefault${index}${pIndex}`" type="text" v-model="param.defaultValue">
+                  <span v-if="getError({parameter: 'operations', index: index, child:
+                          {parameter: 'params', index: pIndex, child: {parameter: 'defaultValue'}}})"
+                        class="error" style="grid-column: span 2;">
+                    {{ getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'defaultValue'} } }) }}
+                  </span>
 
                   <label :for="`paramDirection${index}${pIndex}`">Direction: </label>
                   <select :id="`paramDirection${index}${pIndex}`" v-model="param.direction">
@@ -153,6 +214,12 @@
                     <option value="nonunique">nonunique</option>
                     <option value="sequence">sequence</option>
                   </select>
+                  <span v-if="getError({parameter: 'operations', index: index, child:
+                          {parameter: 'params', index: pIndex, child: {parameter: 'properties'}}})"
+                        class="error" style="grid-column: span 2;">
+                    {{ getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'properties'} } }) }}
+                  </span>
                 </div>
 
                 <fieldset>
@@ -160,9 +227,25 @@
                   <div class="grid-form">
                     <label :for="`paramMultiUpper${index}${pIndex}`">Upper: </label>
                     <input :id="`paramMultiUpper${index}${pIndex}`" type="text" v-model="param.multiplicity.upper">
+                    <span v-if="getError({parameter: 'operations', index: index, child:
+                            {parameter: 'params', index: pIndex, child: 
+                              {parameter: 'multiplicity', child: {parameter: 'upper'}}}})"
+                          class="error" style="grid-column: span 2;">
+                      {{ getError({parameter: 'operations', index: index, child:
+                        {parameter: 'params', index: pIndex, child: 
+                          {parameter: 'multiplicity', child: {parameter: 'upper'} } } }) }}
+                    </span>
 
                     <label :for="`paramMultiLower${index}${pIndex}`">Lower: </label>
                     <input :id="`paramMultiLower${index}${pIndex}`" type="number" v-model="param.multiplicity.lower">
+                    <span v-if="getError({parameter: 'operations', index: index, child:
+                            {parameter: 'params', index: pIndex, child: 
+                              {parameter: 'multiplicity', child: {parameter: 'lower'}}}})"
+                          class="error" style="grid-column: span 2;">
+                      {{ getError({parameter: 'operations', index: index, child:
+                        {parameter: 'params', index: pIndex, child:
+                          {parameter: 'multiplicity', child: {parameter: 'lower'} } } }) }}
+                    </span>
                   </div>
                 </fieldset>
 
