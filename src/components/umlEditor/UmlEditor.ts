@@ -60,6 +60,9 @@ export default {
 
             if (data.type === 'class' && selectedNode.value instanceof ClassNode) {
                 selectedNode.value.name = data.name;
+                selectedNode.value.hasAbstractFlag = data.hasAbstractFlag;
+                selectedNode.value.isNotShownPropertiesExist = data.hasNotShownProperties;
+                selectedNode.value.isNotShownOperationsExist = data.hasNotShownOperations;
                 selectedNode.value.x = data.x;
                 selectedNode.value.y = data.y;
 
@@ -97,6 +100,9 @@ export default {
                     x: node.x,
                     y: node.y,
                     name: node.name,
+                    hasAbstractFlag: node.isAbstract,
+                    hasNotShownProperties: node.isNotShownPropertiesExist,
+                    hasNotShownOperations: node.isNotShownOperationsExist,
                     properties: node.properties,
                     operations: node.operations,
                     errors: node.validate()

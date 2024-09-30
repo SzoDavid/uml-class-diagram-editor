@@ -5,6 +5,9 @@ export interface ClassNodeData {
     x: number;
     y: number;
     name: string;
+    hasAbstractFlag: boolean;
+    hasNotShownProperties: boolean;
+    hasNotShownOperations: boolean;
     properties: Property[];
     operations: Operation[];
     errors: InvalidNodeParameterCause[];

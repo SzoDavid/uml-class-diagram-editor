@@ -19,6 +19,9 @@
       <label for="className">Class Name: </label>
       <input id="className" type="text" v-model="data['name']">
       <span v-if="getError({parameter: 'name'})" class="error" style="grid-column: span 2;">{{ getError({parameter: 'name'}) }}</span>
+
+      <label for="classAbstract">Abstract: </label>
+      <input id="classAbstract" type="checkbox" v-model="data['hasAbstractFlag']">
     </div>
 
     <fieldset>
@@ -93,6 +96,12 @@
           <button class="rm" @click="onRemoveClicked('prop', index)">Remove</button>
         </div>
       </div>
+
+      <div class="grid-form">
+        <label for="hasNotShownProperties">Not shown properties: </label>
+        <input id="hasNotShownProperties" type="checkbox" v-model="data['hasNotShownProperties']">
+      </div>
+
       <button @click="onAddClicked('prop')">Add</button>
     </fieldset>
 
@@ -259,6 +268,12 @@
           <button class="rm" @click="onRemoveClicked('operation', index)">Remove</button>
         </div>
       </div>
+
+      <div class="grid-form">
+        <label for="hasNotShownOperations">Not shown properties: </label>
+        <input id="hasNotShownOperations" type="checkbox" v-model="data['hasNotShownOperations']">
+      </div>
+
       <button @click="onAddClicked('operation')">Add</button>
     </fieldset>
   </fieldset>

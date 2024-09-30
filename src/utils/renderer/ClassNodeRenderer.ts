@@ -24,7 +24,7 @@ export class ClassNodeRenderer extends NodeRenderer {
             isSelected: node.isSelected,
             isInvalid: invalid,
             textWeight: 'bold',
-            italic: node.isAbstract(),
+            italic: node.isAbstract,
             textAlign: 'center'
         });
 

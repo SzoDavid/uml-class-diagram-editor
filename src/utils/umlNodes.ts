@@ -301,19 +301,30 @@ export class ClassNode extends Node {
     name: string;
     properties: Property[];
     operations: Operation[];
+    isNotShownPropertiesExist: boolean;
+    isNotShownOperationsExist: boolean;
+    hasAbstractFlag: boolean;
 
     constructor(name: string,
                 x: number,
                 y: number,
                 properties: Property[]=[],
-                operations: Operation[]=[]) {
+                operations: Operation[]=[],
+                isNotShownPropertiesExist: boolean = false,
+                isNotShownOperationsExist: boolean = false,
+                isAbstract: boolean = false) {
         super(x, y);
         this.name = name;
         this.properties = properties;
         this.operations = operations;
+        this.isNotShownPropertiesExist = isNotShownPropertiesExist;
+        this.isNotShownOperationsExist = isNotShownOperationsExist;
+        this.hasAbstractFlag = isAbstract;
     }
 
-    public isAbstract(): boolean {
+    public get isAbstract(): boolean {
+        if (this.hasAbstractFlag) return true;
+
         for (const operation of this.operations) {
             if (operation.isAbstract) return true;
         }
