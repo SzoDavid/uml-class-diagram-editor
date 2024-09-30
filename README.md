@@ -1,4 +1,4 @@
-# UML Class Diagram Editor 
+# UML Class Diagram Editor
 
 My degree thesis work
 
@@ -20,5 +20,5 @@ Then the site will be accessible at [localhost:80](http://localhost:80)
 
 ## References
 
-[uml-diagrams.org Authored by Kirill Fakhroutdinov](https://www.uml-diagrams.org/class-diagrams-overview.html)
+[uml-diagrams.org Authored by Kirill Fakhroutdinov](https://www.uml-diagrams.org/class-diagrams-overview.html)  
 [UML 2.5.1 specifications](https://www.omg.org/spec/UML/2.5.1/PDF)

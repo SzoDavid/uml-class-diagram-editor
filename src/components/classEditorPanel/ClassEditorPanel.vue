@@ -270,7 +270,7 @@
       </div>
 
       <div class="grid-form">
-        <label for="hasNotShownOperations">Not shown properties: </label>
+        <label for="hasNotShownOperations">Not shown operations: </label>
         <input id="hasNotShownOperations" type="checkbox" v-model="data['hasNotShownOperations']">
       </div>
 
