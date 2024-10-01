@@ -148,6 +148,19 @@
               {{ getError({parameter:'operations', index:index, child:{parameter:'isAbstract'} }) }}
             </span>
 
+            <label :for="`operationRedefines${index}`">Redefines: </label>
+            <input :id="`operationRedefines${index}`" type="text" v-model="operation.redefines">
+
+            <label :for="`operationProperties${index}`">Properties: </label>
+            <select :id="`operationProperties${index}`" v-model="operation.properties" multiple>
+              <option value="query">Query</option>
+              <option value="ordered">Ordered</option>
+              <option value="unique">Unique</option>
+            </select>
+            <span v-if="getError({parameter:'operations', index:index, child:{parameter:'properties'}})"
+                  class="error" style="grid-column: span 2;">
+              {{ getError({parameter:'operations', index:index, child:{parameter:'properties'} }) }}
+            </span>
           </div>
 
           <fieldset>

@@ -9,6 +9,7 @@ export enum Visibility {
 
 export type Direction = 'in'|'out'|'inout';
 export type ParameterProperty = 'ordered'|'unordered'|'unique'|'nonunique'|'sequence';
+export type OperationProperty = 'query'|'ordered'|'unique';
 
 export interface InvalidNodeParameterCause {
     parameter: string;
@@ -271,8 +272,9 @@ export class Operation {
     returnType: string|null;
     returnMultiplicity: MultiplicityRange|null;
     isStatic: boolean;
-    isAbstract: boolean; // NOTE: at validation it can be either static or abstract
-    //TODO: oper-property
+    isAbstract: boolean;
+    properties: OperationProperty[];
+    redefines: string|null;
 
     constructor(name: string,
                 params: Parameter[] = [],
@@ -280,7 +282,9 @@ export class Operation {
                 returnType: string|null = null,
                 returnMultiplicity: MultiplicityRange|null = null,
                 isStatic: boolean = false,
-                isAbstract: boolean = false) {
+                isAbstract: boolean = false,
+                properties: OperationProperty[] = [],
+                redefines: string|null = null) {
         this.name = name;
         this.params = params;
         this.visibility = visibility;
@@ -288,6 +292,8 @@ export class Operation {
         this.returnMultiplicity = returnMultiplicity;
         this.isStatic = isStatic;
         this.isAbstract = isAbstract;
+        this.properties = properties;
+        this.redefines = redefines; // TODO: validate when connections are implemented
     }
 
     get prefix() {
@@ -298,7 +304,14 @@ export class Operation {
         let postfix = `(${this.params.join(', ')})`;
         if (this.returnType) postfix += `: ${this.returnType}`;
         if (this.returnMultiplicity && this.returnMultiplicity.upper) postfix += `[${this.returnMultiplicity.toString()}]`;
-        if (this.isAbstract) postfix += ' {abstract}';
+
+        const props = [];
+        if (this.isAbstract) props.push('abstract');
+        if (this.redefines) props.push(`redefines ${this.redefines}`);
+
+        if (this.properties.length > 0) props.push(...this.properties);
+
+        if (props.length > 0) postfix += ` {${props.join(', ')}}`;
 
         return postfix;
     }
@@ -334,6 +347,10 @@ export class Operation {
                 errors.push({parameter: 'returnMultiplicity', message: 'Return multiplicity is invalid', context: multiErrors});
         }
 
+        if ((this.properties.includes('unique') || this.properties.includes('ordered'))
+            && (!this.returnMultiplicity || !this.returnMultiplicity.upper))
+            errors.push({parameter: 'properties', message: 'Parameters "unique" and "ordered" requires multiplicity to be set'});
+
         if (this.isStatic && this.isAbstract)
             errors.push({parameter: 'isAbstract', message: 'Operation cannot be both static and abstract'});
 
@@ -349,6 +366,8 @@ export class Operation {
             this.returnMultiplicity?.clone(),
             this.isStatic,
             this.isAbstract,
+            [...this.properties],
+            this.redefines
         );
     }
 }
