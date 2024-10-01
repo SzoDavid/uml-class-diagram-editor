@@ -1,10 +1,16 @@
 import {onMounted, ref} from 'vue';
 import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/UmlEditorService.ts';
-import {ClassNode, MultiplicityRange, Node, Operation, Parameter, Property, Visibility,} from '../../utils/umlNodes.ts';
 import {DataContext} from '../../utils/types.ts';
 import ClassEditorPanel from '../classEditorPanel/ClassEditorPanel.vue';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
 import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
+import {ANode} from '../../utils/nodes/ANode.ts';
+import {ClassNode} from '../../utils/nodes/ClassNode.ts';
+import {Property} from '../../utils/nodes/features/Property.ts';
+import {Visibility} from '../../utils/nodes/types.ts';
+import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
+import {Operation} from '../../utils/nodes/features/Operation.ts';
+import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 
 export default {
     components: {ClassEditorPanel},
@@ -15,8 +21,8 @@ export default {
     },
     setup() {
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
-        const selectedNode = ref<Node | null>(null);
-        const data = ref<DataContext<Node>>(null);
+        const selectedNode = ref<ANode | null>(null);
+        const data = ref<DataContext<ANode>>(null);
         const tool = ref<UmlEditorTool|null>(null);
         let editor: UmlEditorService;
 
@@ -33,7 +39,7 @@ export default {
             window.addEventListener('keydown', onKeyPress);
 
             editor.emitter.on('mouseDown', (node: EmitType) => {
-                if (!(node instanceof Node) && node !== null) return;
+                if (!(node instanceof ANode) && node !== null) return;
 
                 setSelectedNode(node);
             });
@@ -52,7 +58,7 @@ export default {
                                          [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))]));
         });
 
-        const onSave = (data: DataContext<Node>) => {
+        const onSave = (data: DataContext<ANode>) => {
             if (selectedNode.value === null || data === null) {
                 console.error('Cannot save: no selected node');
                 return;
@@ -60,16 +66,6 @@ export default {
 
             if (data.type === 'class' && selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
                 selectedNode.value.copy(data.instance);
-
-                // data.properties.forEach((property) => {
-                //     if (property.multiplicity === null || property.multiplicity.upper !== null) return;
-                //     property.multiplicity = null;
-                // });
-                //
-                // data.operations.forEach((operation) => operation.params.forEach((param) => {
-                //     if (param.multiplicity === null || param.multiplicity.upper !== null) return;
-                //     param.multiplicity = null;
-                // }));
 
                 editor.render();
                 setSelectedNode(selectedNode.value);
@@ -79,7 +75,7 @@ export default {
             console.error('Unknown or not matching node types');
         };
 
-        const setSelectedNode = (node: Node | null) => {
+        const setSelectedNode = (node: ANode | null) => {
             selectedNode.value = node;
             if (node === null) {
                 data.value = null;

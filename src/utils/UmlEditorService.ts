@@ -1,6 +1,7 @@
 import mitt, {Emitter} from 'mitt';
-import {ClassNode, Node} from './umlNodes.ts';
+import {ANode} from './nodes/ANode.ts';
 import {Renderer} from './renderer/Renderer.ts';
+import {ClassNode} from './nodes/ClassNode.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -9,12 +10,12 @@ export enum UmlEditorTool {
     REMOVE
 }
 
-export type EmitType = Node | UmlEditorTool | null;
+export type EmitType = ANode | UmlEditorTool | null;
 
 export class UmlEditorService {
     private _renderer: Renderer;
-    private _nodes: Node[] = [];
-    private _selectedNode: Node | null = null;
+    private _nodes: ANode[] = [];
+    private _selectedNode: ANode | null = null;
     private _dragOffsetX: number = 0;
     private _dragOffsetY: number = 0;
     private _tool: UmlEditorTool = UmlEditorTool.EDIT;
@@ -58,7 +59,7 @@ export class UmlEditorService {
         this._renderer.render(this._nodes);
     }
 
-    addNode(node: Node): void {
+    addNode(node: ANode): void {
         this._nodes.push(node);
         this.render();
     }
@@ -112,7 +113,7 @@ export class UmlEditorService {
         }
     }
 
-    private getNodeAtPosition(x: number, y: number): Node | null {
+    private getNodeAtPosition(x: number, y: number): ANode | null {
         for (const node of this._nodes) {
             if (
                 x >= node.x &&

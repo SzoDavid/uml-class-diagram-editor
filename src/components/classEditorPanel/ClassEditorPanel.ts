@@ -1,14 +1,11 @@
-import {
-    ClassNode,
-    InvalidNodeParameterCause,
-    MultiplicityRange,
-    Operation,
-    Parameter,
-    Property,
-    Visibility
-} from '../../utils/umlNodes.ts';
 import {ClickContext, DataContext} from '../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
+import {ClassNode} from '../../utils/nodes/ClassNode.ts';
+import {InvalidNodeParameterCause, Visibility} from '../../utils/nodes/types.ts';
+import {Property} from '../../utils/nodes/features/Property.ts';
+import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
+import {Operation} from '../../utils/nodes/features/Operation.ts';
+import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 
 interface ClassEditorPanelProperties {
     classData: DataContext<ClassNode>

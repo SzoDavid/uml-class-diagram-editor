@@ -1,6 +1,7 @@
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {ClassNode, Node} from '../umlNodes.ts';
+import {ANode} from '../nodes/ANode.ts';
 import {ClassNodeRenderer} from './ClassNodeRenderer.ts';
+import {ClassNode} from '../nodes/ClassNode.ts';
 
 export class Renderer {
     private readonly _canvas: HTMLCanvasElement;
@@ -15,7 +16,7 @@ export class Renderer {
         this._classRenderer = new ClassNodeRenderer(this._ctx, this._rc);
     }
 
-    public render(nodes: Node[]): void {
+    public render(nodes: ANode[]): void {
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
         nodes.forEach(node => {
             if (node instanceof ClassNode) {

@@ -1,6 +1,8 @@
 import {NodeRenderer} from './NodeRenderer.ts';
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {ClassNode} from '../umlNodes.ts';
+import {ClassNode} from '../nodes/ClassNode.ts';
+import {Feature} from '../nodes/features/Feature.ts';
+import {IsDecoratedFeature} from '../nodes/features/DecoratedFeature.ts';
 
 export class ClassNodeRenderer extends NodeRenderer {
     constructor(ctx: CanvasRenderingContext2D, renderConfig: RenderConfiguration) {
@@ -28,8 +30,17 @@ export class ClassNodeRenderer extends NodeRenderer {
             textAlign: 'center'
         });
 
-        this.renderProperties(node, invalid);
-        this.renderOperations(node, invalid);
+        this.renderFeatureGroup(
+            node.properties, node.x, node.y + node.height, node.width,
+            node.isSelected, invalid, node.isNotShownPropertiesExist
+        );
+        node.height += this._rc.lineHeight * (node.properties.length + (node.isNotShownPropertiesExist ? 1 : 0));
+
+        this.renderFeatureGroup(
+            node.operations, node.x, node.y + node.height, node.width,
+            node.isSelected, invalid, node.isNotShownOperationsExist
+        );
+        node.height += this._rc.lineHeight * (node.operations.length + (node.isNotShownOperationsExist ? 1 : 0));
     }
 
     private adjustWidth(node: ClassNode): void {
@@ -49,69 +60,40 @@ export class ClassNodeRenderer extends NodeRenderer {
         }
     }
 
-    private renderProperties(node: ClassNode, isInvalid: boolean): void {
-        if (node.properties.length === 0 && !node.isNotShownPropertiesExist) return;
+    private renderFeatureGroup(features: Feature[],
+                               x: number,
+                               y: number,
+                               width: number,
+                               isSelected: boolean,
+                               isInvalid: boolean,
+                               showExtra: boolean): void {
+        if (features.length === 0 && !showExtra) return;
 
-        this.drawRect(node.x,
-                      node.y + this._rc.lineHeight,
-                      node.width,
-                      this._rc.lineHeight * (node.properties.length + (node.isNotShownPropertiesExist ? 1 : 0)),
-                      node.isSelected,
-                      isInvalid);
-        node.height += this._rc.lineHeight * (node.properties.length + (node.isNotShownPropertiesExist ? 1 : 0));
+        this.drawRect(x, y, width,
+                      this._rc.lineHeight * (features.length + (showExtra ? 1 : 0)),
+                      isSelected, isInvalid);
 
-        node.properties.forEach((prop, i) => this.drawText(
-            prop.toString(),
-            node.x,
-            node.y + ((+i + 1) * this._rc.lineHeight),
-            node.width, {
-                isSelected: node.isSelected,
+        features.forEach((feature, i) => this.drawText(
+            feature.toString(),
+            x,
+            y + ((+i) * this._rc.lineHeight),
+            width,
+            {
+                isSelected: isSelected,
                 isInvalid: isInvalid,
-                puc: prop.isStatic ? {prefix: prop.prefix, underlined: prop.name} : null
+                puc: IsDecoratedFeature(feature) && feature.decorator === 'underline' ?
+                    {prefix: feature.prefix, underlined: feature.text} : null
             }));
 
-        if (!node.isNotShownPropertiesExist) return;
+        if (!showExtra) return;
 
         this.drawText(
             '...',
-            node.x,
-            node.y + ((node.properties.length + 1) * this._rc.lineHeight),
-            node.width, {
-                isSelected: node.isSelected,
-                isInvalid: isInvalid
-            }
-        );
-    }
-
-    private renderOperations(node: ClassNode, isInvalid: boolean): void {
-        if (node.operations.length === 0 && !node.isNotShownOperationsExist) return;
-
-        this.drawRect(node.x,
-                      node.y + (this._rc.lineHeight * (node.properties.length + (node.isNotShownPropertiesExist ? 2 : 1))),
-                      node.width,
-                      this._rc.lineHeight * (node.operations.length + (node.isNotShownOperationsExist ? 1 : 0)),
-                      node.isSelected,
-                      isInvalid);
-        node.height += this._rc.lineHeight * (node.operations.length + (node.isNotShownOperationsExist ? 1 : 0));
-
-        node.operations.forEach((operation, i) => this.drawText(
-            operation.toString(),
-            node.x,
-            node.y + (this._rc.lineHeight * ((+i) + node.properties.length + (node.isNotShownPropertiesExist ? 2 : 1))),
-            node.width, {
-                isSelected: node.isSelected,
-                isInvalid: isInvalid,
-                puc: operation.isStatic ? {prefix: operation.prefix, underlined: operation.name} : null
-            }));
-
-        if (!node.isNotShownOperationsExist) return;
-
-        this.drawText(
-            '...',
-            node.x,
-            node.y + (this._rc.lineHeight * (node.operations.length + node.properties.length + (node.isNotShownPropertiesExist ? 2 : 1))),
-            node.width, {
-                isSelected: node.isSelected,
+            x,
+            y + (features.length * this._rc.lineHeight),
+            width,
+            {
+                isSelected: isSelected,
                 isInvalid: isInvalid
             }
         );
