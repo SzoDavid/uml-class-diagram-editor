@@ -24,6 +24,7 @@ export default {
         const selectedNode = ref<ANode | null>(null);
         const data = ref<DataContext<ANode>>(null);
         const tool = ref<UmlEditorTool|null>(null);
+        const scale = ref<number>(100);
         let editor: UmlEditorService;
 
         onMounted(() => {
@@ -50,6 +51,12 @@ export default {
                 tool.value = newTool;
             });
 
+            editor.emitter.on('scaleChange', (newScale: EmitType) => {
+                if (typeof newScale !== 'number') return;
+
+                scale.value = Math.round(newScale * 100);
+            });
+
             editor.addNode(new ClassNode('ClassA', 50, 50,
                                          [new Property('prop', 'type', Visibility.PUBLIC),
                                              new Property('prop2', 'type', Visibility.PUBLIC, false, new MultiplicityRange('*'), 'value', true)],
@@ -73,6 +80,14 @@ export default {
             }
 
             console.error('Unknown or not matching node types');
+        };
+
+        const onScaleSet = () => {
+            editor.scale = scale.value / 100;
+        };
+
+        const onScaleReset = () => {
+            editor.resetScaling();
         };
 
         const setSelectedNode = (node: ANode | null) => {
@@ -140,9 +155,12 @@ export default {
         return {
             umlCanvas,
             data,
+            scale,
             tool,
             onSave,
             onToolSelected,
+            onScaleSet,
+            onScaleReset
         };
     }
 };

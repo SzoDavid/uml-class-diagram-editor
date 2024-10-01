@@ -16,7 +16,7 @@
     </div>
 
     <div>
-      <canvas ref="umlCanvas" width="800" height="900"
+      <canvas ref="umlCanvas" width="800" height="800"
               :class="{ 'canvas-edit': tool === UmlEditorTool.EDIT,
                         'canvas-move': tool === UmlEditorTool.MOVE }" />
     </div>
@@ -26,5 +26,10 @@
         <ClassEditorPanel :classData="data" @save="onSave" />
       </template>
     </div>
+  </div>
+  <div class="editor-footer">
+    <input id="scale" type="number" v-model="scale">
+    <button @click="onScaleSet">Set</button>
+    <button @click="onScaleReset">Reset</button>
   </div>
 </template>

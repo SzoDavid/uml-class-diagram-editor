@@ -10,17 +10,27 @@ export enum UmlEditorTool {
     REMOVE
 }
 
-export type EmitType = ANode | UmlEditorTool | null;
+
+export type EmitReason = 'toolChange'|'scaleChange'|'mouseDown';
+export type EmitType = ANode | UmlEditorTool | number | null;
 
 export class UmlEditorService {
     private _renderer: Renderer;
     private _nodes: ANode[] = [];
     private _selectedNode: ANode | null = null;
-    private _dragOffsetX: number = 0;
-    private _dragOffsetY: number = 0;
     private _tool: UmlEditorTool = UmlEditorTool.EDIT;
 
-    private readonly _emitter: Emitter<Record<string, EmitType>> = mitt();
+    private readonly _emitter: Emitter<Record<EmitReason, EmitType>> = mitt();
+
+    private _dragOffsetX: number = 0;
+    private _dragOffsetY: number = 0;
+
+    private _scale: number = 1;
+    private _isPanning: boolean = false;
+    private _panOffsetX: number = 0;
+    private _panOffsetY: number = 0;
+    private _lastPanX: number = 0;
+    private _lastPanY: number = 0;
 
     constructor(canvas: HTMLCanvasElement, renderer: Renderer) {
         this._renderer = renderer;
@@ -28,6 +38,7 @@ export class UmlEditorService {
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
         canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
+        canvas.addEventListener('wheel', this.onMouseWheel.bind(this));
 
         this.render();
     }
@@ -55,8 +66,12 @@ export class UmlEditorService {
         this._emitter.emit('toolChange', tool);
     }
 
+    public set scale(scale: number) {
+        this._scale = Math.max(scale, 0.1);
+    }
+
     render(): void {
-        this._renderer.render(this._nodes);
+        this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
     }
 
     addNode(node: ANode): void {
@@ -64,14 +79,24 @@ export class UmlEditorService {
         this.render();
     }
 
+    resetScaling(): void {
+        this._scale = 1;
+        this._panOffsetX = 0;
+        this._panOffsetY = 0;
+
+        this._emitter.emit('scaleChange', this._scale);
+
+        this.render();
+    }
+
     private onMouseDown(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
         if (this._tool === UmlEditorTool.ADD_CLASS) {
-            this.addNode(new ClassNode('Class', offsetX, offsetY));
+            this.addNode(new ClassNode('Class', (offsetX - this._panOffsetX) / this._scale,
+                                       (offsetY - this._panOffsetY) / this._scale));
             return;
         }
-
         this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
 
         if (this._tool === UmlEditorTool.EDIT)
@@ -94,11 +119,17 @@ export class UmlEditorService {
             }
         } else {
             this._nodes.forEach(node => (node.isSelected = false));
+            this._isPanning = true;
+            this._lastPanX = offsetX;
+            this._lastPanY = offsetY;
+            return;
         }
         this.render();
     }
 
     private onMouseUp(): void {
+        this._isPanning = false;
+
         if (this._selectedNode) {
             this._selectedNode.isDragging = false;
         }
@@ -106,21 +137,59 @@ export class UmlEditorService {
     }
 
     private onMouseMove(event: MouseEvent): void {
-        if (this._selectedNode && this._selectedNode.isDragging) {
-            const { offsetX, offsetY } = event;
+        const { offsetX, offsetY } = event;
+
+        if (this._tool === UmlEditorTool.MOVE && this._selectedNode && this._selectedNode.isDragging) {
             this._selectedNode.x = offsetX - this._dragOffsetX;
             this._selectedNode.y = offsetY - this._dragOffsetY;
+            this.render();
+            return;
+        }
+
+        if (this._isPanning) {
+            this._panOffsetX += offsetX - this._lastPanX;
+            this._panOffsetY += offsetY - this._lastPanY;
+            this._lastPanX = offsetX;
+            this._lastPanY = offsetY;
             this.render();
         }
     }
 
+    private onMouseWheel(event: WheelEvent): void {
+        event.preventDefault();
+        const zoomFactor = 0.1;
+
+        const zoomChange = event.deltaY < 0 ? zoomFactor : -zoomFactor;
+        let newZoomLevel = this._scale + zoomChange;
+
+        if (newZoomLevel < 0.1) {
+            newZoomLevel = 0.1;
+        }
+
+        const { offsetX, offsetY } = event;
+
+        const worldX = (offsetX - this._panOffsetX) / this._scale;
+        const worldY = (offsetY - this._panOffsetY) / this._scale;
+
+        this._panOffsetX -= (worldX * (newZoomLevel - this._scale));
+        this._panOffsetY -= (worldY * (newZoomLevel - this._scale));
+
+        this._scale = newZoomLevel;
+        this._emitter.emit('scaleChange', this._scale);
+
+        this.render();
+    }
+
     private getNodeAtPosition(x: number, y: number): ANode | null {
+        const transformedX = (x - this._panOffsetX) / this._scale;
+        const transformedY = (y - this._panOffsetY) / this._scale;
+
         for (const node of this._nodes) {
             if (
-                x >= node.x &&
-                x <= node.x + node.width &&
-                y >= node.y &&
-                y <= node.y + node.height
+                transformedX >= node.x &&
+                transformedX <= node.x + node.width &&
+                transformedY >= node.y &&
+                transformedY <= node.y + node.height
             ) {
                 return node;
             }
