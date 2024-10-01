@@ -16,7 +16,7 @@ export default {
     setup() {
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
-        const data = ref<DataContext>(null);
+        const data = ref<DataContext<Node>>(null);
         const tool = ref<UmlEditorTool|null>(null);
         let editor: UmlEditorService;
 
@@ -52,19 +52,14 @@ export default {
                                          [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))]));
         });
 
-        const onSave = (data: DataContext) => {
+        const onSave = (data: DataContext<Node>) => {
             if (selectedNode.value === null || data === null) {
                 console.error('Cannot save: no selected node');
                 return;
             }
 
-            if (data.type === 'class' && selectedNode.value instanceof ClassNode) {
-                selectedNode.value.name = data.name;
-                selectedNode.value.hasAbstractFlag = data.hasAbstractFlag;
-                selectedNode.value.isNotShownPropertiesExist = data.hasNotShownProperties;
-                selectedNode.value.isNotShownOperationsExist = data.hasNotShownOperations;
-                selectedNode.value.x = data.x;
-                selectedNode.value.y = data.y;
+            if (data.type === 'class' && selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
+                selectedNode.value.copy(data.instance);
 
                 // data.properties.forEach((property) => {
                 //     if (property.multiplicity === null || property.multiplicity.upper !== null) return;
@@ -75,9 +70,6 @@ export default {
                 //     if (param.multiplicity === null || param.multiplicity.upper !== null) return;
                 //     param.multiplicity = null;
                 // }));
-
-                selectedNode.value.properties = data.properties;
-                selectedNode.value.operations = data.operations;
 
                 editor.render();
                 setSelectedNode(selectedNode.value);
@@ -95,28 +87,22 @@ export default {
             }
 
             if (node instanceof ClassNode) {
-                data.value = {
-                    type: 'class',
-                    x: node.x,
-                    y: node.y,
-                    name: node.name,
-                    hasAbstractFlag: node.isAbstract,
-                    hasNotShownProperties: node.isNotShownPropertiesExist,
-                    hasNotShownOperations: node.isNotShownOperationsExist,
-                    properties: node.properties,
-                    operations: node.operations,
-                    errors: node.validate()
-                };
+                const classNode = node.clone();
 
-                data.value.properties.forEach((property) => {
+                classNode.properties.forEach((property) => {
                     if (property.multiplicity !== null) return;
                     property.multiplicity = new MultiplicityRange(null);
                 });
 
-                data.value.operations.forEach((operation) => operation.params.forEach((param) => {
+                classNode.operations.forEach((operation) => operation.params.forEach((param) => {
                     if (param.multiplicity !== null) return;
                     param.multiplicity = new MultiplicityRange(null);
                 }));
+
+                data.value = {
+                    type: 'class',
+                    instance: classNode
+                };
 
                 return;
             }

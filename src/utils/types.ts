@@ -1,17 +1,9 @@
-import {InvalidNodeParameterCause, Operation, Property} from './umlNodes.ts';
+import {Node} from './umlNodes.ts';
 
-export interface ClassNodeData {
+export interface NodeData<T extends Node> {
     type: 'class';
-    x: number;
-    y: number;
-    name: string;
-    hasAbstractFlag: boolean;
-    hasNotShownProperties: boolean;
-    hasNotShownOperations: boolean;
-    properties: Property[];
-    operations: Operation[];
-    errors: InvalidNodeParameterCause[];
+    instance: T;
 }
 
-export type DataContext = ClassNodeData | null;
+export type DataContext<T extends Node> = NodeData<T> | null;
 export type ClickContext = 'prop' | 'operation' | 'param';

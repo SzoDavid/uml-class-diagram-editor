@@ -17,7 +17,7 @@ export interface InvalidNodeParameterCause {
     context?: InvalidNodeParameterCause[]
 }
 
-export class Node {
+export abstract class Node {
     isSelected: boolean = false;
     isDragging: boolean = false;
     height: number = 0;
@@ -26,14 +26,14 @@ export class Node {
     x: number;
     y: number;
 
-    constructor(x: number, y: number) {
+    protected constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
 
-    validate(): InvalidNodeParameterCause[] {
-        return [];
-    }
+    abstract validate(): InvalidNodeParameterCause[];
+    abstract clone(): Node;
+    abstract copy(node: Node): void;
 }
 
 /**
@@ -60,18 +60,30 @@ export class MultiplicityRange {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.upper === null) {
+        if (this.upper === null || this.upper.valueOf() === '') {
             return errors;
         }
 
-        if (this.upper !== '*' && this.upper <= 0) errors.push({parameter: 'upper', message: 'Upper limit must be larger than 0'});
+        if (isNaN(+this.upper) && this.upper !== '*')
+            errors.push({parameter: 'upper', message: 'The only acceptable non-numeric value is "*"'});
+
+        if (this.upper !== '*' && this.upper <= 0)
+            errors.push({parameter: 'upper', message: 'Upper limit must be larger than 0'});
 
         if (this.lower !== null) {
-            if (this.lower < 0) errors.push({parameter: 'lower', message: 'Lower limit must be at least 0'});
-            if (this.upper !== '*' && this.lower >= this.upper) errors.push({parameter: 'lower', message: 'Lower limit must be less than upper'});
+            if (this.lower < 0)
+                errors.push({parameter: 'lower', message: 'Lower limit must be at least 0'});
+            if (this.upper !== '*' && this.lower >= this.upper)
+                errors.push({parameter: 'lower', message: 'Lower limit must be less than upper'});
         }
 
         return errors;
+    }
+
+    clone(): MultiplicityRange {
+        if (this.upper === null || (isNaN(+this.upper) && this.upper !== '*'))
+            return new MultiplicityRange(null, null);
+        return new MultiplicityRange(this.upper, this.lower);
     }
 }
 
@@ -147,6 +159,18 @@ export class Property {
 
         return errors;
     }
+
+    clone(): Property {
+        return new Property(
+            this.name,
+            this.type,
+            this.visibility,
+            this.isDerived,
+            this.multiplicity?.clone(),
+            this.defaultValue,
+            this.isStatic
+        );
+    }
 }
 
 /**
@@ -221,6 +245,17 @@ export class Parameter {
 
         return errors;
     }
+
+    clone(): Parameter {
+        return new Parameter(
+            this.name,
+            this.type,
+            this.direction,
+            this.multiplicity?.clone(),
+            this.defaultValue,
+            [...this.properties]
+        );
+    }
 }
 
 /**
@@ -275,25 +310,46 @@ export class Operation {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
-        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+        if (this.name === '')
+            errors.push({parameter: 'name', message: 'Name is required'});
+        else if (!Validator.isAlphanumeric(this.name))
+            errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
 
         if (this.returnType) {
-            if (this.returnType === '') errors.push({parameter: 'returnType', message: 'Return type is required'});
-            else if (!Validator.isAlphanumeric(this.returnType)) errors.push({parameter: 'returnType', message: 'Return type must be alphanumeric'});
+            if (this.returnType === '')
+                errors.push({parameter: 'returnType', message: 'Return type is required'});
+            else if (!Validator.isAlphanumeric(this.returnType))
+                errors.push({parameter: 'returnType', message: 'Return type must be alphanumeric'});
         }
 
         this.params.forEach((param, i) => {
             const paramErrors = param.validate();
-            if (paramErrors.length > 0) errors.push({parameter: 'params', index: i, message: 'Parameter is invalid', context: paramErrors});
+            if (paramErrors.length > 0)
+                errors.push({parameter: 'params', index: i, message: 'Parameter is invalid', context: paramErrors});
         });
 
         if (this.returnMultiplicity) {
             const multiErrors = this.returnMultiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'returnMultiplicity', message: 'Return multiplicity is invalid', context: multiErrors});
+            if (multiErrors.length > 0)
+                errors.push({parameter: 'returnMultiplicity', message: 'Return multiplicity is invalid', context: multiErrors});
         }
 
+        if (this.isStatic && this.isAbstract)
+            errors.push({parameter: 'isAbstract', message: 'Operation cannot be both static and abstract'});
+
         return errors;
+    }
+
+    clone(): Operation {
+        return new Operation(
+            this.name,
+            this.params.map(param => param.clone()),
+            this.visibility,
+            this.returnType,
+            this.returnMultiplicity?.clone(),
+            this.isStatic,
+            this.isAbstract,
+        );
     }
 }
 
@@ -348,5 +404,36 @@ export class ClassNode extends Node {
         });
 
         return errors;
+    }
+
+    clone(): ClassNode {
+        const clone = new ClassNode(
+            this.name,
+            this.x,
+            this.y,
+            this.properties.map(prop => prop.clone()),
+            this.operations.map(operation => operation.clone()),
+            this.isNotShownPropertiesExist,
+            this.isNotShownOperationsExist,
+            this.isAbstract
+        );
+
+        clone.isSelected = this.isSelected;
+        clone.isDragging = this.isDragging;
+        clone.height = this.height;
+        clone.width = this.width;
+
+        return clone;
+    }
+
+    copy(node: ClassNode) {
+        this.name = node.name;
+        this.x = node.x;
+        this.y = node.y;
+        this.properties = node.properties.map(prop => prop.clone());
+        this.operations = node.operations.map(operation => operation.clone());
+        this.isNotShownPropertiesExist = node.isNotShownPropertiesExist;
+        this.isNotShownOperationsExist = node.isNotShownOperationsExist;
+        this.hasAbstractFlag = node.isAbstract;
     }
 }

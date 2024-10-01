@@ -6,10 +6,10 @@
     <legend>Appearance</legend>
     <div class="grid-form">
       <label for="x">x: </label>
-      <input id="x" type="number" v-model="data['x']">
+      <input id="x" type="number" v-model="data['instance'].x">
 
       <label for="y">y: </label>
-      <input id="y" type="number" v-model="data['y']">
+      <input id="y" type="number" v-model="data['instance'].y">
     </div>
   </fieldset>
 
@@ -17,16 +17,16 @@
     <legend>Details</legend>
     <div class="grid-form">
       <label for="className">Class Name: </label>
-      <input id="className" type="text" v-model="data['name']">
+      <input id="className" type="text" v-model="data['instance'].name">
       <span v-if="getError({parameter: 'name'})" class="error" style="grid-column: span 2;">{{ getError({parameter: 'name'}) }}</span>
 
       <label for="classAbstract">Abstract: </label>
-      <input id="classAbstract" type="checkbox" v-model="data['hasAbstractFlag']">
+      <input id="classAbstract" type="checkbox" v-model="data['instance'].hasAbstractFlag">
     </div>
 
     <fieldset>
       <legend>Properties</legend>
-      <div :id="`property${index}`" class="collapsed" v-for="(prop, index) in data['properties']" :key="index">
+      <div :id="`property${index}`" class="collapsed" v-for="(prop, index) in data['instance'].properties" :key="index">
         <div @click="onCollapseClicked('prop', index)" class="header"
              :class="{ 'error-header': getError({parameter: 'properties', index: index}) }">
           <span>{{ prop.toString() }}</span>
@@ -99,7 +99,7 @@
 
       <div class="grid-form">
         <label for="hasNotShownProperties">Not shown properties: </label>
-        <input id="hasNotShownProperties" type="checkbox" v-model="data['hasNotShownProperties']">
+        <input id="hasNotShownProperties" type="checkbox" v-model="data['instance'].isNotShownPropertiesExist">
       </div>
 
       <button @click="onAddClicked('prop')">Add</button>
@@ -107,7 +107,7 @@
 
     <fieldset>
       <legend>Operations</legend>
-      <div :id="`operation${index}`" class="collapsed" v-for="(operation, index) in data['operations']" :key="index">
+      <div :id="`operation${index}`" class="collapsed" v-for="(operation, index) in data['instance'].operations" :key="index">
         <div @click="onCollapseClicked('operation', index)" class="header"
              :class="{ 'error-header': getError({parameter: 'operations', index: index}) }">
           <span>{{ operation.toString() }}</span>
@@ -143,6 +143,11 @@
 
             <label :for="`operationAbstract${index}`">Abstract: </label>
             <input :id="`operationAbstract${index}`" type="checkbox" v-model="operation.isAbstract">
+            <span v-if="getError({parameter:'operations', index:index, child:{parameter:'isAbstract'}})"
+                  class="error" style="grid-column: span 2;">
+              {{ getError({parameter:'operations', index:index, child:{parameter:'isAbstract'} }) }}
+            </span>
+
           </div>
 
           <fieldset>
@@ -271,7 +276,7 @@
 
       <div class="grid-form">
         <label for="hasNotShownOperations">Not shown operations: </label>
-        <input id="hasNotShownOperations" type="checkbox" v-model="data['hasNotShownOperations']">
+        <input id="hasNotShownOperations" type="checkbox" v-model="data['instance'].isNotShownOperationsExist">
       </div>
 
       <button @click="onAddClicked('operation')">Add</button>

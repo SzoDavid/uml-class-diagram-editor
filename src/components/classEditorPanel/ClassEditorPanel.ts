@@ -1,4 +1,5 @@
 import {
+    ClassNode,
     InvalidNodeParameterCause,
     MultiplicityRange,
     Operation,
@@ -10,11 +11,11 @@ import {ClickContext, DataContext} from '../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
 
 interface ClassEditorPanelProperties {
-    classData: DataContext
+    classData: DataContext<ClassNode>
 }
 
 interface ClassEditorPanelEmits {
-    (e: 'save', data: DataContext): void;
+    (e: 'save', data: DataContext<ClassNode>): void;
 }
 
 interface ErrorContext {
@@ -26,7 +27,7 @@ interface ErrorContext {
 export default defineComponent({
     props: {
         classData: {
-            type: Object as () => DataContext,
+            type: Object as () => DataContext<ClassNode>,
             required: true,
         }
     },
@@ -37,8 +38,10 @@ export default defineComponent({
         }
     },
     setup(props: ClassEditorPanelProperties, { emit }: { emit: ClassEditorPanelEmits}) {
-        const data = ref<DataContext>(null);
+        const data = ref<DataContext<ClassNode>>(null);
         const renderKey = ref<number>(0);
+
+        let errors: InvalidNodeParameterCause[] = [];
 
         watch(
             () => props.classData,
@@ -46,6 +49,15 @@ export default defineComponent({
                 data.value = newClassData;
             },
             { immediate: true }
+        );
+
+        watch(
+            data, 
+            (value) => {
+                if (!value) return;
+                errors = value.instance.validate();
+            },
+            { immediate: true, deep: true }
         );
 
         const onSave = () => {
@@ -59,13 +71,13 @@ export default defineComponent({
                 case 'prop': {
                     const prop = new Property('');
                     prop.multiplicity = new MultiplicityRange(null);
-                    data.value.properties.push(prop);
+                    data.value.instance.properties.push(prop);
                     break;
                 }
                 case 'operation': {
                     const operation = new Operation('');
                     operation.returnMultiplicity = new MultiplicityRange(null);
-                    data.value.operations.push(operation);
+                    data.value.instance.operations.push(operation);
                     break;
                 }
                 case 'param': {
@@ -73,7 +85,7 @@ export default defineComponent({
 
                     const param = new Parameter('', '');
                     param.multiplicity = new MultiplicityRange(null);
-                    data.value.operations[parentIndex].params.push(param);
+                    data.value.instance.operations[parentIndex].params.push(param);
                     break;
                 }
             }
@@ -86,14 +98,14 @@ export default defineComponent({
 
             switch (context) {
                 case 'prop':
-                    data.value.properties.splice(index, 1);
+                    data.value.instance.properties.splice(index, 1);
                     break;
                 case 'operation':
-                    data.value.operations.splice(index, 1);
+                    data.value.instance.operations.splice(index, 1);
                     break;
                 case 'param':
                     if (typeof parentIndex !== 'number') return;
-                    data.value.operations[parentIndex].params.splice(index, 1);
+                    data.value.instance.operations[parentIndex].params.splice(index, 1);
                     break;
             }
         };
@@ -125,13 +137,13 @@ export default defineComponent({
         const getError = (context: ErrorContext) => {
             if (data.value === null || data.value.type !== 'class') return null;
 
-            return findError(data.value.errors, context);
+            return findError(errors, context);
         };
 
         const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string|null => {
             let error;
 
-            if (context.index && typeof context.index === 'number') {
+            if (context.index !== undefined && typeof context.index === 'number') {
                 error = errors.find(error =>
                     error.parameter === context.parameter
                     && error.index === context.index);
