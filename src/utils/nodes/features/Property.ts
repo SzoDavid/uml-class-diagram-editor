@@ -1,4 +1,4 @@
-import {InvalidNodeParameterCause, Visibility} from '../types.ts';
+import {InvalidNodeParameterCause, PropertyModifier, Visibility} from '../types.ts';
 import {MultiplicityRange} from './MultiplicityRange.ts';
 import {Validator} from '../../Validator.ts';
 import {DecoratedFeature, Decorator} from './DecoratedFeature.ts';
@@ -18,7 +18,9 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     multiplicity: MultiplicityRange|null;
     defaultValue: string|null;
     isStatic: boolean;
-    // TODO: implement modifiers
+    modifiers: PropertyModifier[]; // TODO: validate when connections are implemented
+    redefines: string|null;
+    subsets: string|null;
 
     omitVisibility: boolean = true;
 
@@ -28,7 +30,10 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
                 isDerived: boolean = false,
                 multiplicity: MultiplicityRange|null = null,
                 defaultValue: string|null = null,
-                isStatic: boolean = false) {
+                isStatic: boolean = false,
+                modifiers: PropertyModifier[] = [],
+                redefines: string|null = null,
+                subsets: string|null = null) {
         this.visibility = visibility;
         this.name = name;
         this.type = type;
@@ -36,6 +41,9 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
         this.multiplicity = multiplicity;
         this.defaultValue = defaultValue;
         this.isStatic = isStatic;
+        this.modifiers = modifiers;
+        this.redefines = redefines;
+        this.subsets = subsets;
     }
 
     get prefix(): string {
@@ -51,6 +59,14 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
         if (this.type) postfix += `: ${this.type}`;
         if (this.multiplicity && this.multiplicity.upper) postfix += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) postfix += ` = ${this.defaultValue}`;
+
+        const mods = [];
+        if (this.redefines) mods.push(`redefines ${this.redefines}`);
+        if (this.subsets) mods.push(`subsets ${this.subsets}`);
+
+        if (this.modifiers.length > 0) mods.push(...this.modifiers);
+
+        if (mods.length > 0) postfix += ` {${mods.join(', ')}}`;
 
         return postfix;
     }
@@ -96,7 +112,10 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
             this.isDerived,
             this.multiplicity?.clone(),
             this.defaultValue,
-            this.isStatic
+            this.isStatic,
+            [...this.modifiers],
+            this.redefines,
+            this.subsets
         );
     }
 }

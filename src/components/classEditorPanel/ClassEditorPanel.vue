@@ -68,6 +68,22 @@
 
             <label :for="`propDerived${index}`">Derived: </label>
             <input type="checkbox" :id="`propDerived${index}`" v-model="prop.isDerived">
+
+            <label :for="`propRedefines${index}`">Redefines: </label>
+            <input :id="`propRedefines${index}`" type="text" v-model="prop.redefines">
+
+            <label :for="`propSubsets${index}`">Subsets: </label>
+            <input :id="`propSubsets${index}`" type="text" v-model="prop.subsets">
+
+            <label :for="`propModifiers${index}`">Modifiers: </label>
+            <select :id="`propModifiers${index}`" v-model="prop.modifiers" multiple>
+              <option value="id">id</option>
+              <option value="readonly">readonly</option>
+              <option value="unique">unique</option>
+              <option value="nonunique">nonunique</option>
+              <option value="sequence">sequence</option>
+              <option value="union">union</option>
+            </select>
           </div>
 
           <fieldset>

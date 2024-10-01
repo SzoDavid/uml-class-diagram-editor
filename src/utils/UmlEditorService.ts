@@ -69,18 +69,19 @@ export class UmlEditorService {
 
         if (this._tool === UmlEditorTool.ADD_CLASS) {
             this.addNode(new ClassNode('Class', offsetX, offsetY));
+            return;
         }
 
         this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
+
+        if (this._tool === UmlEditorTool.EDIT)
+            this._emitter.emit('mouseDown', this._selectedNode);
 
         if (this._selectedNode) {
             this._nodes.forEach(node => (node.isSelected = false));
             this._selectedNode.isSelected = true;
 
             switch (this._tool) {
-                case UmlEditorTool.EDIT:
-                    this._emitter.emit('mouseDown', this._selectedNode);
-                    break;
                 case UmlEditorTool.MOVE:
                     this._selectedNode.isDragging = true;
                     this._dragOffsetX = offsetX - this._selectedNode.x;
