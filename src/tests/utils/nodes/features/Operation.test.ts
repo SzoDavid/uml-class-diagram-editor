@@ -123,4 +123,30 @@ describe('UCDE-Operation', () => {
             });
         });
     });
+
+    describe('UCDE-O-0600-toMultilineString', () => {
+        describe('UCDE-O-0601 GIVEN valid operation WHEN toMultilineString() THEN return expected value', () => {
+            test.each([
+                { name: 'op1', params: [new Parameter('param1', 'int')], returnType: 'string', expected: [
+                    { text: 'op1(', tabbed: false },
+                    { text: 'param1: int', tabbed: true},
+                    { text: '): string', tabbed: false}
+                ] },
+                { name: 'op2', params: [new Parameter('param1', 'int'), new Parameter('param2', 'int')], returnType: undefined, expected: [
+                    { text: 'op2(', tabbed: false },
+                    { text: 'param1: int,', tabbed: true},
+                    { text: 'param2: int', tabbed: true},
+                    { text: ')', tabbed: false}
+                ] },
+                { name: 'op3', params: [], returnType: undefined, expected: [
+                    { text: 'op3(', tabbed: false },
+                    { text: ')', tabbed: false}
+                ] },
+            ])('UCDE-O-0601 {name: $name}', ({name, params, returnType, expected}) => {
+                const operation = new Operation(name, params, undefined, returnType);
+                
+                expect(operation.toMultilineString()).toEqual(expected);
+            });
+        });
+    });
 });

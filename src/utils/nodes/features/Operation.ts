@@ -4,6 +4,7 @@ import {MultiplicityRange} from './MultiplicityRange.ts';
 import {Validator} from '../../Validator.ts';
 import {DecoratedFeature, Decorator} from './DecoratedFeature.ts';
 import {FeatureWithVisibility} from './FeatureWithVisibility.ts';
+import {FeatureLine, MultilineFeature} from './MultilineFeature.ts';
 
 /**
  * Based on chapter 9.6.4 of UML 2.5.1 specification.
@@ -11,7 +12,7 @@ import {FeatureWithVisibility} from './FeatureWithVisibility.ts';
  * [<visibility>] <name> ‘(‘ [<parameter-list>] ‘)’ [‘:’ [<return-type>] [‘[‘ <multiplicity-range> ‘]’]
  *  [‘{‘ <oper-property> [‘,’ <oper-property> ]* '}'
  */
-export class Operation implements DecoratedFeature, FeatureWithVisibility {
+export class Operation implements DecoratedFeature, FeatureWithVisibility, MultilineFeature {
     name: string;
     params: Parameter[];
     visibility: Visibility|null;
@@ -53,19 +54,7 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility {
     }
 
     get postfix() {
-        let postfix = `(${this.params.join(', ')})`;
-        if (this.returnType) postfix += `: ${this.returnType}`;
-        if (this.returnMultiplicity.upper) postfix += `[${this.returnMultiplicity.toString()}]`;
-
-        const props = [];
-        if (this.isAbstract) props.push('abstract');
-        if (this.redefines) props.push(`redefines ${this.redefines}`);
-
-        if (this.properties.length > 0) props.push(...this.properties);
-
-        if (props.length > 0) postfix += ` {${props.join(', ')}}`;
-
-        return postfix;
+        return `(${this.params.join(', ')})${this.returnText()}`;
     }
 
     get decorator(): Decorator {
@@ -75,6 +64,25 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility {
 
     toString(): string {
         return `${this.prefix}${this.text}${this.postfix}`;
+    }
+
+    toMultilineString(): FeatureLine[] {
+        const lines = [{
+            text: `${this.prefix}${this.text}(`,
+            tabbed: false
+        }];
+
+        this.params.forEach((param, i) => lines.push({
+            text: `${param.toString()}${ (this.params.length - 1 === i) ? '' : ',' }`,
+            tabbed: true
+        }));
+
+        lines.push({
+            text: `)${this.returnText()}`,
+            tabbed: false
+        });
+
+        return lines;
     }
 
     validate(): InvalidNodeParameterCause[] {
@@ -122,5 +130,22 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility {
             [...this.properties],
             this.redefines
         );
+    }
+
+    returnText(): string {
+        let returnText = '';
+
+        if (this.returnType) returnText += `: ${this.returnType}`;
+        if (this.returnMultiplicity.upper) returnText += `[${this.returnMultiplicity.toString()}]`;
+
+        const props = [];
+        if (this.isAbstract) props.push('abstract');
+        if (this.redefines) props.push(`redefines ${this.redefines}`);
+
+        if (this.properties.length > 0) props.push(...this.properties);
+
+        if (props.length > 0) returnText += ` {${props.join(', ')}}`;
+
+        return returnText;
     }
 }

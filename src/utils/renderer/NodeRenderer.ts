@@ -13,7 +13,8 @@ interface TextProperties {
     textWeight?: TextWeight,
     italic?: boolean,
     textAlign?: CanvasTextAlign,
-    puc?: PartialUnderlineContext|null
+    puc?: PartialUnderlineContext|null,
+    isTabbed?: boolean
 }
 
 export class NodeRenderer {
@@ -47,8 +48,9 @@ export class NodeRenderer {
                            isInvalid = false,
                            textWeight = 'normal',
                            italic = false,
-                           textAlign ='left',
-                           puc = null
+                           textAlign = 'left',
+                           puc = null,
+                           isTabbed = false,
                        }: TextProperties = {}): void {
         this._ctx.beginPath();
         this._ctx.fillStyle = isSelected ? (isInvalid ? this._rc.accentColorInvalidSelected : this._rc.accentColorSelected)
@@ -63,12 +65,12 @@ export class NodeRenderer {
 
         switch (textAlign) {
             case 'center':
-                xDelta = (width / 2);
+                xDelta = (width / 2) + (isTabbed ? this._rc.tabSize : 0);
                 wDelta = -2 * this._rc.lineMargin;
                 uDelta = -1 * this._ctx.measureText(text).width / 2;
                 break;
             case 'left':
-                xDelta = this._rc.lineMargin;
+                xDelta = this._rc.lineMargin + (isTabbed ? this._rc.tabSize : 0);
                 wDelta = -2 * this._rc.lineMargin;
                 break;
         }

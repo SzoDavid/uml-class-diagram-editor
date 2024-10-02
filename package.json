@@ -7,9 +7,8 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "vitest": "vitest --ui",
-    "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "vitest-ui": "vitest --ui",
+    "test": "vitest"
   },
   "dependencies": {
     "mitt": "^3.0.1",

@@ -50,15 +50,36 @@ describe('UCDE-ClassNode', () => {
             expect(classNode.validate()).toEqual([{ parameter: 'name', message: 'Name must be alphanumeric' }]);
         });
 
-        test('UCDE-CN-0303 GIVEN a valid property and an invalid operation WHEN validate() THEN validate both', () => {
-            classNode.properties.push(new MockProperty('validProperty'));
-            classNode.operations.push(new MockOperation('invalid')); // Invalid operation
-            expect(classNode.validate()).toEqual([{
-                parameter: 'operations',
-                index: 0,
-                message: 'Operation is invalid',
-                context: [{ parameter: 'name', message: 'Invalid operation name' }]
-            }]);
+        describe('UCDE-CN-0303 GIVEN an invalid property or operation WHEN validate() THEN validate both', () => {
+            test.each([
+                { property: 'validProperty', operation: 'invalid', expectedErrors: [{
+                    parameter: 'operations',
+                    index: 0,
+                    message: 'Operation is invalid',
+                    context: [{ parameter: 'name', message: 'Invalid operation name' }]}] },
+                { property: 'invalid', operation: 'validOperation', expectedErrors: [{
+                    parameter: 'properties',
+                    index: 0,
+                    message: 'Property is invalid',
+                    context: [{ parameter: 'name', message: 'Invalid property name' }]}] },
+                { property: 'invalid', operation: 'invalid', expectedErrors: [
+                    {
+                        parameter: 'properties',
+                        index: 0,
+                        message: 'Property is invalid',
+                        context: [{ parameter: 'name', message: 'Invalid property name' }]},
+                    {
+                        parameter: 'operations',
+                        index: 0,
+                        message: 'Operation is invalid',
+                        context: [{ parameter: 'name', message: 'Invalid operation name' }]},
+                ]},
+            ])('UCDE-CN-0303 {property: $property, operation: $operation}', ({property, operation, expectedErrors})=> {
+                classNode.properties.push(new MockProperty(property));
+                classNode.operations.push(new MockOperation(operation));
+                expect(classNode.validate()).toEqual(expectedErrors);
+            });
+
         });
     });
 

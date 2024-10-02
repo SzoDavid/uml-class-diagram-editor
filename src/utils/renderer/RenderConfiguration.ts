@@ -3,6 +3,7 @@ export interface RenderConfiguration {
     defaultWidth: number,
     lineHeight: number,
     lineMargin: number,
+    tabSize: number,
     borderSize: number,
     underlineDelta: number,
     underlineWidth: number,
@@ -15,6 +16,7 @@ export interface RenderConfiguration {
     accentColorSelected: string,
     accentColorInvalid: string,
     accentColorInvalidSelected: string,
+    separateObjectParametersWidthLimit: number
 }
 
 export const defaultRenderConfiguration: RenderConfiguration = {
@@ -22,6 +24,7 @@ export const defaultRenderConfiguration: RenderConfiguration = {
     defaultWidth: 100,
     lineHeight: 24,
     lineMargin: 5,
+    tabSize: 10,
     borderSize: 1,
     underlineDelta: -2,
     underlineWidth: 1,
@@ -33,5 +36,6 @@ export const defaultRenderConfiguration: RenderConfiguration = {
     accentColor: '#000',
     accentColorSelected: '#66F',
     accentColorInvalid: '#F00',
-    accentColorInvalidSelected: '#F06'
+    accentColorInvalidSelected: '#F06',
+    separateObjectParametersWidthLimit: 500,
 };
