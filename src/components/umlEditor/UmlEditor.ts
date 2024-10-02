@@ -127,6 +127,8 @@ export default {
                     setSelectedNode(editor.selectedNode);
                     break;
                 case UmlEditorTool.MOVE:
+                    data.value = { type: 'editor', instance: editor.editorConfig };
+                    break;
                 case UmlEditorTool.ADD_CLASS:
                 case UmlEditorTool.REMOVE:
                     data.value = null;
@@ -138,15 +140,23 @@ export default {
 
             switch (event.key) {
                 case 'm':
+                    event.preventDefault();
+                    event.stopPropagation();
                     onToolSelected(UmlEditorTool.MOVE);
                     break;
                 case 'e':
+                    event.preventDefault();
+                    event.stopPropagation();
                     onToolSelected(UmlEditorTool.EDIT);
                     break;
                 case 'c':
+                    event.preventDefault();
+                    event.stopPropagation();
                     onToolSelected(UmlEditorTool.ADD_CLASS);
                     break;
                 case 'r':
+                    event.preventDefault();
+                    event.stopPropagation();
                     onToolSelected(UmlEditorTool.REMOVE);
                     break;
             }

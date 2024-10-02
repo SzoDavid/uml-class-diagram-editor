@@ -31,19 +31,15 @@ export class ClassNodeRenderer extends NodeRenderer {
             textAlign: 'center'
         });
 
-        if (node.name === 'ClassB') console.log('a', node.height);
         node.height += this._rc.lineHeight * this.renderFeatureGroup(
             node.properties, node.x, node.y + node.height, node.width,
             node.isSelected, invalid, node.isNotShownPropertiesExist
         );
 
-        if (node.name === 'ClassB') console.log('b', node.height);
         node.height += this._rc.lineHeight * this.renderFeatureGroup(
             node.operations, node.x, node.y + node.height, node.width,
             node.isSelected, invalid, node.isNotShownOperationsExist
         );
-
-        if (node.name === 'ClassB') console.log('c', node.height);
     }
 
     private adjustWidth(node: ClassNode): void {

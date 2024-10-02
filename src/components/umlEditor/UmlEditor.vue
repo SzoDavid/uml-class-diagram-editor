@@ -23,7 +23,19 @@
 
     <div id="editor" v-if="data !== null">
       <template v-if="data['type']==='class'">
+        <!-- Because of type check it shouldn't have an error -->
         <ClassEditorPanel :classData="data" @save="onSave" />
+      </template>
+      <template v-if="data['type']==='editor'">
+        <fieldset>
+          <legend>Options</legend>
+          <label for="gridSize">Grid size: </label>
+          <select id="gridSize" v-model="data['instance']['gridSize']">
+            <option :value="0">0</option>
+            <option :value="25">25</option>
+            <option :value="50">50</option>
+          </select>
+        </fieldset>
       </template>
     </div>
   </div>

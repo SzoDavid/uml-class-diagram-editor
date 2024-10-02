@@ -10,9 +10,12 @@ export enum UmlEditorTool {
     REMOVE
 }
 
-
 export type EmitReason = 'toolChange'|'scaleChange'|'mouseDown';
 export type EmitType = ANode | UmlEditorTool | number | null;
+
+export interface EditorConfig {
+    gridSize: number;
+}
 
 export class UmlEditorService {
     private _renderer: Renderer;
@@ -31,6 +34,10 @@ export class UmlEditorService {
     private _panOffsetY: number = 0;
     private _lastPanX: number = 0;
     private _lastPanY: number = 0;
+
+    editorConfig: EditorConfig = {
+        gridSize: 0,
+    };
 
     constructor(canvas: HTMLCanvasElement, renderer: Renderer) {
         this._renderer = renderer;
@@ -70,16 +77,16 @@ export class UmlEditorService {
         this._scale = Math.max(scale, 0.1);
     }
 
-    render(): void {
+    public render(): void {
         this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
     }
 
-    addNode(node: ANode): void {
+    public addNode(node: ANode): void {
         this._nodes.push(node);
         this.render();
     }
 
-    resetScaling(): void {
+    public resetScaling(): void {
         this._scale = 1;
         this._panOffsetX = 0;
         this._panOffsetY = 0;
@@ -140,8 +147,8 @@ export class UmlEditorService {
         const { offsetX, offsetY } = event;
 
         if (this._tool === UmlEditorTool.MOVE && this._selectedNode && this._selectedNode.isDragging) {
-            this._selectedNode.x = offsetX - this._dragOffsetX;
-            this._selectedNode.y = offsetY - this._dragOffsetY;
+            this._selectedNode.x = this.roundToNearest(offsetX - this._dragOffsetX, this.editorConfig.gridSize);
+            this._selectedNode.y = this.roundToNearest(offsetY - this._dragOffsetY, this.editorConfig.gridSize);
             this.render();
             return;
         }
@@ -195,5 +202,10 @@ export class UmlEditorService {
             }
         }
         return null;
+    }
+
+    private roundToNearest(value: number, size: number): number {
+        if (size === 0) return value;
+        return Math.round(value / size) * size;
     }
 }
