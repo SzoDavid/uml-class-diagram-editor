@@ -4,6 +4,12 @@ export default defineConfig({
     test: {
         environment: 'jsdom',
         globals: true,
-        //setupFiles: 'src/tests/setup.ts',
+        coverage: {
+            provider: 'v8',
+            enabled: true,
+            reporter: ['html', 'text'],
+            include: ['**/src/components/**', '**/src/utils/**'],
+            exclude: ['**/tests'],
+        }
     },
 });

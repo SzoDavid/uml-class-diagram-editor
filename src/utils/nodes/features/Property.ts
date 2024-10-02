@@ -14,26 +14,26 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     visibility: Visibility|null;
     isDerived: boolean;
     name: string;
-    type: string|null;
-    multiplicity: MultiplicityRange|null;
-    defaultValue: string|null;
+    type: string;
+    multiplicity: MultiplicityRange;
+    defaultValue: string;
     isStatic: boolean;
     modifiers: PropertyModifier[]; // TODO: validate when connections are implemented
-    redefines: string|null;
-    subsets: string|null;
+    redefines: string;
+    subsets: string;
 
     omitVisibility: boolean = true;
 
     constructor(name: string,
-                type: string|null = null,
+                type: string = '',
                 visibility: Visibility|null = null,
                 isDerived: boolean = false,
-                multiplicity: MultiplicityRange|null = null,
-                defaultValue: string|null = null,
+                multiplicity: MultiplicityRange = new MultiplicityRange(null, null),
+                defaultValue: string = '',
                 isStatic: boolean = false,
                 modifiers: PropertyModifier[] = [],
-                redefines: string|null = null,
-                subsets: string|null = null) {
+                redefines: string = '',
+                subsets: string = '') {
         this.visibility = visibility;
         this.name = name;
         this.type = type;
@@ -57,7 +57,7 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     get postfix(): string {
         let postfix = '';
         if (this.type) postfix += `: ${this.type}`;
-        if (this.multiplicity && this.multiplicity.upper) postfix += `[${this.multiplicity.toString()}]`;
+        if (this.multiplicity.upper) postfix += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) postfix += ` = ${this.defaultValue}`;
 
         const mods = [];
@@ -86,14 +86,12 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
         if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
         else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
 
-        if (this.type) {
-            if (this.type === '') errors.push({parameter: 'type', message: 'Type is required'});
-            else if (!Validator.isAlphanumeric(this.type)) errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
+        if (this.type && !Validator.isAlphanumeric(this.type)) {
+            errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
         }
 
-        if (this.defaultValue) {
-            if (this.defaultValue === '') errors.push({parameter: 'defaultValue', message: 'Default value is required'});
-            else if (!Validator.isAlphanumeric(this.defaultValue)) errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
+        if (this.defaultValue && !Validator.isAlphanumeric(this.defaultValue)) {
+            errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
         }
 
         if (this.multiplicity) {

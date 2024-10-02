@@ -1,4 +1,4 @@
-import {ClickContext, DataContext} from '../../utils/types.ts';
+import {ClickContext, NodeData} from '../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
 import {ClassNode} from '../../utils/nodes/ClassNode.ts';
 import {InvalidNodeParameterCause, Visibility} from '../../utils/nodes/types.ts';
@@ -8,11 +8,11 @@ import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 
 interface ClassEditorPanelProperties {
-    classData: DataContext<ClassNode>
+    classData: NodeData<ClassNode>
 }
 
 interface ClassEditorPanelEmits {
-    (e: 'save', data: DataContext<ClassNode>): void;
+    (e: 'save', data: NodeData<ClassNode>): void;
 }
 
 interface ErrorContext {
@@ -24,7 +24,7 @@ interface ErrorContext {
 export default defineComponent({
     props: {
         classData: {
-            type: Object as () => DataContext<ClassNode>,
+            type: Object as () => NodeData<ClassNode>,
             required: true,
         }
     },
@@ -35,7 +35,7 @@ export default defineComponent({
         }
     },
     setup(props: ClassEditorPanelProperties, { emit }: { emit: ClassEditorPanelEmits}) {
-        const data = ref<DataContext<ClassNode>>(null);
+        const data = ref<NodeData<ClassNode>>(props.classData);
         const renderKey = ref<number>(0);
 
         let errors: InvalidNodeParameterCause[] = [];

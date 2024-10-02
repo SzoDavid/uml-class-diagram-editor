@@ -15,24 +15,24 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility {
     name: string;
     params: Parameter[];
     visibility: Visibility|null;
-    returnType: string|null;
-    returnMultiplicity: MultiplicityRange|null;
+    returnType: string;
+    returnMultiplicity: MultiplicityRange;
     isStatic: boolean;
     isAbstract: boolean;
     properties: OperationProperty[];
-    redefines: string|null;
+    redefines: string;
 
     omitVisibility: boolean = true;
 
     constructor(name: string,
                 params: Parameter[] = [],
                 visibility: Visibility|null = null,
-                returnType: string|null = null,
-                returnMultiplicity: MultiplicityRange|null = null,
+                returnType: string = '',
+                returnMultiplicity: MultiplicityRange = new MultiplicityRange(null),
                 isStatic: boolean = false,
                 isAbstract: boolean = false,
                 properties: OperationProperty[] = [],
-                redefines: string|null = null) {
+                redefines: string = '') {
         this.name = name;
         this.params = params;
         this.visibility = visibility;
@@ -55,7 +55,7 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility {
     get postfix() {
         let postfix = `(${this.params.join(', ')})`;
         if (this.returnType) postfix += `: ${this.returnType}`;
-        if (this.returnMultiplicity && this.returnMultiplicity.upper) postfix += `[${this.returnMultiplicity.toString()}]`;
+        if (this.returnMultiplicity.upper) postfix += `[${this.returnMultiplicity.toString()}]`;
 
         const props = [];
         if (this.isAbstract) props.push('abstract');
@@ -85,11 +85,8 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility {
         else if (!Validator.isAlphanumeric(this.name))
             errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
 
-        if (this.returnType) {
-            if (this.returnType === '')
-                errors.push({parameter: 'returnType', message: 'Return type is required'});
-            else if (!Validator.isAlphanumeric(this.returnType))
-                errors.push({parameter: 'returnType', message: 'Return type must be alphanumeric'});
+        if (this.returnType && !Validator.isAlphanumeric(this.returnType)) {
+            errors.push({parameter: 'returnType', message: 'Return type must be alphanumeric'});
         }
 
         this.params.forEach((param, i) => {
@@ -104,8 +101,7 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility {
                 errors.push({parameter: 'returnMultiplicity', message: 'Return multiplicity is invalid', context: multiErrors});
         }
 
-        if ((this.properties.includes('unique') || this.properties.includes('ordered'))
-            && (!this.returnMultiplicity || !this.returnMultiplicity.upper))
+        if ((this.properties.includes('unique') || this.properties.includes('ordered')) && !this.returnMultiplicity.upper)
             errors.push({parameter: 'properties', message: 'Parameters "unique" and "ordered" requires multiplicity to be set'});
 
         if (this.isStatic && this.isAbstract)

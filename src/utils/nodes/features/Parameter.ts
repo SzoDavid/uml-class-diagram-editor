@@ -15,15 +15,15 @@ export class Parameter implements Feature {
     direction: Direction|null;
     name: string;
     type: string;
-    multiplicity: MultiplicityRange|null;
-    defaultValue: string|null;
+    multiplicity: MultiplicityRange;
+    defaultValue: string;
     properties: ParameterProperty[];
 
     constructor(name: string,
-                type: string,
+                type: string = '',
                 direction: Direction|null = null,
-                multiplicity: MultiplicityRange|null = null,
-                defaultValue: string|null = null,
+                multiplicity: MultiplicityRange = new MultiplicityRange(null),
+                defaultValue: string = '',
                 properties: ParameterProperty[] = []) {
         this.direction = direction;
         this.name = name;
@@ -38,8 +38,9 @@ export class Parameter implements Feature {
 
         if (this.direction) value += `${this.direction} `;
 
-        value += `${this.name}: ${this.type}`;
+        value += `${this.name}`;
 
+        if (this.type) value += `: ${this.type}`;
         if (this.multiplicity && this.multiplicity.upper) value += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) value += ` = ${this.defaultValue}`;
         if (this.properties.length) value += ` {${this.properties.join(',')}}`;
@@ -53,12 +54,12 @@ export class Parameter implements Feature {
         if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
         else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
 
-        if (this.type === '') errors.push({parameter: 'type', message: 'Type is required'});
-        else if (!Validator.isAlphanumeric(this.type)) errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
+        if (this.type && !Validator.isAlphanumeric(this.type)) {
+            errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
+        }
 
-        if (this.defaultValue) {
-            if (this.defaultValue === '') errors.push({parameter: 'defaultValue', message: 'Default value is required'});
-            else if (!Validator.isAlphanumeric(this.defaultValue)) errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
+        if (this.defaultValue && !Validator.isAlphanumeric(this.defaultValue)) {
+            errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
         }
 
         if (this.properties.length > 1) {

@@ -19,6 +19,7 @@ export class MultiplicityRange implements Feature {
     }
 
     toString(): string {
+        if (!this.upper) return '';
         return `${this.lower ? this.lower + '..' : ''}${this.upper}`;
     }
 

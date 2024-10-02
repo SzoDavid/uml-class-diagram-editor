@@ -51,7 +51,7 @@ export class ClassNode extends ANode {
 
         this.operations.forEach((operation, i) => {
             const operationErrors = operation.validate();
-            if (operationErrors.length > 0) errors.push({parameter: 'operations', index: i, message: 'Property is invalid', context: operationErrors});
+            if (operationErrors.length > 0) errors.push({parameter: 'operations', index: i, message: 'Operation is invalid', context: operationErrors});
         });
 
         return errors;
