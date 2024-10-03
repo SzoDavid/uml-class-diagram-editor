@@ -31,16 +31,16 @@ export class MultiplicityRange implements Feature {
         }
 
         if (isNaN(+this.upper) && this.upper !== '*')
-            errors.push({parameter: 'upper', message: 'The only acceptable non-numeric value is "*"'});
+            errors.push({parameter: 'upper', message: 'error.multiplicity_range.invalid_non_numeric_value'});
 
         if (this.upper !== '*' && this.upper <= 0)
-            errors.push({parameter: 'upper', message: 'Upper limit must be larger than 0'});
+            errors.push({parameter: 'upper', message: 'error.multiplicity_range.upper_not_larger_than_zero'});
 
         if (this.lower !== null) {
             if (this.lower < 0)
-                errors.push({parameter: 'lower', message: 'Lower limit must be at least 0'});
+                errors.push({parameter: 'lower', message: 'error.multiplicity_range.lower_less_than_zero'});
             if (this.upper !== '*' && this.lower >= this.upper)
-                errors.push({parameter: 'lower', message: 'Lower limit must be less than upper'});
+                errors.push({parameter: 'lower', message: 'error.multiplicity_range.lower_not_less_than_upper'});
         }
 
         return errors;

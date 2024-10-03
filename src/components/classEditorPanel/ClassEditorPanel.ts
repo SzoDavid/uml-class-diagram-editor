@@ -6,6 +6,7 @@ import {Property} from '../../utils/nodes/features/Property.ts';
 import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
 import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
+import {useI18n} from 'vue-i18n';
 
 interface ClassEditorPanelProperties {
     classData: NodeData<ClassNode>
@@ -35,6 +36,8 @@ export default defineComponent({
         }
     },
     setup(props: ClassEditorPanelProperties, { emit }: { emit: ClassEditorPanelEmits}) {
+        const { t } = useI18n();
+
         const data = ref<NodeData<ClassNode>>(props.classData);
         const renderKey = ref<number>(0);
 
@@ -161,7 +164,8 @@ export default defineComponent({
             onAddClicked,
             onRemoveClicked,
             onCollapseClicked,
-            getError
+            getError,
+            t
         };
     }
 });
