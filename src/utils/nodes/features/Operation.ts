@@ -93,7 +93,7 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility, Multi
         else if (!Validator.isAlphanumeric(this.name))
             errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
 
-        if (this.returnType && !Validator.isAlphanumeric(this.returnType)) {
+        if (this.returnType && !Validator.isAlphanumericWithBrackets(this.returnType)) {
             errors.push({parameter: 'returnType', message: 'error.type_alphanumeric'});
         }
 

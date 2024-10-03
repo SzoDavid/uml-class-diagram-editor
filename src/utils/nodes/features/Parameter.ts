@@ -54,11 +54,11 @@ export class Parameter implements Feature {
         if (this.name === '') errors.push({parameter: 'name', message: 'error.name.required'});
         else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
 
-        if (this.type && !Validator.isAlphanumeric(this.type)) {
+        if (this.type && !Validator.isAlphanumericWithBrackets(this.type)) {
             errors.push({parameter: 'type', message: 'error.type_alphanumeric'});
         }
 
-        if (this.defaultValue && !Validator.isAlphanumeric(this.defaultValue)) {
+        if (this.defaultValue && !Validator.isAlphanumericWithBrackets(this.defaultValue)) {
             errors.push({parameter: 'defaultValue', message: 'error.default_value_alphanumeric'});
         }
 
