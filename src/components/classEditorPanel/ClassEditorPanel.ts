@@ -135,12 +135,12 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'class') return null;
+            if (data.value === null || data.value.type !== 'class') return '';
 
             return findError(errors, context);
         };
 
-        const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string|null => {
+        const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string => {
             let error;
 
             if (context.index !== undefined && typeof context.index === 'number') {
@@ -151,7 +151,7 @@ export default defineComponent({
                 error = errors.find(error => error.parameter === context.parameter);
             }
 
-            if (!error) return null;
+            if (!error) return '';
             if (context.child && error.context) return findError(error.context, context.child);
 
             return error.message;
