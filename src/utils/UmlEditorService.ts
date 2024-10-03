@@ -75,6 +75,15 @@ export class UmlEditorService {
 
     public set scale(scale: number) {
         this._scale = Math.max(scale, 0.1);
+        this.emitter.emit('scaleChange', this._scale);
+    }
+
+    public get scale() {
+        return this._scale;
+    }
+
+    public get offset(): {x: number, y: number} {
+        return {x: this._panOffsetX, y: this._panOffsetY};
     }
 
     public render(): void {

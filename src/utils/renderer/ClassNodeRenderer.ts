@@ -10,6 +10,8 @@ export class ClassNodeRenderer extends NodeRenderer {
         super(ctx, renderConfig);
     }
 
+    // NOTE: optimize by caching width and line counts, and not rendering not visible nodes
+
     public render(node: ClassNode): void {
         let invalid = false;
         const nodeErrors = node.validate();
@@ -46,28 +48,25 @@ export class ClassNodeRenderer extends NodeRenderer {
         node.width = this._rc.defaultWidth;
 
         this._ctx.font = `${this._rc.textSize}px Arial`;
-        for (const property of node.properties) {
-            const propW = this._ctx.measureText(property.toString()).width + 2 * this._rc.lineMargin;
 
-            if (propW > node.width) node.width = propW;
+        [...node.properties, ...node.operations].forEach(feature => {
+            const featureWidth = this.calculateFeatureWidth(feature);
+
+            if (featureWidth > node.width) node.width = featureWidth;
+        });
+    }
+
+    private calculateFeatureWidth(feature: Feature): number {
+        const baseWidth = this._ctx.measureText(feature.toString()).width + 2 * this._rc.lineMargin;
+
+        if (IsMultilineFeature(feature) && feature.toMultilineString().length > 2) {
+            return feature.toMultilineString().reduce((maxWidth, line) => {
+                const lineWidth = this._ctx.measureText(line.text).width + 2 * this._rc.lineMargin + (line.tabbed ? this._rc.tabSize : 0);
+                return Math.max(maxWidth, lineWidth);
+            }, baseWidth);
         }
 
-        for (const operation of node.operations) {
-            let operationW = this._ctx.measureText(operation.toString()).width + 2 * this._rc.lineMargin;
-
-            if ((operation.toMultilineString().length <= 2 ||
-                this._ctx.measureText(operation.toString()).width < this._rc.separateObjectParametersWidthLimit) &&
-                operationW > node.width) {
-                node.width = operationW;
-                return;
-            }
-
-            operation.toMultilineString().forEach((line) => {
-                operationW = this._ctx.measureText(line.text).width + 2 * this._rc.lineMargin + (line.tabbed ? this._rc.tabSize : 0);
-
-                if (operationW > node.width) node.width = operationW;
-            });
-        }
+        return baseWidth;
     }
 
     private renderFeatureGroup(features: Feature[],
@@ -79,19 +78,43 @@ export class ClassNodeRenderer extends NodeRenderer {
                                showExtra: boolean): number {
         if (features.length === 0 && !showExtra) return 0;
 
-        const lines = this.countFeatureLines(features);
+        const totalLines = this.calculateTotalFeatureLines(features);
 
         this.drawRect(x, y, width,
-                      this._rc.lineHeight * (lines + (showExtra ? 1 : 0)),
+                      this._rc.lineHeight * (totalLines + (showExtra ? 1 : 0)),
                       isSelected, isInvalid);
 
+        this.renderFeatures(features, x, y, width, isSelected, isInvalid);
+
+        if (!showExtra) return totalLines;
+
+        this.drawText(
+            '...',
+            x,
+            y + (totalLines * this._rc.lineHeight),
+            width,
+            {
+                isSelected: isSelected,
+                isInvalid: isInvalid
+            }
+        );
+
+        return totalLines + 1;
+    }
+
+    private renderFeatures(features: Feature[],
+                           x: number,
+                           y: number,
+                           width: number,
+                           isSelected: boolean,
+                           isInvalid: boolean) {
         features.forEach((feature, i) => {
             if (!IsMultilineFeature(feature) || feature.toMultilineString().length <= 2 ||
                 this._ctx.measureText(feature.toString()).width < this._rc.separateObjectParametersWidthLimit) {
                 this.drawText(
                     feature.toString(),
                     x,
-                    y + ((+i) * this._rc.lineHeight),
+                    y + (i * this._rc.lineHeight),
                     width,
                     {
                         isSelected: isSelected,
@@ -99,15 +122,15 @@ export class ClassNodeRenderer extends NodeRenderer {
                         puc: IsDecoratedFeature(feature) && feature.decorator === 'underline' ?
                             {prefix: feature.prefix, underlined: feature.text} : null
                     });
-
+                
                 return;
-            }
+            } 
 
             feature.toMultilineString().forEach((line, j) => {
                 this.drawText(
                     line.text,
                     x,
-                    y + ((+i + j) * this._rc.lineHeight),
+                    y + ((i + j) * this._rc.lineHeight),
                     width,
                     {
                         isSelected: isSelected,
@@ -118,39 +141,14 @@ export class ClassNodeRenderer extends NodeRenderer {
                     });
             });
         });
-
-        if (!showExtra) return lines;
-
-        this.drawText(
-            '...',
-            x,
-            y + (lines * this._rc.lineHeight),
-            width,
-            {
-                isSelected: isSelected,
-                isInvalid: isInvalid
-            }
-        );
-
-        return lines + 1;
     }
 
-    // Note: this can be optimized if the lines with the settings are precalculated, and then width calculation can be simplified too
-    private countFeatureLines(features: Feature[]): number {
-        let lines = 0;
-        features.forEach((feature) => {
+    private calculateTotalFeatureLines(features: Feature[]): number {
+        return features.reduce((totalLines, feature) => {
             if (IsMultilineFeature(feature) && this._ctx.measureText(feature.toString()).width >= this._rc.separateObjectParametersWidthLimit) {
-                const len = feature.toMultilineString().length;
-                if (len > 2) {
-                    lines += len;
-                    return;
-                }
-                lines++;
-                return;
+                return totalLines + feature.toMultilineString().length;
             }
-            lines++;
-        });
-
-        return lines;
+            return totalLines + 1;
+        }, 0);
     }
 }
