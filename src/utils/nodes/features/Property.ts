@@ -83,20 +83,20 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
-        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+        if (this.name === '') errors.push({parameter: 'name', message: 'error.name.required'});
+        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
 
         if (this.type && !Validator.isAlphanumeric(this.type)) {
-            errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
+            errors.push({parameter: 'type', message: 'error.type_alphanumeric'});
         }
 
         if (this.defaultValue && !Validator.isAlphanumeric(this.defaultValue)) {
-            errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
+            errors.push({parameter: 'defaultValue', message: 'error.default_value_alphanumeric'});
         }
 
         if (this.multiplicity) {
             const multiErrors = this.multiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'Multiplicity is invalid', context: multiErrors});
+            if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
         }
 
         return errors;

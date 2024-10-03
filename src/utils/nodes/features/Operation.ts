@@ -89,31 +89,31 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility, Multi
         const errors: InvalidNodeParameterCause[] = [];
 
         if (this.name === '')
-            errors.push({parameter: 'name', message: 'Name is required'});
+            errors.push({parameter: 'name', message: 'error.name.required'});
         else if (!Validator.isAlphanumeric(this.name))
-            errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+            errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
 
         if (this.returnType && !Validator.isAlphanumeric(this.returnType)) {
-            errors.push({parameter: 'returnType', message: 'Return type must be alphanumeric'});
+            errors.push({parameter: 'returnType', message: 'error.type_alphanumeric'});
         }
 
         this.params.forEach((param, i) => {
             const paramErrors = param.validate();
             if (paramErrors.length > 0)
-                errors.push({parameter: 'params', index: i, message: 'Parameter is invalid', context: paramErrors});
+                errors.push({parameter: 'params', index: i, message: 'error.parameter.invalid', context: paramErrors});
         });
 
         if (this.returnMultiplicity) {
             const multiErrors = this.returnMultiplicity.validate();
             if (multiErrors.length > 0)
-                errors.push({parameter: 'returnMultiplicity', message: 'Return multiplicity is invalid', context: multiErrors});
+                errors.push({parameter: 'returnMultiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
         }
 
         if ((this.properties.includes('unique') || this.properties.includes('ordered')) && !this.returnMultiplicity.upper)
-            errors.push({parameter: 'properties', message: 'Parameters "unique" and "ordered" requires multiplicity to be set'});
+            errors.push({parameter: 'properties', message: 'error.parameter.unique_ordered_needs_multiplicity'});
 
         if (this.isStatic && this.isAbstract)
-            errors.push({parameter: 'isAbstract', message: 'Operation cannot be both static and abstract'});
+            errors.push({parameter: 'isAbstract', message: 'error.operation.static_and_abstract'});
 
         return errors;
     }

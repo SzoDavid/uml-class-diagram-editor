@@ -9,7 +9,7 @@ import {Validator} from '../../Validator.ts';
  * Based on chapter 9.4.4 of UML 2.5.1 specification.
  *
  * [<direction>] <parameter-name> ’:’ <type-expression> [’[’<multiplicity-range>’]’] [’=’ <default>]
- * [’{’ <parm-property> [’,’ <parm-property>]* ’}’]
+ * [’{’ <param-property> [’,’ <param-property>]* ’}’]
  */
 export class Parameter implements Feature {
     direction: Direction|null;
@@ -51,27 +51,27 @@ export class Parameter implements Feature {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
-        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+        if (this.name === '') errors.push({parameter: 'name', message: 'error.name.required'});
+        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
 
         if (this.type && !Validator.isAlphanumeric(this.type)) {
-            errors.push({parameter: 'type', message: 'Type must be alphanumeric'});
+            errors.push({parameter: 'type', message: 'error.type_alphanumeric'});
         }
 
         if (this.defaultValue && !Validator.isAlphanumeric(this.defaultValue)) {
-            errors.push({parameter: 'defaultValue', message: 'Default value must be alphanumeric'});
+            errors.push({parameter: 'defaultValue', message: 'error.default_value_alphanumeric'});
         }
 
         if (this.properties.length > 1) {
             if (this.properties.includes('unique') && this.properties.includes('nonunique'))
-                errors.push({parameter: 'properties', message: 'Property cannot be unique and nonunique in the same time'});
+                errors.push({parameter: 'properties', message: 'error.parameter.unique_nonunique'});
             if (this.properties.includes('ordered') && this.properties.includes('unordered'))
-                errors.push({parameter: 'properties', message: 'Property cannot be ordered and unordered in the same time'});
+                errors.push({parameter: 'properties', message: 'error.parameter.ordered_unordered'});
         }
 
         if (this.multiplicity) {
             const multiErrors = this.multiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'Multiplicity is invalid', context: multiErrors});
+            if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
         }
 
         return errors;

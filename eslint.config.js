@@ -29,7 +29,8 @@ export default [
             }],
             semi: ['error', 'always'],
             eqeqeq: ['error', 'always'],
-            'vue/html-indent': ['error', 2]
+            'vue/html-indent': ['error', 2],
+            '@typescript-eslint/no-explicit-any': 'off'
         }
     },
 ];

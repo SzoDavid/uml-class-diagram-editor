@@ -3,6 +3,7 @@ import {Property} from '../../../../utils/nodes/features/Property';
 import {MultiplicityRange} from '../../../../utils/nodes/features/MultiplicityRange';
 import {PropertyModifier, Visibility} from '../../../../utils/nodes/types';
 import {Decorator} from '../../../../utils/nodes/features/DecoratedFeature.ts';
+import {validateStringKeys} from '../../../helpers.ts';
 
 describe('UCDE-Property', () => {
     describe('UCDE-P-0100-toString', () => {
@@ -31,30 +32,54 @@ describe('UCDE-Property', () => {
             });
         });
 
-        describe('UCDE-P-0202 GIVEN invalid name WHEN validate() THEN return expected error', () => {
+        describe('UCDE-P-0202 GIVEN invalid name WHEN validate() THEN return expected valid error', () => {
             test.each([
-                { name: '', expectedErrors: [{ parameter: 'name', message: 'Name is required' }] },
-                { name: 'invalid name!', expectedErrors: [{ parameter: 'name', message: 'Name must be alphanumeric' }] }
+                { name: '', expectedErrors: [{ parameter: 'name', message: 'error.name.required' }] },
+                { name: 'invalid name!', expectedErrors: [{ parameter: 'name', message: 'error.name.alphanumeric' }] }
             ])('UCDE-P-0202 {name: $name, expectedErrors: $expectedErrors}', ({ name, expectedErrors }) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
                 const property = new Property(name, 'int');
                 expect(property.validate()).toEqual(expectedErrors);
             });
         });
 
-        test('UCDE-P-0203 GIVEN invalid type WHEN validate() THEN return expected error', () => {
-            const property = new Property('prop1', 'invalid type!');
-            expect(property.validate()).toEqual([{ parameter: 'type', message: 'Type must be alphanumeric' }]);
+        describe('UCDE-P-0203 GIVEN invalid type WHEN validate() THEN return expected valid error', () => {
+            test.each([
+                { type: 'invalid type!', expectedError: [{ parameter: 'type', message: 'error.type_alphanumeric' }]}
+            ])('UCDE-P-0203 {type: $type}', ({type, expectedError}) => {
+                expect(validateStringKeys(expectedError)).toBe(true);
+
+                const property = new Property('prop1', type);
+                expect(property.validate()).toEqual(expectedError);
+            });
         });
 
-        test('UCDE-P-0204 GIVEN invalid defaultValue WHEN validate() THEN return expected error', () => {
-            const property = new Property('prop', 'int', null, false, new MultiplicityRange(null), 'invalid value!');
-            expect(property.validate()).toEqual([{ parameter: 'defaultValue', message: 'Default value must be alphanumeric' }]);
+
+        describe('UCDE-P-0204 GIVEN invalid defaultValue WHEN validate() THEN return expected valid error', () => {
+            test.each([
+                { defaultValue: 'invalid value!', expectedErrors: [{ parameter: 'defaultValue', message: 'error.default_value_alphanumeric' }] }
+            ])('UCDE-P-0204 {defaultValue: $defaultValue}', ({defaultValue, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const property = new Property('prop', undefined, undefined, undefined, undefined, defaultValue);
+                expect(property.validate()).toEqual(expectedErrors);
+            });
         });
 
-        test('UCDE-P-0205 GIVEN invalid multiplicity WHEN validate() THEN return expected error', () => {
-            const property = new Property('prop', 'int', null, false, new MultiplicityRange(0));
-            expect(property.validate()).toEqual([{ parameter: 'multiplicity', message: 'Multiplicity is invalid', context: [{ parameter: 'upper', message: 'Upper limit must be larger than 0' }] }]);
+
+        describe('UCDE-P-0205 GIVEN invalid multiplicity WHEN validate() THEN return expected error', () => {
+            test.each([
+                { multiplicityUpper: 0, expectedErrors: [{ parameter: 'multiplicity', message: 'error.multiplicity_range.invalid', context:
+                            [{ parameter: 'upper', message: 'error.multiplicity_range.upper_not_larger_than_zero' }] }] }
+            ])('UCDE-P-0205 {multiplicityUpper: $multiplicityUpper}', ({multiplicityUpper, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const property = new Property('prop', undefined, undefined, undefined, new MultiplicityRange(multiplicityUpper));
+                expect(property.validate()).toEqual(expectedErrors);
+            });
         });
+
     });
 
     describe('UCDE-P-0300-clone', () => {

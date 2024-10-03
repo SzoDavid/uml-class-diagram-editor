@@ -41,17 +41,17 @@ export class ClassNode extends ANode {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '') errors.push({parameter: 'name', message: 'Name is required'});
-        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'Name must be alphanumeric'});
+        if (this.name === '') errors.push({parameter: 'name', message: 'error.name.required'});
+        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
 
         this.properties.forEach((prop, i) => {
             const propErrors = prop.validate();
-            if (propErrors.length > 0) errors.push({parameter: 'properties', index: i, message: 'Property is invalid', context: propErrors});
+            if (propErrors.length > 0) errors.push({parameter: 'properties', index: i, message: 'error.invalid_class_property', context: propErrors});
         });
 
         this.operations.forEach((operation, i) => {
             const operationErrors = operation.validate();
-            if (operationErrors.length > 0) errors.push({parameter: 'operations', index: i, message: 'Operation is invalid', context: operationErrors});
+            if (operationErrors.length > 0) errors.push({parameter: 'operations', index: i, message: 'error.operation.invalid', context: operationErrors});
         });
 
         return errors;

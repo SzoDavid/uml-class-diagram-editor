@@ -6,6 +6,7 @@ import {Property} from '../../utils/nodes/features/Property.ts';
 import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
 import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
+import {useI18n} from 'vue-i18n';
 
 interface ClassEditorPanelProperties {
     classData: NodeData<ClassNode>
@@ -35,6 +36,8 @@ export default defineComponent({
         }
     },
     setup(props: ClassEditorPanelProperties, { emit }: { emit: ClassEditorPanelEmits}) {
+        const { t } = useI18n();
+
         const data = ref<NodeData<ClassNode>>(props.classData);
         const renderKey = ref<number>(0);
 
@@ -132,12 +135,12 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'class') return null;
+            if (data.value === null || data.value.type !== 'class') return '';
 
             return findError(errors, context);
         };
 
-        const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string|null => {
+        const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string => {
             let error;
 
             if (context.index !== undefined && typeof context.index === 'number') {
@@ -148,7 +151,7 @@ export default defineComponent({
                 error = errors.find(error => error.parameter === context.parameter);
             }
 
-            if (!error) return null;
+            if (!error) return '';
             if (context.child && error.context) return findError(error.context, context.child);
 
             return error.message;
@@ -161,7 +164,8 @@ export default defineComponent({
             onAddClicked,
             onRemoveClicked,
             onCollapseClicked,
-            getError
+            getError,
+            t
         };
     }
 });

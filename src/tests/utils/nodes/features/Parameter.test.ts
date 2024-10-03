@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { Parameter } from '../../../../utils/nodes/features/Parameter';
 import { MultiplicityRange } from '../../../../utils/nodes/features/MultiplicityRange';
 import {Direction, ParameterProperty} from '../../../../utils/nodes/types';
+import {validateStringKeys} from '../../../helpers.ts';
 
 describe('UCDE-Parameter', () => {
     describe('UCDE-P-0100-toString', () => {
@@ -29,40 +30,65 @@ describe('UCDE-Parameter', () => {
             });
         });
 
-        describe('UCDE-P-0202 GIVEN invalid name WHEN validate() THEN return expected error', () => {
+        describe('UCDE-P-0202 GIVEN invalid name WHEN validate() THEN return expected valid error', () => {
             test.each([
-                { name: '', expectedErrors: [{ parameter: 'name', message: 'Name is required' }] },
-                { name: 'invalid name!', expectedErrors: [{ parameter: 'name', message: 'Name must be alphanumeric' }] }
+                { name: '', expectedErrors: [{ parameter: 'name', message: 'error.name.required' }] },
+                { name: 'invalid name!', expectedErrors: [{ parameter: 'name', message: 'error.name.alphanumeric' }] }
             ])('UCDE-P-0202 {name: $name, expectedErrors: $expectedErrors}', ({ name, expectedErrors }) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
                 const param = new Parameter(name, 'int');
                 expect(param.validate()).toEqual(expectedErrors);
             });
         });
 
-        test('UCDE-P-0203 GIVEN invalid type WHEN validate() THEN return expected error', () => {
-            const param = new Parameter('param1', 'invalid type!');
-            expect(param.validate()).toEqual([{ parameter: 'type', message: 'Type must be alphanumeric' }]);
-        });
-
-        describe('UCDE-P-0204 GIVEN invalid properties WHEN validate() THEN return expected error', () => {
+        describe('UCDE-P-0203 GIVEN invalid type WHEN validate() THEN return expected valid error', () => {
             test.each([
-                { properties: ['unique', 'nonunique'] as ParameterProperty[], expectedErrors: [{ parameter: 'properties', message: 'Property cannot be unique and nonunique in the same time' }] },
-                { properties: ['ordered', 'unordered' ] as ParameterProperty[], expectedErrors: [{ parameter: 'properties', message: 'Property cannot be ordered and unordered in the same time' }] }
-            ])('UCDE-P-0204 {properties: $properties, expectedErrors: $expectedErrors}', ({ properties, expectedErrors }) => {
-                const param = new Parameter('param', 'int', null, new MultiplicityRange(null), '', properties);
+                { type: 'invalid type!', expectedErrors: [{ parameter: 'type', message: 'error.type_alphanumeric' }] },
+            ])('UCDE-P-0203 {type: $type}', ({type, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const param = new Parameter('param', type);
                 expect(param.validate()).toEqual(expectedErrors);
             });
         });
-        
-        test('UCDE-P-0205 GIVEN invalid default value WHEN validate() THEN return expected error', () => {
-            const param = new Parameter('param', 'int', null, new MultiplicityRange(null), 'invalid value!');
-            expect(param.validate()).toEqual([{ parameter: 'defaultValue', message: 'Default value must be alphanumeric' }]);
+
+
+        describe('UCDE-P-0204 GIVEN invalid properties WHEN validate() THEN return expected valid error', () => {
+            test.each([
+                { properties: ['unique', 'nonunique'] as ParameterProperty[], expectedErrors: [{ parameter: 'properties', message: 'error.parameter.unique_nonunique' }] },
+                { properties: ['ordered', 'unordered' ] as ParameterProperty[], expectedErrors: [{ parameter: 'properties', message: 'error.parameter.ordered_unordered' }] }
+            ])('UCDE-P-0204 {properties: $properties}', ({ properties, expectedErrors }) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const param = new Parameter('param', undefined, undefined, undefined, undefined, properties);
+                expect(param.validate()).toEqual(expectedErrors);
+            });
         });
-        
-        test('UCDE-P-0206 GIVEN invalid multiplicity WHEN validate() THEN return expected error', () => {
-            const param = new Parameter('param', 'int', null, new MultiplicityRange(0));
-            expect(param.validate()).toEqual([{parameter: 'multiplicity', message: 'Multiplicity is invalid', context: [{parameter: 'upper', message: 'Upper limit must be larger than 0'}]}]);
+
+        describe('UCDE-P-0205 GIVEN invalid default value WHEN validate() THEN return expected valid error', () => {
+            test.each([
+                { defaultValue: 'invalid value!', expectedErrors: [{ parameter: 'defaultValue', message: 'error.default_value_alphanumeric' }] }
+            ])('UCDE-P-0205 {defaultValue: $defaultValue}', ({defaultValue, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const param = new Parameter('param', undefined, undefined, undefined, defaultValue);
+                expect(param.validate()).toEqual(expectedErrors);
+            });
         });
+
+        describe('UCDE-P-0206 GIVEN invalid multiplicity WHEN validate() THEN return expected error', () => {
+            test.each([
+                { multiplicityUpper: 0, expectedErrors: [{parameter: 'multiplicity', message: 'error.multiplicity_range.invalid', context:
+                            [{parameter: 'upper', message: 'error.multiplicity_range.upper_not_larger_than_zero'}]}]},
+            ])('UCDE-P-0206 {multiplicityUpper: $multiplicityUpper}', ({multiplicityUpper, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const param = new Parameter('param', undefined, undefined, new MultiplicityRange(multiplicityUpper));
+                expect(param.validate()).toEqual(expectedErrors);
+            });
+        });
+
     });
 
     describe('UCDE-P-0300-clone', () => {

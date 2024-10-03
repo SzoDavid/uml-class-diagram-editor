@@ -11,6 +11,7 @@ import {Visibility} from '../../utils/nodes/types.ts';
 import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
 import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
+import {useI18n} from 'vue-i18n';
 
 export default {
     components: {ClassEditorPanel},
@@ -20,6 +21,8 @@ export default {
         }
     },
     setup() {
+        const { t } = useI18n();
+
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<ANode | null>(null);
         const data = ref<DataContext<ANode>>(null);
@@ -170,7 +173,8 @@ export default {
             onSave,
             onToolSelected,
             onScaleSet,
-            onScaleReset
+            onScaleReset,
+            t
         };
     }
 };

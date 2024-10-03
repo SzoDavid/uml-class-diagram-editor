@@ -1,0 +1,68 @@
+{
+    "abstract": "abstract",
+    "add": "add",
+    "add_class": "add class",
+    "appearance": "appearance",
+    "class_property": "property | properties",
+    "default_value": "default value",
+    "derived": "derived",
+    "detail": "detail | details",
+    "direction": "direction",
+    "edit": "edit",
+    "error": {
+        "default_value_alphanumeric": "default value must be alphanumeric",
+        "invalid_class_property": "property is invalid",
+        "multiplicity_range": {
+            "invalid": "multiplicity is invalid",
+            "invalid_non_numeric_value": "the only acceptable non-numeric value is \"*\"",
+            "lower_less_than_zero": "lower limit must be at least 0",
+            "lower_not_less_than_upper": "lower limit must be less than upper",
+            "upper_not_larger_than_zero": "upper limit must be larger than 0"
+        },
+        "operation": {
+            "invalid": "operation is invalid",
+            "static_and_abstract": "operation cannot be both static and abstract"
+        },
+        "parameter": {
+            "invalid": "parameter is invalid",
+            "ordered_unordered": "parameter cannot be ordered and unordered in the same time",
+            "unique_nonunique": "parameter cannot be unique and nonunique in the same time",
+            "unique_ordered_needs_multiplicity": "properties \"unique\" and \"ordered\" requires multiplicity to be set"
+        },
+        "name": {
+            "alphanumeric": "name must be alphanumeric",
+            "required": "name is required"
+        },
+        "type_alphanumeric": "type must be alphanumeric"
+    },
+    "grid_size": "grid size",
+    "modifier": "modifier | modifiers",
+    "move": "move",
+    "multiplicity": "multiplicity",
+    "multiplicity_lower": "lower",
+    "multiplicity_upper": "upper",
+    "name": "name",
+    "navigation": "navigation",
+    "not_shown_operations": "not shown operations",
+    "not_shown_properties": "not shown properties",
+    "operation": "operation | operations",
+    "option": "option | options",
+    "parameter": "parameter | parameters",
+    "property": "property | properties",
+    "redefines": "redefines",
+    "remove": "remove",
+    "return_multiplicity": "return multiplicity",
+    "return_type": "return type",
+    "reset": "reset",
+    "save": "save",
+    "scale": "scale",
+    "set": "set",
+    "subsets": "subsets",
+    "static_type": "static",
+    "type": "type",
+    "visibility": "visibility",
+    "visibility_package": "package",
+    "visibility_private": "private",
+    "visibility_protected": "protected",
+    "visibility_public": "public"
+}

@@ -5,14 +5,14 @@
   <div class="editor-container">
     <div id="tools">
       <span>Tools: </span>
-      <button @click="onToolSelected(UmlEditorTool.EDIT)"
-              :class="{ active: tool === UmlEditorTool.EDIT}">Edit</button>
-      <button @click="onToolSelected(UmlEditorTool.MOVE)"
-              :class="{ active: tool === UmlEditorTool.MOVE}">Move</button>
-      <button @click="onToolSelected(UmlEditorTool.ADD_CLASS)"
-              :class="{ active: tool === UmlEditorTool.ADD_CLASS}">Add class</button>
-      <button @click="onToolSelected(UmlEditorTool.REMOVE)"
-              :class="{ active: tool === UmlEditorTool.REMOVE}">Remove</button>
+      <button @click="onToolSelected(UmlEditorTool.EDIT)" class="capitalized"
+              :class="{ active: tool === UmlEditorTool.EDIT}">{{ t("edit") }}</button>
+      <button @click="onToolSelected(UmlEditorTool.MOVE)" class="capitalized"
+              :class="{ active: tool === UmlEditorTool.MOVE}">{{ t("move") }}</button>
+      <button @click="onToolSelected(UmlEditorTool.ADD_CLASS)" class="capitalized"
+              :class="{ active: tool === UmlEditorTool.ADD_CLASS}">{{ t("add_class") }}</button>
+      <button @click="onToolSelected(UmlEditorTool.REMOVE)" class="capitalized"
+              :class="{ active: tool === UmlEditorTool.REMOVE}">{{ t("remove") }}</button>
     </div>
 
     <div>
@@ -21,27 +21,39 @@
                         'canvas-move': tool === UmlEditorTool.MOVE }" />
     </div>
 
-    <div id="editor" v-if="data !== null">
-      <template v-if="data['type']==='class'">
-        <!-- Because of type check it shouldn't have an error -->
-        <ClassEditorPanel :classData="data" @save="onSave" />
-      </template>
-      <template v-if="data['type']==='editor'">
-        <fieldset>
-          <legend>Options</legend>
-          <label for="gridSize">Grid size: </label>
-          <select id="gridSize" v-model="data['instance']['gridSize']">
-            <option :value="0">0</option>
-            <option :value="25">25</option>
-            <option :value="50">50</option>
-          </select>
-        </fieldset>
+    <div id="editor">
+      <fieldset>
+        <legend class="capitalized">{{ t("navigation") }}</legend>
+
+        <div class="grid-form" style="margin-bottom: 5px">
+          <label for="scale" class="capitalized">{{ t("scale") }}</label>
+          <input id="scale" type="number" v-model="scale">
+        </div>
+        <div class="half-half-grid">
+          <button @click="onScaleSet" class="capitalized">{{ t("set") }}</button>
+          <button @click="onScaleReset" class="capitalized">{{ t("reset") }}</button>
+        </div>
+      </fieldset>
+
+      <template v-if="data !== null">
+        <template v-if="data['type']==='class'">
+          <!-- Because of type check it shouldn't have an error -->
+          <ClassEditorPanel :classData="data" @save="onSave" />
+        </template>
+        <template v-if="data['type']==='editor'">
+          <fieldset>
+            <legend class="capitalized">{{ t("option", 2) }}</legend>
+            <div class="grid-form">
+              <label for="gridSize" class="capitalized">{{ t("grid_size") }}</label>
+              <select id="gridSize" v-model="data['instance']['gridSize']">
+                <option :value="0">0</option>
+                <option :value="25">25</option>
+                <option :value="50">50</option>
+              </select>
+            </div>
+          </fieldset>
+        </template>
       </template>
     </div>
-  </div>
-  <div class="editor-footer">
-    <input id="scale" type="number" v-model="scale">
-    <button @click="onScaleSet">Set</button>
-    <button @click="onScaleReset">Reset</button>
   </div>
 </template>

@@ -4,6 +4,7 @@ import { Parameter } from '../../../../utils/nodes/features/Parameter';
 import { MultiplicityRange } from '../../../../utils/nodes/features/MultiplicityRange';
 import {OperationProperty, Visibility} from '../../../../utils/nodes/types';
 import { Decorator } from '../../../../utils/nodes/features/DecoratedFeature.ts';
+import {validateStringKeys} from '../../../helpers.ts';
 
 describe('UCDE-Operation', () => {
     describe('UCDE-O-0100-toString', () => {
@@ -32,50 +33,76 @@ describe('UCDE-Operation', () => {
             });
         });
 
-        describe('UCDE-O-0202 GIVEN invalid name WHEN validate() THEN return expected error', () => {
+        describe('UCDE-O-0202 GIVEN invalid name WHEN validate() THEN return expected valid error', () => {
             test.each([
-                { name: '', expectedErrors: [{ parameter: 'name', message: 'Name is required' }] },
-                { name: 'invalid name!', expectedErrors: [{ parameter: 'name', message: 'Name must be alphanumeric' }] }
+                { name: '', expectedErrors: [{ parameter: 'name', message: 'error.name.required' }] },
+                { name: 'invalid name!', expectedErrors: [{ parameter: 'name', message: 'error.name.alphanumeric' }] }
             ])('UCDE-O-0202 {name: $name}', ({ name, expectedErrors }) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
                 const operation = new Operation(name);
                 expect(operation.validate()).toEqual(expectedErrors);
             });
         });
 
-        test('UCDE-O-0203 GIVEN invalid return type WHEN validate() THEN return expected error', () => {
-            const operation = new Operation('op1', [], null, 'invalid type!');
-            expect(operation.validate()).toEqual([{ parameter: 'returnType', message: 'Return type must be alphanumeric' }]);
-        });
-
-        test('UCDE-O-0204 GIVEN invalid multiplicity WHEN validate() THEN return expected error', () => {
-            const operation = new Operation('op', [], null, 'void', new MultiplicityRange(0));
-            expect(operation.validate()).toEqual([{ parameter: 'returnMultiplicity', message: 'Return multiplicity is invalid', context: [{ parameter: 'upper', message: 'Upper limit must be larger than 0' }] }]);
-        });
-
-        test('UCDE-O-0205 GIVEN static and abstract true WHEN validate() THEN return expected error', () => {
-            const operation = new Operation('op', [], null, 'void', new MultiplicityRange(1), true, true);
-            expect(operation.validate()).toEqual([{ parameter: 'isAbstract', message: 'Operation cannot be both static and abstract' }]);
-        });
-
-        test('UCDE-O-0206 GIVEN invalid parameters WHEN validate() THEN return expected errors', () => {
-            const operation = new Operation('op', [
-                new Parameter('', 'int'), // Invalid parameter name
-                new Parameter('param2', 'invalid type!') // Invalid type
-            ]);
-            expect(operation.validate()).toEqual([
-                { parameter: 'params', index: 0, message: 'Parameter is invalid', context: [{ parameter: 'name', message: 'Name is required' }] },
-                { parameter: 'params', index: 1, message: 'Parameter is invalid', context: [{ parameter: 'type', message: 'Type must be alphanumeric' }] }
-            ]);
-        });
-
-        describe('UCDE-O-0207 GIVEN unique and ordered properties WHEN multiplicity is null THEN return expected error', () => {
+        describe('UCDE-O-0203 GIVEN invalid return type WHEN validate() THEN return expected valid error', () => {
             test.each([
-                { props: ['ordered'] as OperationProperty[] },
-                { props: ['unique'] as OperationProperty[] },
-                { props: ['unique', 'ordered'] as OperationProperty[] },
-            ])('UCDE-O-0207 {props: $props}', (({props}) => {
+                { returnType: 'invalid type!', expectedErrors: [{ parameter: 'returnType', message: 'error.type_alphanumeric' }]}
+            ])('UCDE-O-0203 {returnType: $returnType}', ({returnType, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const operation = new Operation('op1', undefined, undefined, returnType);
+                expect(operation.validate()).toEqual(expectedErrors);
+            });
+        });
+
+        describe('UCDE-O-0204 GIVEN invalid multiplicity WHEN validate() THEN return expected valid error', () => {
+            test.each([
+                { multiplicityUpper: 0, expectedErrors: [{ parameter: 'returnMultiplicity', message: 'error.multiplicity_range.invalid', context:
+                            [{ parameter: 'upper', message: 'error.multiplicity_range.upper_not_larger_than_zero' }] }] }
+            ])('UCDE-O-0204 {multiplicityUpper: $multiplicityUpper}', ({multiplicityUpper, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const operation = new Operation('op', undefined, undefined, undefined, new MultiplicityRange(multiplicityUpper));
+                expect(operation.validate()).toEqual(expectedErrors);
+            });
+        });
+
+        describe('UCDE-O-0205 GIVEN static and abstract true WHEN validate() THEN return expected valid error', () => {
+            test.each([
+                { isStatic: true, isAbstract: true, expectedErrors: [{ parameter: 'isAbstract', message: 'error.operation.static_and_abstract' }] },
+            ])('UCDE-O-0205 {isStatic: $isStatic, isAbstract: $isAbstract} ', ({isStatic, isAbstract, expectedErrors }) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const operation = new Operation('op', undefined, undefined, undefined, undefined, isStatic, isAbstract);
+                expect(operation.validate()).toEqual(expectedErrors);
+            });
+        });
+
+        describe('UCDE-O-0206 GIVEN invalid parameters WHEN validate() THEN return expected valid errors', () => {
+            test.each([
+                { params: [new Parameter('', 'int'), new Parameter('param2', 'invalid type!')], expectedErrors: [
+                    { parameter: 'params', index: 0, message: 'error.parameter.invalid', context: [{ parameter: 'name', message: 'error.name.required' }] },
+                    { parameter: 'params', index: 1, message: 'error.parameter.invalid', context: [{ parameter: 'type', message: 'error.type_alphanumeric' }] }
+                ] }
+            ])('UCDE-O-0206 {params: $params}', ({params, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
+                const operation = new Operation('op', params);
+                expect(operation.validate()).toEqual(expectedErrors);
+            });
+        });
+
+        describe('UCDE-O-0207 GIVEN unique and ordered properties WHEN multiplicity is null THEN return expected valid error', () => {
+            test.each([
+                { props: ['ordered'] as OperationProperty[], expectedErrors: [{ parameter: 'properties', message: 'error.parameter.unique_ordered_needs_multiplicity' }] },
+                { props: ['unique'] as OperationProperty[], expectedErrors: [{ parameter: 'properties', message: 'error.parameter.unique_ordered_needs_multiplicity' }] },
+                { props: ['unique', 'ordered'] as OperationProperty[], expectedErrors: [{ parameter: 'properties', message: 'error.parameter.unique_ordered_needs_multiplicity' }] },
+            ])('UCDE-O-0207 {props: $props}', (({props, expectedErrors}) => {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
                 const operation = new Operation('op', undefined, undefined, undefined, new MultiplicityRange(null), undefined, undefined, props);
-                expect(operation.validate()).toEqual([{ parameter: 'properties', message: 'Parameters "unique" and "ordered" requires multiplicity to be set' }]);
+                expect(operation.validate()).toEqual(expectedErrors);
             }));
 
         });
@@ -144,7 +171,7 @@ describe('UCDE-Operation', () => {
                 ] },
             ])('UCDE-O-0601 {name: $name}', ({name, params, returnType, expected}) => {
                 const operation = new Operation(name, params, undefined, returnType);
-                
+
                 expect(operation.toMultilineString()).toEqual(expected);
             });
         });
