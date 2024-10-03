@@ -9,6 +9,32 @@
     "detail": "részlet | részletek",
     "direction": "irány",
     "edit": "szerkesztés",
+    "error": {
+        "default_value_alphanumeric": "az alapértelmezett értéknek alfanumerikusnak kell lennie",
+        "invalid_class_property": "invalid attribútum",
+        "multiplicity_range": {
+            "invalid": "invalid sokaság",
+            "invalid_non_numeric_value": "az egyetlen elfogadható nem numerikus érték a \"*\"",
+            "lower_less_than_zero": "az alsó határértéknek legalább 0-nak kell lennie",
+            "lower_not_less_than_upper": "az alsó határértéknek kisebbnek kell lennie, mint a felső",
+            "upper_not_larger_than_zero": "a felső határértéknek 0-nál nagyobbnak kell lennie"
+        },
+        "operation": {
+            "invalid": "invalid operáció",
+            "static_and_abstract": "az operáció nem lehet egyszerre statikus és absztrakt"
+        },
+        "parameter": {
+            "invalid": "invalid paraméter",
+            "ordered_unordered": "a paraméter nem lehet rendezett és nem rendezett egyszerre (ordered-unordered)",
+            "unique_nonunique": "a paraméter nem lehet egyedi és nem egyedi egyszerre (unique-nonunique)",
+            "unique_ordered_needs_multiplicity": "sokaság beállítása szükséges \"unique\" és \"ordered\" alkalmazhatóságához"
+        },
+        "name": {
+            "alphanumeric": "a névnek alfanumerikusnak kell lennie",
+            "required": "a név kötelező"
+        },
+        "type_alphanumeric": "a típusnak alfanumerikusnak kell lennie"
+    },
     "grid_size": "rácsméret",
     "modifier": "módosító | módosítók",
     "move": "mozgatás",

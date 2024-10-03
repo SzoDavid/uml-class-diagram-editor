@@ -2,6 +2,7 @@ import { describe, expect, test, beforeEach } from 'vitest';
 import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
 import {MockOperation} from './features/mocks/MockOperation.ts';
 import {MockProperty} from './features/mocks/MockProperty.ts';
+import {validateStringKeys} from '../../helpers.ts';
 
 describe('UCDE-ClassNode', () => {
     let classNode: ClassNode;
@@ -40,46 +41,48 @@ describe('UCDE-ClassNode', () => {
     });
 
     describe('UCDE-CN-0300-validate', () => {
-        test('UCDE-CN-0301 GIVEN an empty name WHEN validate() THEN return error for name', () => {
-            classNode.name = '';
-            expect(classNode.validate()).toEqual([{ parameter: 'name', message: 'Name is required' }]);
+        describe('UCDE-CN-0301 GIVEN an invalid name WHEN validate() THEN return valid error for name', () => {
+            test.each([
+                { name: '', expectedError: [{ parameter: 'name', message: 'error.name.required' }] },
+                { name: 'invalid name!', expectedError: [{ parameter: 'name', message: 'error.name.alphanumeric' }] }
+            ])('UCDE-CN-0301 {name: $name}', ({name, expectedError}) => {
+                expect(validateStringKeys(expectedError)).toBe(true);
+                classNode.name = name;
+                expect(classNode.validate()).toEqual(expectedError);
+            });
         });
 
-        test('UCDE-CN-0302 GIVEN an invalid name WHEN validate() THEN return error for name', () => {
-            classNode.name = 'invalid name!';
-            expect(classNode.validate()).toEqual([{ parameter: 'name', message: 'Name must be alphanumeric' }]);
-        });
-
-        describe('UCDE-CN-0303 GIVEN an invalid property or operation WHEN validate() THEN validate both', () => {
+        describe('UCDE-CN-0302 GIVEN an invalid property or operation WHEN validate() THEN validate both', () => {
             test.each([
                 { property: 'validProperty', operation: 'invalid', expectedErrors: [{
                     parameter: 'operations',
                     index: 0,
-                    message: 'Operation is invalid',
+                    message: 'error.operation.invalid',
                     context: [{ parameter: 'name', message: 'Invalid operation name' }]}] },
                 { property: 'invalid', operation: 'validOperation', expectedErrors: [{
                     parameter: 'properties',
                     index: 0,
-                    message: 'Property is invalid',
+                    message: 'error.invalid_class_property',
                     context: [{ parameter: 'name', message: 'Invalid property name' }]}] },
                 { property: 'invalid', operation: 'invalid', expectedErrors: [
                     {
                         parameter: 'properties',
                         index: 0,
-                        message: 'Property is invalid',
+                        message: 'error.invalid_class_property',
                         context: [{ parameter: 'name', message: 'Invalid property name' }]},
                     {
                         parameter: 'operations',
                         index: 0,
-                        message: 'Operation is invalid',
+                        message: 'error.operation.invalid',
                         context: [{ parameter: 'name', message: 'Invalid operation name' }]},
                 ]},
-            ])('UCDE-CN-0303 {property: $property, operation: $operation}', ({property, operation, expectedErrors})=> {
+            ])('UCDE-CN-0302 {property: $property, operation: $operation}', ({property, operation, expectedErrors})=> {
+                expect(validateStringKeys(expectedErrors)).toBe(true);
+
                 classNode.properties.push(new MockProperty(property));
                 classNode.operations.push(new MockOperation(operation));
                 expect(classNode.validate()).toEqual(expectedErrors);
             });
-
         });
     });
 

@@ -18,7 +18,7 @@
     <div class="grid-form">
       <label for="className" class="capitalized">{{ t("name") }}</label>
       <input id="className" type="text" v-model="data.instance.name">
-      <span v-if="getError({parameter: 'name'})" class="error" style="grid-column: span 2;">{{ getError({parameter: 'name'}) }}</span>
+      <span v-if="getError({parameter: 'name'})" class="error capitalized" style="grid-column: span 2;">{{ t(getError({parameter: 'name'})) }}</span>
 
       <label for="classAbstract" class="capitalized">{{ t("abstract") }}</label>
       <input id="classAbstract" type="checkbox" v-model="data.instance.hasAbstractFlag">
@@ -45,22 +45,22 @@
             <label :for="`propName${index}`" class="capitalized">{{ t("name") }}</label>
             <input :id="`propName${index}`" type="text" v-model="prop.name">
             <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'name'}})"
-                  class="error" style="grid-column: span 2;">
-              {{ getError({parameter: 'properties', index: index, child: {parameter: 'name'} }) }}
+                  class="error capitalized" style="grid-column: span 2;">
+              {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'name'} })) }}
             </span>
 
             <label :for="`propType${index}`" class="capitalized">{{ t("type") }}</label>
             <input :id="`propType${index}`" type="text" v-model="prop.type">
             <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'type'}})"
-                  class="error" style="grid-column: span 2;">
-              {{ getError({parameter: 'properties', index: index, child: {parameter: 'type'} }) }}
+                  class="error capitalized" style="grid-column: span 2;">
+              {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'type'} })) }}
             </span>
 
             <label :for="`propDefault${index}`" class="capitalized">{{ t("default_value") }}</label>
             <input :id="`propDefault${index}`" type="text" v-model="prop.defaultValue">
             <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}})"
-                  class="error" style="grid-column: span 2;">
-              {{ getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'} }) }}
+                  class="error capitalized" style="grid-column: span 2;">
+              {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'} })) }}
             </span>
 
             <label :for="`propStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
@@ -93,7 +93,7 @@
               <input :id="`propMultiUpper${index}`" type="text" v-model="prop.multiplicity.upper">
               <span v-if="getError({parameter: 'properties', index: index, child: 
                       {parameter: 'multiplicity', child: {parameter: 'upper'}}})"
-                    class="error" style="grid-column: span 2;">
+                    class="error capitalized" style="grid-column: span 2;">
                 {{ t(getError({parameter: 'properties', index: index, child:
                   {parameter: 'multiplicity', child: {parameter: 'upper'} } })) }}
               </span>
@@ -102,7 +102,7 @@
               <input :id="`propMultiLower${index}`" type="number" v-model="prop.multiplicity.lower">
               <span v-if="getError({parameter: 'properties', index: index, child: 
                       {parameter: 'multiplicity', child: {parameter: 'lower'}}})"
-                    class="error" style="grid-column: span 2;">
+                    class="error capitalized" style="grid-column: span 2;">
                 {{ t(getError({parameter: 'properties', index: index, child:
                   {parameter: 'multiplicity', child: {parameter: 'lower'} } })) }}
               </span>
@@ -143,15 +143,15 @@
             <label :for="`operationName${index}`" class="capitalized">{{ t("name") }}</label>
             <input :id="`operationName${index}`" type="text" v-model="operation.name">
             <span v-if="getError({parameter: 'operations', index: index, child: {parameter:'name'}})"
-                  class="error" style="grid-column: span 2;">
-              {{ getError({parameter: 'operations', index: index, child: {parameter:'name'} }) }}
+                  class="error capitalized" style="grid-column: span 2;">
+              {{ t(getError({parameter: 'operations', index: index, child: {parameter:'name'} })) }}
             </span>
 
             <label :for="`operationReturnType${index}`" class="capitalized">{{ t("return_type") }}</label>
             <input :id="`operationReturnType${index}`" type="text" v-model="operation.returnType">
             <span v-if="getError({parameter:'operations', index:index, child:{parameter:'returnType'}})"
-                  class="error" style="grid-column: span 2;">
-              {{ getError({parameter:'operations', index:index, child:{parameter:'returnType'} }) }}
+                  class="error capitalized" style="grid-column: span 2;">
+              {{ t(getError({parameter:'operations', index:index, child:{parameter:'returnType'} })) }}
             </span>
 
             <label :for="`operationStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
@@ -160,8 +160,8 @@
             <label :for="`operationAbstract${index}`" class="capitalized">{{ t("abstract") }}</label>
             <input :id="`operationAbstract${index}`" type="checkbox" v-model="operation.isAbstract">
             <span v-if="getError({parameter:'operations', index:index, child:{parameter:'isAbstract'}})"
-                  class="error" style="grid-column: span 2;">
-              {{ getError({parameter:'operations', index:index, child:{parameter:'isAbstract'} }) }}
+                  class="error capitalized" style="grid-column: span 2;">
+              {{ t(getError({parameter:'operations', index:index, child:{parameter:'isAbstract'} })) }}
             </span>
 
             <label :for="`operationRedefines${index}`" class="capitalized">{{ t("redefines") }}</label>
@@ -174,8 +174,8 @@
               <option value="unique">unique</option>
             </select>
             <span v-if="getError({parameter:'operations', index:index, child:{parameter:'properties'}})"
-                  class="error" style="grid-column: span 2;">
-              {{ getError({parameter:'operations', index:index, child:{parameter:'properties'} }) }}
+                  class="error capitalized" style="grid-column: span 2;">
+              {{ t(getError({parameter:'operations', index:index, child:{parameter:'properties'} })) }}
             </span>
           </div>
 
@@ -186,7 +186,7 @@
               <input :id="`returnMultiUpper${index}`" type="text" v-model="operation.returnMultiplicity.upper">
               <span v-if="getError({parameter: 'operations', index: index, child:
                       {parameter: 'returnMultiplicity', child: {parameter: 'upper'}}})"
-                    class="error" style="grid-column: span 2;">
+                    class="error capitalized" style="grid-column: span 2;">
                 {{ t(getError({parameter: 'operations', index: index, child:
                   {parameter: 'returnMultiplicity', child: {parameter: 'upper'} } })) }}
               </span>
@@ -195,7 +195,7 @@
               <input :id="`returnMultiLower${index}`" type="number" v-model="operation.returnMultiplicity.lower">
               <span v-if="getError({parameter: 'operations', index: index, child:
                       {parameter: 'returnMultiplicity', child: {parameter: 'lower'}}})"
-                    class="error" style="grid-column: span 2;">
+                    class="error capitalized" style="grid-column: span 2;">
                 {{ t(getError({parameter: 'operations', index: index, child:
                   {parameter: 'returnMultiplicity', child: {parameter: 'lower'} } })) }}
               </span>
@@ -210,25 +210,25 @@
                    :class="{ 'error-header': getError({parameter: 'operations', index: index, child: {parameter: 'params', index: pIndex}}) }">
                 <span>{{ param.toString() }}</span>
               </div>
-              
+
               <div class="details sep">
                 <div class="grid-form">
                   <label :for="`paramName${index}${pIndex}`" class="capitalized">{{ t("name") }}</label>
                   <input :id="`paramName${index}${pIndex}`" type="text" v-model="param.name">
                   <span v-if="getError({parameter: 'operations', index: index, child:
                           {parameter: 'params', index: pIndex, child: {parameter: 'name'}}})"
-                        class="error" style="grid-column: span 2;">
-                    {{ getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'name'} } }) }}
+                        class="error capitalized" style="grid-column: span 2;">
+                    {{ t(getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'name'} } })) }}
                   </span>
 
                   <label :for="`paramType${index}${pIndex}`" class="capitalized">{{ t("type") }}</label>
                   <input :id="`paramType${index}${pIndex}`" type="text" v-model="param.type">
                   <span v-if="getError({parameter: 'operations', index: index, child:
                           {parameter: 'params', index: pIndex, child: {parameter: 'type'}}})"
-                        class="error" style="grid-column: span 2;">
-                    {{ getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'type'} } }) }}
+                        class="error capitalized" style="grid-column: span 2;">
+                    {{ t(getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'type'} } })) }}
                   </span>
 
 
@@ -236,9 +236,9 @@
                   <input :id="`paramDefault${index}${pIndex}`" type="text" v-model="param.defaultValue">
                   <span v-if="getError({parameter: 'operations', index: index, child:
                           {parameter: 'params', index: pIndex, child: {parameter: 'defaultValue'}}})"
-                        class="error" style="grid-column: span 2;">
-                    {{ getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'defaultValue'} } }) }}
+                        class="error capitalized" style="grid-column: span 2;">
+                    {{ t(getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'defaultValue'} } })) }}
                   </span>
 
                   <label :for="`paramDirection${index}${pIndex}`" class="capitalized">{{ t("direction") }}</label>
@@ -259,9 +259,9 @@
                   </select>
                   <span v-if="getError({parameter: 'operations', index: index, child:
                           {parameter: 'params', index: pIndex, child: {parameter: 'properties'}}})"
-                        class="error" style="grid-column: span 2;">
-                    {{ getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'properties'} } }) }}
+                        class="error capitalized" style="grid-column: span 2;">
+                    {{ t(getError({parameter: 'operations', index: index, child:
+                      {parameter: 'params', index: pIndex, child: {parameter: 'properties'} } })) }}
                   </span>
                 </div>
 
@@ -275,7 +275,7 @@
                               {parameter: 'multiplicity', child: {parameter: 'upper'}}}})"
                           class="error" style="grid-column: span 2;">
                       {{ t(getError({parameter: 'operations', index: index, child:
-                        {parameter: 'params', index: pIndex, child: 
+                        {parameter: 'params', index: pIndex, child:
                           {parameter: 'multiplicity', child: {parameter: 'upper'} } } })) }}
                     </span>
 
