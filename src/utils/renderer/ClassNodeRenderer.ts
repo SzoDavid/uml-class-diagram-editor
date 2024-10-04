@@ -59,11 +59,11 @@ export class ClassNodeRenderer extends NodeRenderer {
     private calculateFeatureWidth(feature: Feature): number {
         const baseWidth = this._ctx.measureText(feature.toString()).width + 2 * this._rc.lineMargin;
 
-        if (IsMultilineFeature(feature) && feature.toMultilineString().length > 2) {
+        if (IsMultilineFeature(feature) && feature.toMultilineString().length > 2 && baseWidth >= this._rc.separateObjectParametersWidthLimit) {
             return feature.toMultilineString().reduce((maxWidth, line) => {
                 const lineWidth = this._ctx.measureText(line.text).width + 2 * this._rc.lineMargin + (line.tabbed ? this._rc.tabSize : 0);
                 return Math.max(maxWidth, lineWidth);
-            }, baseWidth);
+            }, 0);
         }
 
         return baseWidth;
