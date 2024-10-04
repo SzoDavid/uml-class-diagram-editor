@@ -22,6 +22,18 @@
 
       <label for="classAbstract" class="capitalized">{{ t("abstract") }}</label>
       <input id="classAbstract" type="checkbox" v-model="data.instance.hasAbstractFlag">
+
+      <label for="classStereotype" class="capitalized">{{ t("class_stereotype.name") }}</label>
+      <select id="classStereotype" v-model="data.instance.stereotype">
+        <option :value="undefined">--</option>
+        <option :value="ClassStereotype.INTERFACE" class="capitalized">{{ t("class_stereotype.interface") }}</option>
+        <option :value="ClassStereotype.AUXILIARY" class="capitalized">{{ t("class_stereotype.auxiliary") }}</option>
+        <option :value="ClassStereotype.FOCUS" class="capitalized">{{ t("class_stereotype.focus") }}</option>
+        <option :value="ClassStereotype.IMPLEMENTATION_CLASS" class="capitalized">{{ t("class_stereotype.implementation_class") }}</option>
+        <option :value="ClassStereotype.METACLASS" class="capitalized">{{ t("class_stereotype.metaclass") }}</option>
+        <option :value="ClassStereotype.TYPE" class="capitalized">{{ t("class_stereotype.type") }}</option>
+        <option :value="ClassStereotype.UTILITY" class="capitalized">{{ t("class_stereotype.utility") }}</option>
+      </select>
     </div>
 
     <fieldset>
@@ -33,13 +45,13 @@
         </div>
         <div class="details sep">
           <div class="grid-form">
-            <label :for="`propVisibility${index}`" class="capitalized">{{ t("visibility") }}</label>
+            <label :for="`propVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
             <select :id="`propVisibility${index}`" v-model="prop.visibility">
               <option :value="null">--</option>
-              <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility_public") }} (+)</option>
-              <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility_private") }} (-)</option>
-              <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility_protected") }} (#)</option>
-              <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility_package") }} (~)</option>
+              <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
+              <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
+              <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
+              <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
             </select>
 
             <label :for="`propName${index}`" class="capitalized">{{ t("name") }}</label>
@@ -131,13 +143,13 @@
 
         <div class="details sep">
           <div class="grid-form">
-            <label :for="`operationVisibility${index}`" class="capitalized">{{ t("visibility") }}</label>
+            <label :for="`operationVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
             <select :id="`operationVisibility${index}`" v-model="operation.visibility">
               <option :value="null">--</option>
-              <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility_public") }} (+)</option>
-              <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility_private") }} (-)</option>
-              <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility_protected") }} (#)</option>
-              <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility_package") }} (~)</option>
+              <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
+              <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
+              <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
+              <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
             </select>
 
             <label :for="`operationName${index}`" class="capitalized">{{ t("name") }}</label>

@@ -4,6 +4,17 @@
     "add_class": "add class",
     "appearance": "appearance",
     "class_property": "property | properties",
+    "class_stereotype": {
+        "name": "stereotype",
+        "_note_": "Translation is not advised",
+        "interface": "interface",
+        "auxiliary": "auxiliary",
+        "focus": "focus",
+        "implementation_class": "implementation class",
+        "metaclass": "metaclass",
+        "type": "type",
+        "utility": "utility"
+    },
     "default_value": "default value",
     "derived": "derived",
     "detail": "detail | details",
@@ -60,9 +71,11 @@
     "subsets": "subsets",
     "static_type": "static",
     "type": "type",
-    "visibility": "visibility",
-    "visibility_package": "package",
-    "visibility_private": "private",
-    "visibility_protected": "protected",
-    "visibility_public": "public"
+    "visibility": {
+        "name": "visibility",
+        "package": "package",
+        "private": "private",
+        "protected": "protected",
+        "public": "public"
+    }
 }

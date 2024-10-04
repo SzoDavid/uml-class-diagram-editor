@@ -13,7 +13,8 @@
   "dependencies": {
     "mitt": "^3.0.1",
     "vue": "^3.4.37",
-    "vue-i18n": "^9.14.1"
+    "vue-i18n": "^9.14.1",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

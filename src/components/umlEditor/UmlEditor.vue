@@ -4,7 +4,6 @@
 <template>
   <div class="editor-container">
     <div id="tools">
-      <span>Tools: </span>
       <button @click="onToolSelected(UmlEditorTool.EDIT)" class="capitalized"
               :class="{ active: tool === UmlEditorTool.EDIT}">{{ t("edit") }}</button>
       <button @click="onToolSelected(UmlEditorTool.MOVE)" class="capitalized"

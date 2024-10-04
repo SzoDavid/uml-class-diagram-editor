@@ -4,6 +4,17 @@
     "add_class": "osztály hozzáadása",
     "appearance": "megjelenés",
     "class_property": "attribútum | attribútumok",
+    "class_stereotype": {
+        "name": "sztereotípus",
+        "_note_": "Translation is not advised",
+        "interface": "interface",
+        "auxiliary": "auxiliary",
+        "focus": "focus",
+        "implementation_class": "implementation class",
+        "metaclass": "metaclass",
+        "type": "type",
+        "utility": "utility"
+    },
     "default_value": "alapértelmezett érték",
     "derived": "derivált",
     "detail": "részlet | részletek",
@@ -13,7 +24,7 @@
         "default_value_alphanumeric": "az alapértelmezett értéknek alfanumerikusnak kell lennie",
         "invalid_class_property": "invalid attribútum",
         "multiplicity_range": {
-            "invalid": "invalid sokaság",
+            "invalid": "invalid multiplicitás",
             "invalid_non_numeric_value": "az egyetlen elfogadható nem numerikus érték a \"*\"",
             "lower_less_than_zero": "az alsó határértéknek legalább 0-nak kell lennie",
             "lower_not_less_than_upper": "az alsó határértéknek kisebbnek kell lennie, mint a felső",
@@ -27,7 +38,7 @@
             "invalid": "invalid paraméter",
             "ordered_unordered": "a paraméter nem lehet rendezett és nem rendezett egyszerre (ordered-unordered)",
             "unique_nonunique": "a paraméter nem lehet egyedi és nem egyedi egyszerre (unique-nonunique)",
-            "unique_ordered_needs_multiplicity": "sokaság beállítása szükséges \"unique\" és \"ordered\" alkalmazhatóságához"
+            "unique_ordered_needs_multiplicity": "multiplicitás beállítása szükséges \"unique\" és \"ordered\" alkalmazhatóságához"
         },
         "name": {
             "alphanumeric": "a névnek alfanumerikusnak kell lennie",
@@ -38,7 +49,7 @@
     "grid_size": "rácsméret",
     "modifier": "módosító | módosítók",
     "move": "mozgatás",
-    "multiplicity": "sokaság",
+    "multiplicity": "multiplicitás",
     "multiplicity_lower": "felső",
     "multiplicity_upper": "alsó",
     "name": "név",
@@ -51,7 +62,7 @@
     "property": "tulajdonság | tulajdonságok",
     "redefines": "újradefiniálja",
     "remove": "törlés",
-    "return_multiplicity": "visszatérési sokaság",
+    "return_multiplicity": "visszatérési multiplicitás",
     "return_type": "visszatérési típus",
     "reset": "visszaállítás",
     "save": "mentés",
@@ -60,9 +71,11 @@
     "subsets": "részhalmaza",
     "static_type": "statikus",
     "type": "típus",
-    "visibility": "láthatóság",
-    "visibility_package": "csomag",
-    "visibility_private": "privát",
-    "visibility_protected": "védett",
-    "visibility_public": "publikus"
+    "visibility": {
+        "name": "láthatóság",
+        "visibility_package": "csomag",
+        "visibility_private": "privát",
+        "visibility_protected": "védett",
+        "visibility_public": "publikus"
+    }
 }
