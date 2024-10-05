@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import UmlEditor from './components/umlEditor/UmlEditor.vue';
 </script>
 
 <template>
-  <UmlEditor />
+  <nav>
+    <RouterLink to="/en">en</RouterLink>
+    <RouterLink to="/hu">hu</RouterLink>
+  </nav>
+  <RouterView />
 </template>
 
 <style scoped>
+nav {
+  margin-bottom: 15px;
+}
+
+nav * {
+  margin-right: 10px;
+}
 </style>

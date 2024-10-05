@@ -4,6 +4,16 @@ import {Property} from './features/Property.ts';
 import {Operation} from './features/Operation.ts';
 import {ANode} from './ANode.ts';
 
+export enum ClassStereotype {
+    INTERFACE = 'Interface',
+    AUXILIARY = 'Auxiliary', //TODO: validate when connections are implemented
+    FOCUS = 'Focus',
+    IMPLEMENTATION_CLASS = 'ImplementationClass',
+    METACLASS = 'Metaclass',
+    TYPE = 'Type',
+    UTILITY = 'Utility'
+}
+
 export class ClassNode extends ANode {
     name: string;
     properties: Property[];
@@ -11,6 +21,7 @@ export class ClassNode extends ANode {
     isNotShownPropertiesExist: boolean;
     isNotShownOperationsExist: boolean;
     hasAbstractFlag: boolean;
+    private _stereotype?: ClassStereotype;
 
     constructor(name: string,
                 x: number,
@@ -19,7 +30,8 @@ export class ClassNode extends ANode {
                 operations: Operation[]=[],
                 isNotShownPropertiesExist: boolean = false,
                 isNotShownOperationsExist: boolean = false,
-                isAbstract: boolean = false) {
+                isAbstract: boolean = false,
+                stereotype?: ClassStereotype) {
         super(x, y);
         this.name = name;
         this.properties = properties;
@@ -27,6 +39,20 @@ export class ClassNode extends ANode {
         this.isNotShownPropertiesExist = isNotShownPropertiesExist;
         this.isNotShownOperationsExist = isNotShownOperationsExist;
         this.hasAbstractFlag = isAbstract;
+        this._stereotype = stereotype;
+    }
+
+    public set stereotype(value: ClassStereotype|undefined) {
+        this._stereotype = value;
+
+        if (value === ClassStereotype.UTILITY) {
+            this.properties.forEach(property => property.isStatic = true);
+            this.operations.forEach(operation => operation.isStatic = true);
+        }
+    }
+
+    public get stereotype(): ClassStereotype|undefined {
+        return this._stereotype;
     }
 
     public get isAbstract(): boolean {
@@ -66,7 +92,8 @@ export class ClassNode extends ANode {
             this.operations.map(operation => operation.clone()),
             this.isNotShownPropertiesExist,
             this.isNotShownOperationsExist,
-            this.isAbstract
+            this.isAbstract,
+            this.stereotype
         );
 
         clone.isSelected = this.isSelected;
@@ -86,5 +113,6 @@ export class ClassNode extends ANode {
         this.isNotShownPropertiesExist = node.isNotShownPropertiesExist;
         this.isNotShownOperationsExist = node.isNotShownOperationsExist;
         this.hasAbstractFlag = node.isAbstract;
+        this.stereotype = node.stereotype;
     }
 }

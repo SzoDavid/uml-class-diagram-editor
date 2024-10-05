@@ -1,6 +1,6 @@
 import {ClickContext, NodeData} from '../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
-import {ClassNode} from '../../utils/nodes/ClassNode.ts';
+import {ClassNode, ClassStereotype} from '../../utils/nodes/ClassNode.ts';
 import {InvalidNodeParameterCause, Visibility} from '../../utils/nodes/types.ts';
 import {Property} from '../../utils/nodes/features/Property.ts';
 import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
@@ -31,6 +31,9 @@ export default defineComponent({
     },
     emits: ['save'],
     computed: {
+        ClassStereotype() {
+            return ClassStereotype;
+        },
         Visibility() {
             return Visibility;
         }

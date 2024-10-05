@@ -22,10 +22,19 @@ export class ClassNodeRenderer extends NodeRenderer {
 
         this.adjustWidth(node);
 
-        this.drawRect(node.x, node.y, node.width, this._rc.lineHeight, node.isSelected, invalid);
-        node.height = this._rc.lineHeight;
+        this.drawRect(node.x, node.y, node.width, this._rc.lineHeight * (node.stereotype ? 2 : 1), node.isSelected, invalid);
+        node.height = this._rc.lineHeight * (node.stereotype ? 2 : 1);
 
-        this.drawText(node.name, node.x, node.y, node.width, {
+        if (node.stereotype) {
+            this.drawText(`«${node.stereotype}»`, node.x, node.y, node.width, {
+                isSelected: node.isSelected,
+                isInvalid: invalid,
+                textWeight: 'bold',
+                textAlign: 'center'
+            });
+        }
+        
+        this.drawText(node.name, node.x, node.y + (node.stereotype ? this._rc.lineHeight : 0), node.width, {
             isSelected: node.isSelected,
             isInvalid: invalid,
             textWeight: 'bold',
@@ -49,11 +58,14 @@ export class ClassNodeRenderer extends NodeRenderer {
 
         this._ctx.font = `${this._rc.textSize}px Arial`;
 
-        [...node.properties, ...node.operations].forEach(feature => {
-            const featureWidth = this.calculateFeatureWidth(feature);
+        node.width = Math.max(
+            node.width,
+            this._ctx.measureText(node.name).width + 2 * this._rc.lineMargin,
+            node.stereotype ? this._ctx.measureText(`«${node.stereotype}»`).width + 2 * this._rc.lineMargin : 0
+        );
 
-            if (featureWidth > node.width) node.width = featureWidth;
-        });
+        [...node.properties, ...node.operations].forEach(feature =>
+            node.width = Math.max(node.width, this.calculateFeatureWidth(feature)));
     }
 
     private calculateFeatureWidth(feature: Feature): number {
