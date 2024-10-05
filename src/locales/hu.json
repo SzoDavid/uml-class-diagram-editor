@@ -55,8 +55,9 @@
     "navigation": "navigáció",
     "node_types": {
         "class": "osztály",
-        "interface": "interface",
-        "datatype": "adattípus"
+        "datatype": "adattípus",
+        "primitive": "primitív típus",
+        "interface": "interface"
     },
     "not_shown_operations": "nem mutatott operációk",
     "not_shown_properties": "nem mutatott attribútumok",

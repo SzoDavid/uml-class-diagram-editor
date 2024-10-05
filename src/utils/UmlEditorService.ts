@@ -5,6 +5,7 @@ import {ClassNode} from './nodes/ClassNode.ts';
 import {InterfaceNode} from './nodes/InterfaceNode.ts';
 import {DataTypeNode} from './nodes/DataTypeNode.ts';
 import {NodeType} from './nodes/types.ts';
+import {PrimitiveTypeNode} from './nodes/PrimitiveTypeNode.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -133,6 +134,10 @@ export class UmlEditorService {
                 case NodeType.DATATYPE:
                     node = new DataTypeNode('DataType', (offsetX - this._panOffsetX) / this._scale,
                                             (offsetY - this._panOffsetY) / this._scale);
+                    break;
+                case NodeType.PRIMITIVE:
+                    node = new PrimitiveTypeNode('Primitive', (offsetX - this._panOffsetX) / this._scale,
+                                                 (offsetY - this._panOffsetY) / this._scale);
                     break;
             }
 

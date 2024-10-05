@@ -2,6 +2,7 @@ import {onMounted, ref} from 'vue';
 import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/UmlEditorService.ts';
 import {DataContext} from '../../utils/types.ts';
 import ClassifierEditorPanel from '../classifierEditorPanel/ClassifierEditorPanel.vue';
+import PrimitiveEditorPanel from '../primitiveEditorPanel/PrimitiveEditorPanel.vue';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
 import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
 import {Node} from '../../utils/nodes/Node.ts';
@@ -15,9 +16,10 @@ import {useI18n} from 'vue-i18n';
 import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
 import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
+import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
 
 export default {
-    components: {ClassifierEditorPanel},
+    components: {ClassifierEditorPanel, PrimitiveEditorPanel},
     computed: {
         NodeType() {
             return NodeType;
@@ -80,12 +82,15 @@ export default {
                 return;
             }
 
-            if (data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) {
+            if ((data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) ||
+                (data.type === 'primitive' && selectedNode.value instanceof PrimitiveTypeNode)) {
                 if (selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof InterfaceNode && data.instance instanceof InterfaceNode) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof DataTypeNode && data.instance instanceof DataTypeNode) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof PrimitiveTypeNode && data.instance instanceof PrimitiveTypeNode) {
                     selectedNode.value.copy(data.instance);
                 } else {
                     console.error('Not matching node types');
@@ -121,8 +126,13 @@ export default {
                     type: 'classifier',
                     instance: classifierNode
                 };
+            } else if (node instanceof PrimitiveTypeNode) {
+                const primitiveNode = node.clone();
 
-                return;
+                data.value = {
+                    type: 'primitive',
+                    instance: primitiveNode
+                };
             }
         };
 

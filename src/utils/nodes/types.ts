@@ -20,5 +20,6 @@ export interface InvalidNodeParameterCause {
 export enum NodeType {
     CLASS,
     INTERFACE,
-    DATATYPE
+    DATATYPE,
+    PRIMITIVE
 }

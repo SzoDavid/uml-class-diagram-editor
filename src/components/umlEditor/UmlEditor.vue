@@ -36,8 +36,11 @@
       </fieldset>
 
       <template v-if="data !== null && 'instance' in data && 'type' in data">
-        <template v-if="data.type ==='classifier'">
+        <template v-if="data.type==='classifier'">
           <ClassifierEditorPanel :classifierData="data" @save="onSave" />
+        </template>
+        <template v-else-if="data.type==='primitive'">
+          <PrimitiveEditorPanel :primitiveData="data" @save="onSave" />
         </template>
         <template v-else-if="data.type==='editor'">
           <fieldset>
@@ -61,6 +64,7 @@
                 <option :value="NodeType.CLASS" selected>{{ t("node_types.class") }}</option>
                 <option :value="NodeType.INTERFACE">{{ t("node_types.interface") }}</option>
                 <option :value="NodeType.DATATYPE">{{ t("node_types.datatype") }}</option>
+                <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
               </select>
             </div>
           </fieldset>

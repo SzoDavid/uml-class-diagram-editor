@@ -55,8 +55,9 @@
     "navigation": "navigation",
     "node_types": {
         "class": "class",
-        "interface": "interface",
-        "datatype": "datatype"
+        "datatype": "datatype",
+        "primitive": "primitive type",
+        "interface": "interface"
     },
     "not_shown_operations": "not shown operations",
     "not_shown_properties": "not shown properties",

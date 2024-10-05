@@ -41,13 +41,15 @@ export class ClassifierNodeRenderer {
     private adjustWidth(node: ClassifierNode): void {
         node.width = this._nr.rc.defaultWidth;
 
-        this._nr.ctx.font = `${this._nr.rc.textSize}px Arial`;
+        this._nr.ctx.font = `bold ${this._nr.rc.textSize}px Arial`;
 
         node.width = Math.max(
             node.width,
             this._nr.ctx.measureText(node.name).width + 2 * this._nr.rc.lineMargin,
             node.header ? this._nr.ctx.measureText(`«${node.header}»`).width + 2 * this._nr.rc.lineMargin : 0
         );
+
+        this._nr.ctx.font = `${this._nr.rc.textSize}px Arial`;
 
         [...node.properties, ...node.operations].forEach(feature =>
             node.width = Math.max(node.width, this.calculateFeatureWidth(feature)));

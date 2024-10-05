@@ -1,4 +1,4 @@
-import {ClickContext, NodeData} from '../../utils/types.ts';
+import {ClickContext, ErrorContext, NodeData} from '../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
 import {ClassNode, ClassStereotype} from '../../utils/nodes/ClassNode.ts';
 import {InvalidNodeParameterCause, Visibility} from '../../utils/nodes/types.ts';
@@ -16,12 +16,6 @@ interface ClassifierEditorPanelProperties {
 
 interface ClassifierEditorPanelEmits {
     (e: 'save', data: NodeData<ClassifierNode>): void;
-}
-
-interface ErrorContext {
-    parameter: string,
-    index?: number|string,
-    child?: ErrorContext
 }
 
 export default defineComponent({
@@ -50,7 +44,6 @@ export default defineComponent({
         const { t } = useI18n();
 
         const data = ref<NodeData<ClassifierNode>>(props.classifierData);
-        const renderKey = ref<number>(0);
 
         let errors: InvalidNodeParameterCause[] = [];
 
@@ -170,7 +163,6 @@ export default defineComponent({
 
         return {
             data,
-            renderKey,
             onSave,
             onAddClicked,
             onRemoveClicked,

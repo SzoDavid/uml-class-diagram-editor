@@ -2,6 +2,7 @@ import {RenderConfiguration} from './RenderConfiguration.ts';
 import {ClassifierNode} from '../nodes/ClassifierNode.ts';
 import {Node} from '../nodes/Node.ts';
 import {ClassifierNodeRenderer} from './ClassifierNodeRenderer.ts';
+import {PrimitiveTypeNode} from '../nodes/PrimitiveTypeNode.ts';
 
 type TextWeight = 'normal' | 'bold';
 
@@ -34,6 +35,18 @@ export class NodeRenderer {
     public render(node: Node) {
         if (node instanceof ClassifierNode) {
             this._classifierRenderer.render(node);
+        } else if (node instanceof PrimitiveTypeNode) {
+            this.ctx.font = `bold ${this.rc.textSize}px Arial`;
+
+            node.width = Math.max(
+                this.rc.defaultWidth,
+                this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
+                this.ctx.measureText('«Primitive»').width + 2 * this.rc.lineMargin,
+            );
+
+            this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive',
+                            node.isSelected, node.validate().length > 0, false);
+            node.height = this.rc.lineHeight * 2;
         }
     }
 

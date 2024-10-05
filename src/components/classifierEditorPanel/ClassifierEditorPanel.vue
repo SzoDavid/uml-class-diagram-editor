@@ -13,7 +13,7 @@
     </div>
   </fieldset>
 
-  <fieldset :key="renderKey">
+  <fieldset>
     <legend class="capitalized">{{ t("detail", 2) }}</legend>
     <div class="grid-form">
       <label for="className" class="capitalized">{{ t("name") }}</label>
