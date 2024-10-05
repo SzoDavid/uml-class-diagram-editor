@@ -3,12 +3,13 @@ import {Node} from './nodes/Node.ts';
 import {Renderer} from './renderer/Renderer.ts';
 import {ClassNode} from './nodes/ClassNode.ts';
 import {InterfaceNode} from './nodes/InterfaceNode.ts';
+import {DataTypeNode} from './nodes/DataTypeNode.ts';
+import {NodeType} from './nodes/types.ts';
 
 export enum UmlEditorTool {
     EDIT,
     MOVE,
-    ADD_CLASS,
-    ADD_INTERFACE,
+    ADD,
     REMOVE
 }
 
@@ -17,6 +18,10 @@ export type EmitType = Node | UmlEditorTool | number | null;
 
 export interface EditorConfig {
     gridSize: number;
+}
+
+export interface AddConfig {
+    type: NodeType;
 }
 
 export class UmlEditorService {
@@ -38,7 +43,11 @@ export class UmlEditorService {
     private _lastPanY: number = 0;
 
     editorConfig: EditorConfig = {
-        gridSize: 0,
+        gridSize: 0
+    };
+
+    addConfig: AddConfig = {
+        type: NodeType.CLASS
     };
 
     constructor(canvas: HTMLCanvasElement, renderer: Renderer) {
@@ -110,15 +119,24 @@ export class UmlEditorService {
     private onMouseDown(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
-        if (this._tool === UmlEditorTool.ADD_CLASS) {
-            this.addNode(new ClassNode('Class', (offsetX - this._panOffsetX) / this._scale,
-                                       (offsetY - this._panOffsetY) / this._scale));
-            return;
-        }
+        if (this._tool === UmlEditorTool.ADD) {
+            let node: Node;
+            switch (this.addConfig.type) {
+                case NodeType.CLASS:
+                    node = new ClassNode('Class', (offsetX - this._panOffsetX) / this._scale,
+                                         (offsetY - this._panOffsetY) / this._scale);
+                    break;
+                case NodeType.INTERFACE:
+                    node = new InterfaceNode('Interface', (offsetX - this._panOffsetX) / this._scale,
+                                             (offsetY - this._panOffsetY) / this._scale);
+                    break;
+                case NodeType.DATATYPE:
+                    node = new DataTypeNode('DataType', (offsetX - this._panOffsetX) / this._scale,
+                                            (offsetY - this._panOffsetY) / this._scale);
+                    break;
+            }
 
-        if (this._tool === UmlEditorTool.ADD_INTERFACE) {
-            this.addNode(new InterfaceNode('Interface', (offsetX - this._panOffsetX) / this._scale,
-                                           (offsetY - this._panOffsetY) / this._scale));
+            this.addNode(node);
             return;
         }
 

@@ -14,12 +14,16 @@ canvas {
     color: white;
 }
 
-.canvas-edit {
+.cursor-pointer {
     cursor: pointer;
 }
 
-.canvas-move {
+.cursor-move {
     cursor: move;
+}
+
+.cursor-crosshair {
+    cursor: crosshair;
 }
 
 .editor-container {

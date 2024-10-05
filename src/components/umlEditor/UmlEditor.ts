@@ -7,17 +7,21 @@ import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfigurati
 import {Node} from '../../utils/nodes/Node.ts';
 import {ClassNode} from '../../utils/nodes/ClassNode.ts';
 import {Property} from '../../utils/nodes/features/Property.ts';
-import {Visibility} from '../../utils/nodes/types.ts';
+import {NodeType, Visibility} from '../../utils/nodes/types.ts';
 import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
 import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
 import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
+import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
 
 export default {
     components: {ClassifierEditorPanel},
     computed: {
+        NodeType() {
+            return NodeType;
+        },
         UmlEditorTool() {
             return UmlEditorTool;
         }
@@ -81,6 +85,10 @@ export default {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof InterfaceNode && data.instance instanceof InterfaceNode) {
                     selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof DataTypeNode && data.instance instanceof DataTypeNode) {
+                    selectedNode.value.copy(data.instance);
+                } else {
+                    console.error('Not matching node types');
                 }
 
                 editor.render();
@@ -128,8 +136,9 @@ export default {
                 case UmlEditorTool.MOVE:
                     data.value = { type: 'editor', instance: editor.editorConfig };
                     break;
-                case UmlEditorTool.ADD_CLASS:
-                case UmlEditorTool.ADD_INTERFACE:
+                case UmlEditorTool.ADD:
+                    data.value = { type: 'addOption', instance: editor.addConfig };
+                    break;
                 case UmlEditorTool.REMOVE:
                     data.value = null;
                     break;}
@@ -154,7 +163,7 @@ export default {
                 case 'c':
                     event.preventDefault();
                     event.stopPropagation();
-                    onToolSelected(UmlEditorTool.ADD_CLASS);
+                    onToolSelected(UmlEditorTool.ADD);
                     break;
                 case 'r':
                     event.preventDefault();

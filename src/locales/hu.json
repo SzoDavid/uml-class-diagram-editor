@@ -1,8 +1,6 @@
 {
     "abstract": "absztrakt",
     "add": "hozzáadás",
-    "add_class": "osztály hozzáadása",
-    "add_interface": "interface hozzáadása",
     "appearance": "megjelenés",
     "class_property": "attribútum | attribútumok",
     "class_stereotype": {
@@ -55,6 +53,11 @@
     "multiplicity_upper": "alsó",
     "name": "név",
     "navigation": "navigáció",
+    "node_types": {
+        "class": "osztály",
+        "interface": "interface",
+        "datatype": "adattípus"
+    },
     "not_shown_operations": "nem mutatott operációk",
     "not_shown_properties": "nem mutatott attribútumok",
     "operation": "operáció | operációk",

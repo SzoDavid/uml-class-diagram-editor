@@ -8,6 +8,7 @@ import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
 import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
+import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
 
 interface ClassifierEditorPanelProperties {
     classifierData: NodeData<ClassifierNode>
@@ -32,6 +33,9 @@ export default defineComponent({
     },
     emits: ['save'],
     computed: {
+        DataTypeNode() {
+            return DataTypeNode;
+        },
         ClassNode() {
             return ClassNode;
         },

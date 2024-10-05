@@ -1,5 +1,5 @@
 import {Node} from './nodes/Node.ts';
-import {EditorConfig} from './UmlEditorService.ts';
+import {AddConfig, EditorConfig} from './UmlEditorService.ts';
 
 export interface NodeData<T extends Node> {
     type: 'classifier'
@@ -10,5 +10,11 @@ export interface ConfigData {
     type: 'editor';
     instance: EditorConfig
 }
-export type DataContext<T extends Node> = NodeData<T> | ConfigData | null;
+
+export interface AddOption {
+    type: 'addOption';
+    instance: AddConfig
+}
+
+export type DataContext<T extends Node> = NodeData<T> | ConfigData | AddOption | null;
 export type ClickContext = 'prop' | 'operation' | 'param';
