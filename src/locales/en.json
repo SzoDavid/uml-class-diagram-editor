@@ -43,7 +43,12 @@
             "alphanumeric": "name must be alphanumeric",
             "required": "name is required"
         },
-        "type_alphanumeric": "type must be alphanumeric"
+        "type_alphanumeric": "type must be alphanumeric",
+        "value": {
+            "name": "value",
+            "alphanumeric": "value must be alphanumeric",
+            "required": "value is required"
+        }
     },
     "grid_size": "grid size",
     "modifier": "modifier | modifiers",

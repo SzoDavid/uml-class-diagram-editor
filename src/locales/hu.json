@@ -43,7 +43,12 @@
             "alphanumeric": "a névnek alfanumerikusnak kell lennie",
             "required": "a név kötelező"
         },
-        "type_alphanumeric": "a típusnak alfanumerikusnak kell lennie"
+        "type_alphanumeric": "a típusnak alfanumerikusnak kell lennie",
+        "value": {
+            "name": "érték",
+            "alphanumeric": "az értéknek alfanumerikusnak kell lennie",
+            "required": "az érték kötelező"
+        }
     },
     "grid_size": "rácsméret",
     "modifier": "módosító | módosítók",

@@ -3,6 +3,7 @@ import {ClassifierNode} from '../nodes/ClassifierNode.ts';
 import {Node} from '../nodes/Node.ts';
 import {ClassifierNodeRenderer} from './ClassifierNodeRenderer.ts';
 import {PrimitiveTypeNode} from '../nodes/PrimitiveTypeNode.ts';
+import {EnumerationNode} from '../nodes/EnumerationNode.ts';
 
 type TextWeight = 'normal' | 'bold';
 
@@ -47,6 +48,8 @@ export class NodeRenderer {
             this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive',
                             node.isSelected, node.validate().length > 0, false);
             node.height = this.rc.lineHeight * 2;
+        } else if (node instanceof EnumerationNode) {
+            //TODO
         }
     }
 
