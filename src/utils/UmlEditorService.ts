@@ -1,17 +1,19 @@
 import mitt, {Emitter} from 'mitt';
-import {ANode} from './nodes/ANode.ts';
+import {Node} from './nodes/Node.ts';
 import {Renderer} from './renderer/Renderer.ts';
 import {ClassNode} from './nodes/ClassNode.ts';
+import {InterfaceNode} from './nodes/InterfaceNode.ts';
 
 export enum UmlEditorTool {
     EDIT,
     MOVE,
     ADD_CLASS,
+    ADD_INTERFACE,
     REMOVE
 }
 
 export type EmitReason = 'toolChange'|'scaleChange'|'mouseDown';
-export type EmitType = ANode | UmlEditorTool | number | null;
+export type EmitType = Node | UmlEditorTool | number | null;
 
 export interface EditorConfig {
     gridSize: number;
@@ -19,8 +21,8 @@ export interface EditorConfig {
 
 export class UmlEditorService {
     private _renderer: Renderer;
-    private _nodes: ANode[] = [];
-    private _selectedNode: ANode | null = null;
+    private _nodes: Node[] = [];
+    private _selectedNode: Node | null = null;
     private _tool: UmlEditorTool = UmlEditorTool.EDIT;
 
     private readonly _emitter: Emitter<Record<EmitReason, EmitType>> = mitt();
@@ -90,7 +92,7 @@ export class UmlEditorService {
         this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
     }
 
-    public addNode(node: ANode): void {
+    public addNode(node: Node): void {
         this._nodes.push(node);
         this.render();
     }
@@ -113,6 +115,13 @@ export class UmlEditorService {
                                        (offsetY - this._panOffsetY) / this._scale));
             return;
         }
+
+        if (this._tool === UmlEditorTool.ADD_INTERFACE) {
+            this.addNode(new InterfaceNode('Interface', (offsetX - this._panOffsetX) / this._scale,
+                                           (offsetY - this._panOffsetY) / this._scale));
+            return;
+        }
+
         this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
 
         if (this._tool === UmlEditorTool.EDIT)
@@ -196,7 +205,7 @@ export class UmlEditorService {
         this.render();
     }
 
-    private getNodeAtPosition(x: number, y: number): ANode | null {
+    private getNodeAtPosition(x: number, y: number): Node | null {
         const transformedX = (x - this._panOffsetX) / this._scale;
         const transformedY = (y - this._panOffsetY) / this._scale;
 

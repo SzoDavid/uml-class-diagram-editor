@@ -1,5 +1,5 @@
-<script lang="ts" src="./ClassEditorPanel.ts" />
-<style scoped src="./ClassEditorPanel.css" />
+<script lang="ts" src="./ClassifierEditorPanel.ts" />
+<style scoped src="./ClassifierEditorPanel.css" />
 
 <template>
   <fieldset>
@@ -20,20 +20,21 @@
       <input id="className" type="text" v-model="data.instance.name">
       <span v-if="getError({parameter: 'name'})" class="error capitalized" style="grid-column: span 2;">{{ t(getError({parameter: 'name'})) }}</span>
 
-      <label for="classAbstract" class="capitalized">{{ t("abstract") }}</label>
-      <input id="classAbstract" type="checkbox" v-model="data.instance.hasAbstractFlag">
+      <template v-if="data.instance instanceof ClassNode">
+        <label for="classAbstract" class="capitalized">{{ t("abstract") }}</label>
+        <input id="classAbstract" type="checkbox" v-model="data.instance.hasAbstractFlag">
 
-      <label for="classStereotype" class="capitalized">{{ t("class_stereotype.name") }}</label>
-      <select id="classStereotype" v-model="data.instance.stereotype">
-        <option :value="undefined">--</option>
-        <option :value="ClassStereotype.INTERFACE" class="capitalized">{{ t("class_stereotype.interface") }}</option>
-        <option :value="ClassStereotype.AUXILIARY" class="capitalized">{{ t("class_stereotype.auxiliary") }}</option>
-        <option :value="ClassStereotype.FOCUS" class="capitalized">{{ t("class_stereotype.focus") }}</option>
-        <option :value="ClassStereotype.IMPLEMENTATION_CLASS" class="capitalized">{{ t("class_stereotype.implementation_class") }}</option>
-        <option :value="ClassStereotype.METACLASS" class="capitalized">{{ t("class_stereotype.metaclass") }}</option>
-        <option :value="ClassStereotype.TYPE" class="capitalized">{{ t("class_stereotype.type") }}</option>
-        <option :value="ClassStereotype.UTILITY" class="capitalized">{{ t("class_stereotype.utility") }}</option>
-      </select>
+        <label for="classStereotype" class="capitalized">{{ t("class_stereotype.name") }}</label>
+        <select id="classStereotype" v-model="data.instance.stereotype">
+          <option :value="undefined">--</option>
+          <option :value="ClassStereotype.AUXILIARY" class="capitalized">{{ t("class_stereotype.auxiliary") }}</option>
+          <option :value="ClassStereotype.FOCUS" class="capitalized">{{ t("class_stereotype.focus") }}</option>
+          <option :value="ClassStereotype.IMPLEMENTATION_CLASS" class="capitalized">{{ t("class_stereotype.implementation_class") }}</option>
+          <option :value="ClassStereotype.METACLASS" class="capitalized">{{ t("class_stereotype.metaclass") }}</option>
+          <option :value="ClassStereotype.TYPE" class="capitalized">{{ t("class_stereotype.type") }}</option>
+          <option :value="ClassStereotype.UTILITY" class="capitalized">{{ t("class_stereotype.utility") }}</option>
+        </select>
+      </template>
     </div>
 
     <fieldset>
@@ -79,7 +80,7 @@
               {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'} })) }}
             </span>
 
-            <template v-if="data.instance.stereotype !== ClassStereotype.UTILITY">
+            <template v-if="data.instance instanceof ClassNode && data.instance.stereotype !== ClassStereotype.UTILITY">
               <label :for="`propStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
               <input type="checkbox" :id="`propStatic${index}`" v-model="prop.isStatic">
             </template>
@@ -176,17 +177,17 @@
               {{ t(getError({parameter:'operations', index:index, child:{parameter:'returnType'} })) }}
             </span>
 
-            <template v-if="data.instance.stereotype !== ClassStereotype.UTILITY">
+            <template v-if="data.instance instanceof ClassNode && data.instance.stereotype !== ClassStereotype.UTILITY">
               <label :for="`operationStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
               <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">
-            </template>
 
-            <label :for="`operationAbstract${index}`" class="capitalized">{{ t("abstract") }}</label>
-            <input :id="`operationAbstract${index}`" type="checkbox" v-model="operation.isAbstract">
-            <span v-if="getError({parameter:'operations', index:index, child:{parameter:'isAbstract'}})"
-                  class="error capitalized" style="grid-column: span 2;">
-              {{ t(getError({parameter:'operations', index:index, child:{parameter:'isAbstract'} })) }}
-            </span>
+              <label :for="`operationAbstract${index}`" class="capitalized">{{ t("abstract") }}</label>
+              <input :id="`operationAbstract${index}`" type="checkbox" v-model="operation.isAbstract">
+              <span v-if="getError({parameter:'operations', index:index, child:{parameter:'isAbstract'}})"
+                    class="error capitalized" style="grid-column: span 2;">
+                {{ t(getError({parameter:'operations', index:index, child:{parameter:'isAbstract'} })) }}
+              </span>
+            </template>
 
             <label :for="`operationRedefines${index}`" class="capitalized">{{ t("redefines") }}</label>
             <input :id="`operationRedefines${index}`" type="text" v-model="operation.redefines">

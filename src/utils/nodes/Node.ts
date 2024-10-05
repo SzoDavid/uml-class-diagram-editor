@@ -1,6 +1,6 @@
 import {InvalidNodeParameterCause} from './types.ts';
 
-export abstract class ANode {
+export abstract class Node {
     isSelected: boolean = false;
     isDragging: boolean = false;
     height: number = 0;
@@ -14,10 +14,7 @@ export abstract class ANode {
         this.y = y;
     }
 
-    validate(): InvalidNodeParameterCause[] {
-        return [];
-    }
-    
-    abstract clone(): ANode;
-    abstract copy(node: ANode): void;
+    abstract validate(): InvalidNodeParameterCause[];
+    abstract clone(): Node;
+    abstract copy(node: Node): void;
 }

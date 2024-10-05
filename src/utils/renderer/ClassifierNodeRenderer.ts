@@ -1,18 +1,19 @@
 import {NodeRenderer} from './NodeRenderer.ts';
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {ClassNode} from '../nodes/ClassNode.ts';
 import {Feature} from '../nodes/features/Feature.ts';
 import {IsDecoratedFeature} from '../nodes/features/DecoratedFeature.ts';
 import {IsMultilineFeature} from '../nodes/features/MultilineFeature.ts';
+import {ClassifierNode} from '../nodes/ClassifierNode.ts';
+import {ClassNode} from '../nodes/ClassNode.ts';
 
-export class ClassNodeRenderer extends NodeRenderer {
+export class ClassifierNodeRenderer extends NodeRenderer {
     constructor(ctx: CanvasRenderingContext2D, renderConfig: RenderConfiguration) {
         super(ctx, renderConfig);
     }
 
     // NOTE: optimize by caching width and line counts, and not rendering not visible nodes
 
-    public render(node: ClassNode): void {
+    public render(node: ClassifierNode): void {
         let invalid = false;
         const nodeErrors = node.validate();
         if (nodeErrors.length > 0) {
@@ -22,11 +23,11 @@ export class ClassNodeRenderer extends NodeRenderer {
 
         this.adjustWidth(node);
 
-        this.drawRect(node.x, node.y, node.width, this._rc.lineHeight * (node.stereotype ? 2 : 1), node.isSelected, invalid);
-        node.height = this._rc.lineHeight * (node.stereotype ? 2 : 1);
+        this.drawRect(node.x, node.y, node.width, this._rc.lineHeight * (node.header ? 2 : 1), node.isSelected, invalid);
+        node.height = this._rc.lineHeight * (node.header ? 2 : 1);
 
-        if (node.stereotype) {
-            this.drawText(`«${node.stereotype}»`, node.x, node.y, node.width, {
+        if (node.header) {
+            this.drawText(`«${node.header}»`, node.x, node.y, node.width, {
                 isSelected: node.isSelected,
                 isInvalid: invalid,
                 textWeight: 'bold',
@@ -34,11 +35,11 @@ export class ClassNodeRenderer extends NodeRenderer {
             });
         }
         
-        this.drawText(node.name, node.x, node.y + (node.stereotype ? this._rc.lineHeight : 0), node.width, {
+        this.drawText(node.name, node.x, node.y + (node.header ? this._rc.lineHeight : 0), node.width, {
             isSelected: node.isSelected,
             isInvalid: invalid,
             textWeight: 'bold',
-            italic: node.isAbstract,
+            italic: node instanceof ClassNode && node.isAbstract,
             textAlign: 'center'
         });
 
@@ -53,7 +54,7 @@ export class ClassNodeRenderer extends NodeRenderer {
         );
     }
 
-    private adjustWidth(node: ClassNode): void {
+    private adjustWidth(node: ClassifierNode): void {
         node.width = this._rc.defaultWidth;
 
         this._ctx.font = `${this._rc.textSize}px Arial`;
@@ -61,7 +62,7 @@ export class ClassNodeRenderer extends NodeRenderer {
         node.width = Math.max(
             node.width,
             this._ctx.measureText(node.name).width + 2 * this._rc.lineMargin,
-            node.stereotype ? this._ctx.measureText(`«${node.stereotype}»`).width + 2 * this._rc.lineMargin : 0
+            node.header ? this._ctx.measureText(`«${node.header}»`).width + 2 * this._rc.lineMargin : 0
         );
 
         [...node.properties, ...node.operations].forEach(feature =>

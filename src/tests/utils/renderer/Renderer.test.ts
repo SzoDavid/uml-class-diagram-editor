@@ -1,15 +1,15 @@
 import {beforeEach, describe, vi, test, expect} from 'vitest';
 import {Renderer} from '../../../utils/renderer/Renderer.ts';
-import {ClassNodeRenderer} from '../../../utils/renderer/ClassNodeRenderer.ts';
+import {ClassifierNodeRenderer} from '../../../utils/renderer/ClassifierNodeRenderer.ts';
 import {defaultRenderConfiguration, RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
-import {ANode} from '../../../utils/nodes/ANode.ts';
+import {Node} from '../../../utils/nodes/Node.ts';
 
 describe('UCDE-Renderer', () => {
     let canvas: HTMLCanvasElement;
     let context2D: CanvasRenderingContext2D;
     let renderConf: RenderConfiguration;
-    let classNodeRenderer: ClassNodeRenderer;
+    let classifierNodeRenderer: ClassifierNodeRenderer;
     let renderer: Renderer;
     
     beforeEach(() => {
@@ -36,12 +36,12 @@ describe('UCDE-Renderer', () => {
         vi.spyOn(canvas, 'getContext').mockReturnValue(context2D);
 
         renderConf = defaultRenderConfiguration;
-        classNodeRenderer = new ClassNodeRenderer(context2D, renderConf);
-        vi.spyOn(classNodeRenderer, 'render');
+        classifierNodeRenderer = new ClassifierNodeRenderer(context2D, renderConf);
+        vi.spyOn(classifierNodeRenderer, 'render');
 
         renderer = new Renderer(canvas, renderConf);
 
-        (renderer as any)._classRenderer = classNodeRenderer;
+        (renderer as any)._classifierRenderer = classifierNodeRenderer;
     });
 
     test('UCDE-R-01 GIVEN an empty node list WHEN render is called THEN clearRect and transformation methods should be called', () => {
@@ -58,14 +58,14 @@ describe('UCDE-Renderer', () => {
         const classNode = new ClassNode('TestClass', 100, 100);
         renderer.render([classNode], 1, 0, 0);
 
-        expect(classNodeRenderer.render).toHaveBeenCalledWith(classNode);
+        expect(classifierNodeRenderer.render).toHaveBeenCalledWith(classNode);
     });
 
     test('UCDE-R-03 GIVEN a non-ClassNode node WHEN render is called THEN ClassNodeRenderer.render should not be called', () => {
-        const aNode = { x: 100, y: 100, width: 50, height: 50 } as ANode;
+        const aNode = { x: 100, y: 100, width: 50, height: 50 } as Node;
         renderer.render([aNode], 1, 0, 0);
 
-        expect(classNodeRenderer.render).not.toHaveBeenCalled();
+        expect(classifierNodeRenderer.render).not.toHaveBeenCalled();
     });
 
     test('UCDE-R-04 GIVEN a scale and offsets WHEN render is called THEN transformations should be applied correctly', () => {

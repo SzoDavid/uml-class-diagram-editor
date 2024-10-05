@@ -2,6 +2,7 @@
     "abstract": "abstract",
     "add": "add",
     "add_class": "add class",
+    "add_interface": "add interface",
     "appearance": "appearance",
     "class_property": "property | properties",
     "class_stereotype": {
