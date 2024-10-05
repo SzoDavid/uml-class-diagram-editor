@@ -54,9 +54,9 @@ describe('UCDE-UmlEditorService', () => {
 
     test('UCDE-UES-03 GIVEN a new tool is set WHEN tool is changed THEN it should emit toolChange event', () => {
         const spy = vi.spyOn(editorService.emitter, 'emit');
-        editorService.tool = UmlEditorTool.ADD_CLASS;
+        editorService.tool = UmlEditorTool.ADD;
 
-        expect(spy).toHaveBeenCalledWith('toolChange', UmlEditorTool.ADD_CLASS);
+        expect(spy).toHaveBeenCalledWith('toolChange', UmlEditorTool.ADD);
     });
 
     test('UCDE-UES-04 GIVEN the scale is changed WHEN scale setter is called THEN it should update scale and emit scaleChange event', () => {
