@@ -9,11 +9,11 @@ import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
 import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 
-interface ClassEditorPanelProperties {
-    classData: NodeData<ClassifierNode>
+interface ClassifierEditorPanelProperties {
+    classifierData: NodeData<ClassifierNode>
 }
 
-interface ClassEditorPanelEmits {
+interface ClassifierEditorPanelEmits {
     (e: 'save', data: NodeData<ClassifierNode>): void;
 }
 
@@ -25,7 +25,7 @@ interface ErrorContext {
 
 export default defineComponent({
     props: {
-        classData: {
+        classifierData: {
             type: Object as () => NodeData<ClassNode>,
             required: true,
         }
@@ -42,18 +42,18 @@ export default defineComponent({
             return Visibility;
         }
     },
-    setup(props: ClassEditorPanelProperties, { emit }: { emit: ClassEditorPanelEmits}) {
+    setup(props: ClassifierEditorPanelProperties, { emit }: { emit: ClassifierEditorPanelEmits}) {
         const { t } = useI18n();
 
-        const data = ref<NodeData<ClassifierNode>>(props.classData);
+        const data = ref<NodeData<ClassifierNode>>(props.classifierData);
         const renderKey = ref<number>(0);
 
         let errors: InvalidNodeParameterCause[] = [];
 
         watch(
-            () => props.classData,
-            (newClassData) => {
-                data.value = newClassData;
+            () => props.classifierData,
+            (newClassifierData) => {
+                data.value = newClassifierData;
             },
             { immediate: true }
         );

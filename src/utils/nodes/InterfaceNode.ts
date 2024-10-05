@@ -32,6 +32,10 @@ export class InterfaceNode extends ClassifierNode {
         return clone;
     }
 
+    public copy(node: InterfaceNode) {
+        super.copy(node);
+    }
+
     public get header(): string {
         return 'Interface';
     }

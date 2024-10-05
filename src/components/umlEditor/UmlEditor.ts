@@ -1,7 +1,7 @@
 import {onMounted, ref} from 'vue';
 import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/UmlEditorService.ts';
 import {DataContext} from '../../utils/types.ts';
-import ClassEditorPanel from '../classEditorPanel/ClassEditorPanel.vue';
+import ClassifierEditorPanel from '../classifierEditorPanel/ClassifierEditorPanel.vue';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
 import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
 import {Node} from '../../utils/nodes/Node.ts';
@@ -13,9 +13,10 @@ import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
 import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
+import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
 
 export default {
-    components: {ClassEditorPanel},
+    components: {ClassifierEditorPanel},
     computed: {
         UmlEditorTool() {
             return UmlEditorTool;
@@ -75,9 +76,12 @@ export default {
                 return;
             }
 
-            if (data.type === 'classifier' && selectedNode.value instanceof ClassifierNode && data.instance instanceof ClassifierNode) {
-                // TODO make sure both values are the same type
-                selectedNode.value.copy(data.instance);
+            if (data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) {
+                if (selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof InterfaceNode && data.instance instanceof InterfaceNode) {
+                    selectedNode.value.copy(data.instance);
+                }
 
                 editor.render();
                 setSelectedNode(selectedNode.value);
@@ -125,6 +129,7 @@ export default {
                     data.value = { type: 'editor', instance: editor.editorConfig };
                     break;
                 case UmlEditorTool.ADD_CLASS:
+                case UmlEditorTool.ADD_INTERFACE:
                 case UmlEditorTool.REMOVE:
                     data.value = null;
                     break;}
@@ -132,6 +137,8 @@ export default {
 
         const onKeyPress = (event: KeyboardEvent) => {
             if (!event.ctrlKey) return;
+
+            // TODO: rethink this mechanism
 
             switch (event.key) {
                 case 'm':

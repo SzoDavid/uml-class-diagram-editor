@@ -1,5 +1,5 @@
-<script lang="ts" src="./ClassEditorPanel.ts" />
-<style scoped src="./ClassEditorPanel.css" />
+<script lang="ts" src="./ClassifierEditorPanel.ts" />
+<style scoped src="./ClassifierEditorPanel.css" />
 
 <template>
   <fieldset>

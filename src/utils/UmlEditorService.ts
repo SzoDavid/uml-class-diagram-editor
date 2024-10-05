@@ -2,11 +2,13 @@ import mitt, {Emitter} from 'mitt';
 import {Node} from './nodes/Node.ts';
 import {Renderer} from './renderer/Renderer.ts';
 import {ClassNode} from './nodes/ClassNode.ts';
+import {InterfaceNode} from './nodes/InterfaceNode.ts';
 
 export enum UmlEditorTool {
     EDIT,
     MOVE,
     ADD_CLASS,
+    ADD_INTERFACE,
     REMOVE
 }
 
@@ -113,6 +115,13 @@ export class UmlEditorService {
                                        (offsetY - this._panOffsetY) / this._scale));
             return;
         }
+
+        if (this._tool === UmlEditorTool.ADD_INTERFACE) {
+            this.addNode(new InterfaceNode('Interface', (offsetX - this._panOffsetX) / this._scale,
+                                           (offsetY - this._panOffsetY) / this._scale));
+            return;
+        }
+
         this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
 
         if (this._tool === UmlEditorTool.EDIT)
