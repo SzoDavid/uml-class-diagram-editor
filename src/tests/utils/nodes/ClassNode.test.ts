@@ -1,5 +1,5 @@
-import { describe, expect, test, beforeEach } from 'vitest';
-import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
+import {beforeEach, describe, expect, test} from 'vitest';
+import {ClassNode, ClassStereotype} from '../../../utils/nodes/ClassNode.ts';
 import {MockOperation} from './features/mocks/MockOperation.ts';
 import {MockProperty} from './features/mocks/MockProperty.ts';
 import {validateStringKeys} from '../../helpers.ts';
@@ -21,6 +21,7 @@ describe('UCDE-ClassNode', () => {
             expect(classNode.isNotShownPropertiesExist).toBe(false);
             expect(classNode.isNotShownOperationsExist).toBe(false);
             expect(classNode.hasAbstractFlag).toBe(false);
+            expect(classNode.stereotype).toBe(undefined);
         });
     });
 
@@ -90,6 +91,7 @@ describe('UCDE-ClassNode', () => {
         test('UCDE-CN-0401 GIVEN valid ClassNode WHEN clone() THEN return a new instance with same values', () => {
             classNode.properties.push(new MockProperty('prop1'));
             classNode.operations.push(new MockOperation('op1'));
+            classNode.stereotype = ClassStereotype.METACLASS;
             const clone = classNode.clone();
             expect(clone).not.toBe(classNode); // Ensure it's a new instance
             expect(clone.name).toBe(classNode.name);
@@ -97,6 +99,7 @@ describe('UCDE-ClassNode', () => {
             expect(clone.y).toBe(classNode.y);
             expect(clone.properties.length).toBe(1);
             expect(clone.operations.length).toBe(1);
+            expect(clone.stereotype).toBe(ClassStereotype.METACLASS);
         });
     });
 
@@ -109,6 +112,21 @@ describe('UCDE-ClassNode', () => {
             expect(classNode.y).toBe(40);
             expect(classNode.properties.length).toBe(1);
             expect(classNode.operations.length).toBe(1);
+        });
+    });
+
+    describe ('UCDE-CN-0600-set stereotype', () => {
+        test('UCDE-CN-0601 GIVEN utility WHEN setting stereotype for class with non-static properties and operations THEN props and operations are set to static', () => {
+            classNode.properties.push(new MockProperty('prop1'));
+            classNode.operations.push(new MockOperation('op1'));
+
+            expect(classNode.properties[0].isStatic).toBe(false);
+            expect(classNode.operations[0].isStatic).toBe(false);
+
+            classNode.stereotype = ClassStereotype.UTILITY;
+
+            expect(classNode.properties[0].isStatic).toBe(true);
+            expect(classNode.operations[0].isStatic).toBe(true);
         });
     });
 });
