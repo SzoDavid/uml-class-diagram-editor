@@ -30,13 +30,13 @@
     margin-bottom: 2px;
 }
 
-.header span::before {
+.header>span::before {
     content: '⯆';
     display: inline-block;
     margin: 0 5px;
 }
 
-.collapsed .header span::before {
+.collapsed .header>span::before {
     content: '⯈';
 }
 
@@ -48,4 +48,8 @@
 
 .error-header {
     background-color: red;
+}
+
+.underlined {
+    text-decoration: underline;
 }

@@ -41,7 +41,11 @@
       <div :id="`property${index}`" class="collapsed" v-for="(prop, index) in data.instance.properties" :key="index">
         <div @click="onCollapseClicked('prop', index)" class="header"
              :class="{ 'error-header': getError({parameter: 'properties', index: index}) }">
-          <span>{{ prop.toString() }}</span>
+          <span>
+            <span>{{ prop.prefix }}</span>
+            <span :class="{underlined: prop.isStatic}">{{ prop.text }}</span>
+            <span>{{ prop.postfix }}</span>
+          </span>
         </div>
         <div class="details sep">
           <div class="grid-form">
@@ -75,8 +79,10 @@
               {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'} })) }}
             </span>
 
-            <label :for="`propStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
-            <input type="checkbox" :id="`propStatic${index}`" v-model="prop.isStatic">
+            <template v-if="data.instance.stereotype !== ClassStereotype.UTILITY">
+              <label :for="`propStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
+              <input type="checkbox" :id="`propStatic${index}`" v-model="prop.isStatic">
+            </template>
 
             <label :for="`propDerived${index}`" class="capitalized">{{ t("derived") }}</label>
             <input type="checkbox" :id="`propDerived${index}`" v-model="prop.isDerived">
@@ -138,7 +144,11 @@
       <div :id="`operation${index}`" class="collapsed" v-for="(operation, index) in data.instance.operations" :key="index">
         <div @click="onCollapseClicked('operation', index)" class="header"
              :class="{ 'error-header': getError({parameter: 'operations', index: index}) }">
-          <span>{{ operation.toString() }}</span>
+          <span>
+            <span>{{ operation.prefix }}</span>
+            <span :class="{underlined: operation.isStatic}">{{ operation.text }}</span>
+            <span>{{ operation.postfix }}</span>
+          </span>
         </div>
 
         <div class="details sep">
@@ -166,8 +176,10 @@
               {{ t(getError({parameter:'operations', index:index, child:{parameter:'returnType'} })) }}
             </span>
 
-            <label :for="`operationStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
-            <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">
+            <template v-if="data.instance.stereotype !== ClassStereotype.UTILITY">
+              <label :for="`operationStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
+              <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">
+            </template>
 
             <label :for="`operationAbstract${index}`" class="capitalized">{{ t("abstract") }}</label>
             <input :id="`operationAbstract${index}`" type="checkbox" v-model="operation.isAbstract">

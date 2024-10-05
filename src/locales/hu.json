@@ -73,9 +73,9 @@
     "type": "típus",
     "visibility": {
         "name": "láthatóság",
-        "visibility_package": "csomag",
-        "visibility_private": "privát",
-        "visibility_protected": "védett",
-        "visibility_public": "publikus"
+        "package": "csomag",
+        "private": "privát",
+        "protected": "védett",
+        "public": "publikus"
     }
 }

@@ -21,7 +21,7 @@ export class ClassNode extends ANode {
     isNotShownPropertiesExist: boolean;
     isNotShownOperationsExist: boolean;
     hasAbstractFlag: boolean;
-    stereotype?: ClassStereotype;
+    private _stereotype?: ClassStereotype;
 
     constructor(name: string,
                 x: number,
@@ -39,7 +39,20 @@ export class ClassNode extends ANode {
         this.isNotShownPropertiesExist = isNotShownPropertiesExist;
         this.isNotShownOperationsExist = isNotShownOperationsExist;
         this.hasAbstractFlag = isAbstract;
-        this.stereotype = stereotype;
+        this._stereotype = stereotype;
+    }
+
+    public set stereotype(value: ClassStereotype|undefined) {
+        this._stereotype = value;
+
+        if (value === ClassStereotype.UTILITY) {
+            this.properties.forEach(property => property.isStatic = true);
+            this.operations.forEach(operation => operation.isStatic = true);
+        }
+    }
+
+    public get stereotype(): ClassStereotype|undefined {
+        return this._stereotype;
     }
 
     public get isAbstract(): boolean {

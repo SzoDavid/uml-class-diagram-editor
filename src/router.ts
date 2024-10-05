@@ -1,9 +1,10 @@
-import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import i18n from './i18n.ts';
 
 const routes = [
-    { path: '/:locale', component: App },
+    { path: '/:locale', children: [
+        { path: '', component: () => import('./components/umlEditor/UmlEditor.vue') },
+    ]}
 ];
 
 const router = createRouter({

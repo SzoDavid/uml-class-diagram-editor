@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import UmlEditor from './components/umlEditor/UmlEditor.vue';
 </script>
 
 <template>
@@ -7,7 +6,7 @@ import UmlEditor from './components/umlEditor/UmlEditor.vue';
     <RouterLink to="/en">en</RouterLink>
     <RouterLink to="/hu">hu</RouterLink>
   </nav>
-  <UmlEditor />
+  <RouterView />
 </template>
 
 <style scoped>
