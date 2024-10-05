@@ -35,7 +35,7 @@
       </fieldset>
 
       <template v-if="data !== null">
-        <template v-if="data['type']==='class'">
+        <template v-if="data['type'] ==='classifier'">
           <!-- Because of type check it shouldn't have an error -->
           <ClassEditorPanel :classData="data" @save="onSave" />
         </template>

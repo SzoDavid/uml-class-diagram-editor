@@ -7,13 +7,14 @@ import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts
 import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
+import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 
 interface ClassEditorPanelProperties {
-    classData: NodeData<ClassNode>
+    classData: NodeData<ClassifierNode>
 }
 
 interface ClassEditorPanelEmits {
-    (e: 'save', data: NodeData<ClassNode>): void;
+    (e: 'save', data: NodeData<ClassifierNode>): void;
 }
 
 interface ErrorContext {
@@ -31,6 +32,9 @@ export default defineComponent({
     },
     emits: ['save'],
     computed: {
+        ClassNode() {
+            return ClassNode;
+        },
         ClassStereotype() {
             return ClassStereotype;
         },
@@ -41,7 +45,7 @@ export default defineComponent({
     setup(props: ClassEditorPanelProperties, { emit }: { emit: ClassEditorPanelEmits}) {
         const { t } = useI18n();
 
-        const data = ref<NodeData<ClassNode>>(props.classData);
+        const data = ref<NodeData<ClassifierNode>>(props.classData);
         const renderKey = ref<number>(0);
 
         let errors: InvalidNodeParameterCause[] = [];
@@ -68,7 +72,7 @@ export default defineComponent({
         };
 
         const onAddClicked = (context: ClickContext, parentIndex: string | number = '') => {
-            if (data.value === null || data.value.type !== 'class') return;
+            if (data.value === null || data.value.type !== 'classifier') return;
 
             switch (context) {
                 case 'prop': {
@@ -97,7 +101,7 @@ export default defineComponent({
         const onRemoveClicked = (context: ClickContext, index: string | number, parentIndex: string | number = '') => {
             if (typeof index !== 'number') return;
 
-            if (data.value === null || data.value.type !== 'class') return;
+            if (data.value === null || data.value.type !== 'classifier') return;
 
             switch (context) {
                 case 'prop':
@@ -116,7 +120,7 @@ export default defineComponent({
         const onCollapseClicked = (context: ClickContext, index: string|number, parentIndex: string|number = '') => {
             if (typeof index !== 'number') return null;
 
-            if (data.value === null || data.value.type !== 'class') return null;
+            if (data.value === null || data.value.type !== 'classifier') return null;
 
             let element = null;
             switch (context) {
@@ -138,7 +142,7 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'class') return '';
+            if (data.value === null || data.value.type !== 'classifier') return '';
 
             return findError(errors, context);
         };

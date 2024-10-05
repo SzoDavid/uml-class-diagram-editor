@@ -4,7 +4,7 @@ import {DataContext} from '../../utils/types.ts';
 import ClassEditorPanel from '../classEditorPanel/ClassEditorPanel.vue';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
 import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
-import {ANode} from '../../utils/nodes/ANode.ts';
+import {Node} from '../../utils/nodes/Node.ts';
 import {ClassNode} from '../../utils/nodes/ClassNode.ts';
 import {Property} from '../../utils/nodes/features/Property.ts';
 import {Visibility} from '../../utils/nodes/types.ts';
@@ -12,6 +12,7 @@ import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts
 import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
+import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 
 export default {
     components: {ClassEditorPanel},
@@ -24,8 +25,8 @@ export default {
         const { t } = useI18n();
 
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
-        const selectedNode = ref<ANode | null>(null);
-        const data = ref<DataContext<ANode>>(null);
+        const selectedNode = ref<Node | null>(null);
+        const data = ref<DataContext<Node>>(null);
         const tool = ref<UmlEditorTool|null>(null);
         const scale = ref<number>(100);
         let editor: UmlEditorService;
@@ -43,7 +44,7 @@ export default {
             window.addEventListener('keydown', onKeyPress);
 
             editor.emitter.on('mouseDown', (node: EmitType) => {
-                if (!(node instanceof ANode) && node !== null) return;
+                if (!(node instanceof Node) && node !== null) return;
 
                 setSelectedNode(node);
             });
@@ -68,13 +69,14 @@ export default {
                                          [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))]));
         });
 
-        const onSave = (data: DataContext<ANode>) => {
+        const onSave = (data: DataContext<Node>) => {
             if (selectedNode.value === null || data === null) {
                 console.error('Cannot save: no selected node');
                 return;
             }
 
-            if (data.type === 'class' && selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
+            if (data.type === 'classifier' && selectedNode.value instanceof ClassifierNode && data.instance instanceof ClassifierNode) {
+                // TODO make sure both values are the same type
                 selectedNode.value.copy(data.instance);
 
                 editor.render();
@@ -93,29 +95,19 @@ export default {
             editor.resetScaling();
         };
 
-        const setSelectedNode = (node: ANode | null) => {
+        const setSelectedNode = (node: Node | null) => {
             selectedNode.value = node;
             if (node === null) {
                 data.value = null;
                 return;
             }
 
-            if (node instanceof ClassNode) {
-                const classNode = node.clone();
-
-                classNode.properties.forEach((property) => {
-                    if (property.multiplicity !== null) return;
-                    property.multiplicity = new MultiplicityRange(null);
-                });
-
-                classNode.operations.forEach((operation) => operation.params.forEach((param) => {
-                    if (param.multiplicity !== null) return;
-                    param.multiplicity = new MultiplicityRange(null);
-                }));
+            if (node instanceof ClassifierNode) {
+                const classifierNode = node.clone();
 
                 data.value = {
-                    type: 'class',
-                    instance: classNode
+                    type: 'classifier',
+                    instance: classifierNode
                 };
 
                 return;

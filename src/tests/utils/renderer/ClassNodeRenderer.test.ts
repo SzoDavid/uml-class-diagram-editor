@@ -1,6 +1,6 @@
 import {describe, beforeEach, vi, test, expect} from 'vitest';
 import {defaultRenderConfiguration, RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
-import {ClassNodeRenderer} from '../../../utils/renderer/ClassNodeRenderer.ts';
+import {ClassifierNodeRenderer} from '../../../utils/renderer/ClassifierNodeRenderer.ts';
 import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
 import {MockProperty} from '../nodes/features/mocks/MockProperty.ts';
 import {MockOperation} from '../nodes/features/mocks/MockOperation.ts';
@@ -10,7 +10,7 @@ describe('UCDE-ClassNodeRenderer', () => {
     let canvas: HTMLCanvasElement;
     let context2D: CanvasRenderingContext2D;
     let renderConf: RenderConfiguration;
-    let classNodeRenderer: ClassNodeRenderer;
+    let classNodeRenderer: ClassifierNodeRenderer;
 
     beforeEach(() => {
         canvas = document.createElement('canvas');
@@ -34,7 +34,7 @@ describe('UCDE-ClassNodeRenderer', () => {
         } as unknown as CanvasRenderingContext2D;
 
         renderConf = defaultRenderConfiguration;
-        classNodeRenderer = new ClassNodeRenderer(context2D, renderConf);
+        classNodeRenderer = new ClassifierNodeRenderer(context2D, renderConf);
     });
 
     test('UCDE-CNR-01 GIVEN a class node with features WHEN render is called THEN the width of the class node should be adjusted accordingly', () => {
