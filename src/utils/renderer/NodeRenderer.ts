@@ -37,19 +37,9 @@ export class NodeRenderer {
         if (node instanceof ClassifierNode) {
             this._classifierRenderer.render(node);
         } else if (node instanceof PrimitiveTypeNode) {
-            this.ctx.font = `bold ${this.rc.textSize}px Arial`;
-
-            node.width = Math.max(
-                this.rc.defaultWidth,
-                this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
-                this.ctx.measureText('«Primitive»').width + 2 * this.rc.lineMargin,
-            );
-
-            this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive',
-                            node.isSelected, node.validate().length > 0, false);
-            node.height = this.rc.lineHeight * 2;
+            this.renderPrimitiveType(node);
         } else if (node instanceof EnumerationNode) {
-            //TODO
+            this.renderEnumeration(node);
         }
     }
 
@@ -138,5 +128,53 @@ export class NodeRenderer {
                 : (isInvalid ? this.rc.accentColorInvalid : this.rc.accentColor);
             this.ctx.stroke();
         }
+    }
+
+    private renderPrimitiveType(node: PrimitiveTypeNode) {
+        this.ctx.font = `bold ${this.rc.textSize}px Arial`;
+
+        node.width = Math.max(
+            this.rc.defaultWidth,
+            this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
+            this.ctx.measureText('«Primitive»').width + 2 * this.rc.lineMargin,
+        );
+
+        this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive',
+                        node.isSelected, node.validate().length > 0, false);
+        node.height = this.rc.lineHeight * 2;
+    }
+
+    private renderEnumeration(node: EnumerationNode) {
+        this.ctx.font = `bold ${this.rc.textSize}px Arial`;
+
+        const invalid = node.validate().length > 0;
+
+        node.width = Math.max(
+            this.rc.defaultWidth,
+            this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
+            this.ctx.measureText('«Enumeration»').width + 2 * this.rc.lineMargin,
+        );
+
+        this.ctx.font = `${this.rc.textSize}px Arial`;
+
+        node.values.forEach((value) => {
+            node.width = Math.max(node.width, this.ctx.measureText(value).width + 2 * this.rc.lineMargin);
+        });
+
+        this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive',
+                        node.isSelected, invalid, false);
+        node.height = this.rc.lineHeight * 2;
+
+        this.drawRect(node.x, node.y + node.height, node.width,
+                      node.values.length * this.rc.lineHeight, node.isSelected, invalid);
+
+
+        node.values.forEach((value) => {
+            this.drawText(value, node.x, node.y + node.height, node.width, {
+                isSelected: node.isSelected,
+                isInvalid: invalid
+            });
+            node.height += this.rc.lineHeight;
+        });
     }
 }

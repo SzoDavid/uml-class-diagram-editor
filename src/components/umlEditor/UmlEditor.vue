@@ -42,6 +42,9 @@
         <template v-else-if="data.type==='primitive'">
           <PrimitiveEditorPanel :primitiveData="data" @save="onSave" />
         </template>
+        <template v-else-if="data.type==='enumeration'">
+          <EnumerationEditorPanel :enumerationData="data" @save="onSave" />
+        </template>
         <template v-else-if="data.type==='editor'">
           <fieldset>
             <legend class="capitalized">{{ t("option", 2) }}</legend>
@@ -65,6 +68,7 @@
                 <option :value="NodeType.INTERFACE">{{ t("node_types.interface") }}</option>
                 <option :value="NodeType.DATATYPE">{{ t("node_types.datatype") }}</option>
                 <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
+                <option :value="NodeType.ENUMERATION">{{ t("node_types.enumeration") }}</option>
               </select>
             </div>
           </fieldset>

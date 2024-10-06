@@ -61,6 +61,7 @@
     "node_types": {
         "class": "osztály",
         "datatype": "adattípus",
+        "enumeration": "enumeration",
         "primitive": "primitív típus",
         "interface": "interface"
     },
@@ -81,6 +82,7 @@
     "subsets": "részhalmaza",
     "static_type": "statikus",
     "type": "típus",
+    "value": "érték | értékek",
     "visibility": {
         "name": "láthatóság",
         "package": "csomag",

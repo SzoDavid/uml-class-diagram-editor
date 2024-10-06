@@ -61,6 +61,7 @@
     "node_types": {
         "class": "class",
         "datatype": "datatype",
+        "enumeration": "enumeration",
         "primitive": "primitive type",
         "interface": "interface"
     },
@@ -81,6 +82,7 @@
     "subsets": "subsets",
     "static_type": "static",
     "type": "type",
+    "value": "value | values",
     "visibility": {
         "name": "visibility",
         "package": "package",

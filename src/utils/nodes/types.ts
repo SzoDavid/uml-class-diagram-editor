@@ -21,5 +21,6 @@ export enum NodeType {
     CLASS,
     INTERFACE,
     DATATYPE,
-    PRIMITIVE
+    PRIMITIVE,
+    ENUMERATION
 }

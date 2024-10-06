@@ -6,6 +6,7 @@ import {InterfaceNode} from './nodes/InterfaceNode.ts';
 import {DataTypeNode} from './nodes/DataTypeNode.ts';
 import {NodeType} from './nodes/types.ts';
 import {PrimitiveTypeNode} from './nodes/PrimitiveTypeNode.ts';
+import {EnumerationNode} from './nodes/EnumerationNode.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -139,6 +140,9 @@ export class UmlEditorService {
                     node = new PrimitiveTypeNode('Primitive', (offsetX - this._panOffsetX) / this._scale,
                                                  (offsetY - this._panOffsetY) / this._scale);
                     break;
+                case NodeType.ENUMERATION:
+                    node = new EnumerationNode('Enumeration', (offsetX - this._panOffsetX) / this._scale,
+                                               (offsetY - this._panOffsetY) / this._scale);
             }
 
             this.addNode(node);

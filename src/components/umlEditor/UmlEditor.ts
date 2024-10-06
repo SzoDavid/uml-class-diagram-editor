@@ -17,9 +17,11 @@ import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
 import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
 import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
+import EnumerationEditorPanel from '../enumerationEditorPanel/EnumerationEditorPanel.vue';
+import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
 
 export default {
-    components: {ClassifierEditorPanel, PrimitiveEditorPanel},
+    components: {EnumerationEditorPanel, ClassifierEditorPanel, PrimitiveEditorPanel},
     computed: {
         NodeType() {
             return NodeType;
@@ -83,7 +85,8 @@ export default {
             }
 
             if ((data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) ||
-                (data.type === 'primitive' && selectedNode.value instanceof PrimitiveTypeNode)) {
+                (data.type === 'primitive' && selectedNode.value instanceof PrimitiveTypeNode) ||
+                (data.type === 'enumeration' && selectedNode.value instanceof EnumerationNode)) {
                 if (selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof InterfaceNode && data.instance instanceof InterfaceNode) {
@@ -91,6 +94,8 @@ export default {
                 } else if (selectedNode.value instanceof DataTypeNode && data.instance instanceof DataTypeNode) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof PrimitiveTypeNode && data.instance instanceof PrimitiveTypeNode) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof EnumerationNode && data.instance instanceof EnumerationNode) {
                     selectedNode.value.copy(data.instance);
                 } else {
                     console.error('Not matching node types');
@@ -120,18 +125,19 @@ export default {
             }
 
             if (node instanceof ClassifierNode) {
-                const classifierNode = node.clone();
-
                 data.value = {
                     type: 'classifier',
-                    instance: classifierNode
+                    instance: node.clone()
                 };
             } else if (node instanceof PrimitiveTypeNode) {
-                const primitiveNode = node.clone();
-
                 data.value = {
                     type: 'primitive',
-                    instance: primitiveNode
+                    instance: node.clone()
+                };
+            } else if (node instanceof EnumerationNode) {
+                data.value = {
+                    type: 'enumeration',
+                    instance: node.clone()
                 };
             }
         };

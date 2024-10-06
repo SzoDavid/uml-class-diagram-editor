@@ -42,8 +42,8 @@ export class EnumerationNode extends Node {
         else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
 
         this.values.forEach((value, i) => {
-            if (value === '') errors.push({parameter: 'value', message: 'error.value.required', index: i});
-            else if (!Validator.isAlphanumeric(value)) errors.push({parameter: 'value', message: 'error.value.alphanumeric', index: i});
+            if (value === '') errors.push({parameter: 'values', message: 'error.value.required', index: i});
+            else if (!Validator.isAlphanumeric(value)) errors.push({parameter: 'values', message: 'error.value.alphanumeric', index: i});
         });
 
         return errors;
