@@ -1,7 +1,12 @@
-import {beforeEach, describe, vi, test, expect} from 'vitest';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
 import {UmlEditorService, UmlEditorTool} from '../../utils/UmlEditorService.ts';
 import {ClassNode} from '../../utils/nodes/ClassNode.ts';
+import {NodeType} from '../../utils/nodes/types.ts';
+import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
+import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
+import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
+import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
 
 describe('UCDE-UmlEditorService', () => {
     let canvas: HTMLCanvasElement;
@@ -95,5 +100,24 @@ describe('UCDE-UmlEditorService', () => {
         expect(editorService.offset.y).toBe(0);
         expect(spy).toHaveBeenCalledWith('scaleChange', 1);
         expect(renderer.render).toHaveBeenCalled();
+    });
+    
+    describe('UCDE-UES-07 GIVEN add tool is selected WHEN mouse is clicked THEN correct node is added', () => {
+        test.each([
+            { addType: NodeType.CLASS, expectedType: ClassNode},
+            { addType: NodeType.INTERFACE, expectedType: InterfaceNode},
+            { addType: NodeType.DATATYPE, expectedType: DataTypeNode},
+            { addType: NodeType.PRIMITIVE, expectedType: PrimitiveTypeNode},
+            { addType: NodeType.ENUMERATION, expectedType: EnumerationNode},
+        ])('UCDE-UES-07, {addType: $addType}', ({addType, expectedType}) => {
+            editorService.tool = UmlEditorTool.ADD;
+            editorService.addConfig = {type: addType};
+
+            const mouseDownEvent = simulateMouseEvent('mousedown', 100, 100);
+            canvas.dispatchEvent(mouseDownEvent);
+
+            expect(editorService['_nodes']).toHaveLength(1);
+            expect(editorService['_nodes'][0] instanceof expectedType).toBe(true);
+        });
     });
 });
