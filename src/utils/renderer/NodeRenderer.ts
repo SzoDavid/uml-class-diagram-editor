@@ -161,7 +161,7 @@ export class NodeRenderer {
             node.width = Math.max(node.width, this.ctx.measureText(value).width + 2 * this.rc.lineMargin);
         });
 
-        this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive',
+        this.drawHeader(node.x, node.y, node.width, node.name, 'Enumeration',
                         node.isSelected, invalid, false);
         node.height = this.rc.lineHeight * 2;
 

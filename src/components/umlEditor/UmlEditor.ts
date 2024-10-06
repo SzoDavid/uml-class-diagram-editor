@@ -73,9 +73,9 @@ export default {
             editor.addNode(new ClassNode('ClassA', 50, 50,
                                          [new Property('prop', 'type', Visibility.PUBLIC),
                                              new Property('prop2', 'type', Visibility.PUBLIC, false, new MultiplicityRange('*'), 'value', true)],
-                                         [new Operation('operationA', [], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
-            editor.addNode(new ClassNode('ClassB', 300, 200, [],
-                                         [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))]));
+                                         [new Operation('operationA', [new Parameter('param', 'type')], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
+            editor.addNode(new InterfaceNode('InterfaceB', 400, 200, [], [new Operation('operationB', [new Parameter('param', 'type')])]));
+            editor.addNode(new EnumerationNode('EnumerationC', 70, 250, ['VALUE_A', 'VALUE_B']));
         });
 
         const onSave = (data: DataContext<Node>) => {
