@@ -7,6 +7,7 @@ import {DataTypeNode} from './nodes/DataTypeNode.ts';
 import {NodeType} from './nodes/types.ts';
 import {PrimitiveTypeNode} from './nodes/PrimitiveTypeNode.ts';
 import {EnumerationNode} from './nodes/EnumerationNode.ts';
+import {CommentNode} from './nodes/CommentNode.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -24,6 +25,7 @@ export interface EditorConfig {
 
 export interface AddConfig {
     type: NodeType;
+    keepAdding: boolean
 }
 
 export class UmlEditorService {
@@ -49,7 +51,8 @@ export class UmlEditorService {
     };
 
     addConfig: AddConfig = {
-        type: NodeType.CLASS
+        type: NodeType.CLASS,
+        keepAdding: false
     };
 
     constructor(canvas: HTMLCanvasElement, renderer: Renderer) {
@@ -143,9 +146,19 @@ export class UmlEditorService {
                 case NodeType.ENUMERATION:
                     node = new EnumerationNode('Enumeration', (offsetX - this._panOffsetX) / this._scale,
                                                (offsetY - this._panOffsetY) / this._scale);
+                    break;
+                case NodeType.COMMENT:
+                    node = new CommentNode('...', (offsetX - this._panOffsetX) / this._scale,
+                                           (offsetY - this._panOffsetY) / this._scale);
+                    break;
             }
 
             this.addNode(node);
+
+            if (!this.addConfig.keepAdding) {
+                this.tool = UmlEditorTool.EDIT;
+            }
+
             return;
         }
 

@@ -21,6 +21,6 @@
     </div>
   </fieldset>
 
-  <button v-on:click="onSave" class="capitalized">{{ t("save") }}</button>
+  <button @click="onSave" class="capitalized">{{ t("save") }}</button>
 </template>
 

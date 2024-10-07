@@ -19,9 +19,11 @@ import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
 import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
 import EnumerationEditorPanel from '../enumerationEditorPanel/EnumerationEditorPanel.vue';
 import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
+import CommentEditorPanel from '../commentEditorPanel/CommentEditorPanel.vue';
+import {CommentNode} from '../../utils/nodes/CommentNode.ts';
 
 export default {
-    components: {EnumerationEditorPanel, ClassifierEditorPanel, PrimitiveEditorPanel},
+    components: {CommentEditorPanel, EnumerationEditorPanel, ClassifierEditorPanel, PrimitiveEditorPanel},
     computed: {
         NodeType() {
             return NodeType;
@@ -86,6 +88,7 @@ export default {
 
             if ((data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) ||
                 (data.type === 'primitive' && selectedNode.value instanceof PrimitiveTypeNode) ||
+                (data.type === 'comment' && selectedNode.value instanceof CommentNode) ||
                 (data.type === 'enumeration' && selectedNode.value instanceof EnumerationNode)) {
                 if (selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
                     selectedNode.value.copy(data.instance);
@@ -96,6 +99,8 @@ export default {
                 } else if (selectedNode.value instanceof PrimitiveTypeNode && data.instance instanceof PrimitiveTypeNode) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof EnumerationNode && data.instance instanceof EnumerationNode) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof CommentNode && data.instance instanceof CommentNode) {
                     selectedNode.value.copy(data.instance);
                 } else {
                     console.error('Not matching node types');
@@ -137,6 +142,11 @@ export default {
             } else if (node instanceof EnumerationNode) {
                 data.value = {
                     type: 'enumeration',
+                    instance: node.clone()
+                };
+            } else if (node instanceof CommentNode) {
+                data.value = {
+                    type: 'comment',
                     instance: node.clone()
                 };
             }

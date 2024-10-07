@@ -45,6 +45,9 @@
         <template v-else-if="data.type==='enumeration'">
           <EnumerationEditorPanel :enumerationData="data" @save="onSave" />
         </template>
+        <template v-else-if="data.type==='comment'">
+          <CommentEditorPanel :commentData="data" @save="onSave" />
+        </template>
         <template v-else-if="data.type==='editor'">
           <fieldset>
             <legend class="capitalized">{{ t("option", 2) }}</legend>
@@ -69,7 +72,11 @@
                 <option :value="NodeType.DATATYPE">{{ t("node_types.datatype") }}</option>
                 <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
                 <option :value="NodeType.ENUMERATION">{{ t("node_types.enumeration") }}</option>
+                <option :value="NodeType.COMMENT">{{ t("node_types.comment") }}</option>
               </select>
+
+              <label for=keepAdding class="capitalized">{{ t("keep_adding") }}</label>
+              <input id="keepAdding" type="checkbox" v-model="data.instance.keepAdding">
             </div>
           </fieldset>
         </template>

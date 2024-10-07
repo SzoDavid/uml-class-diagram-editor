@@ -6,7 +6,6 @@
     "class_stereotype": {
         "name": "stereotype",
         "_note_": "Translation is not advised",
-        "interface": "interface",
         "auxiliary": "auxiliary",
         "focus": "focus",
         "implementation_class": "implementation class",
@@ -20,6 +19,7 @@
     "direction": "direction",
     "edit": "edit",
     "error": {
+        "comment_empty": "comment cannot be empty",
         "default_value_alphanumeric": "default value must be alphanumeric",
         "invalid_class_property": "property is invalid",
         "multiplicity_range": {
@@ -51,6 +51,7 @@
         }
     },
     "grid_size": "grid size",
+    "keep_adding": "keep adding",
     "modifier": "modifier | modifiers",
     "move": "move",
     "multiplicity": "multiplicity",
@@ -60,6 +61,7 @@
     "navigation": "navigation",
     "node_types": {
         "class": "class",
+        "comment": "comment",
         "datatype": "datatype",
         "enumeration": "enumeration",
         "primitive": "primitive type",
@@ -89,5 +91,6 @@
         "private": "private",
         "protected": "protected",
         "public": "public"
-    }
+    },
+    "width": "width"
 }

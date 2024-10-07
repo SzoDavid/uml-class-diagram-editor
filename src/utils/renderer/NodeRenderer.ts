@@ -4,6 +4,8 @@ import {Node} from '../nodes/Node.ts';
 import {ClassifierNodeRenderer} from './ClassifierNodeRenderer.ts';
 import {PrimitiveTypeNode} from '../nodes/PrimitiveTypeNode.ts';
 import {EnumerationNode} from '../nodes/EnumerationNode.ts';
+import {CommentRenderer} from './CommentRenderer.ts';
+import {CommentNode} from '../nodes/CommentNode.ts';
 
 type TextWeight = 'normal' | 'bold';
 
@@ -24,6 +26,7 @@ interface TextProperties {
 
 export class NodeRenderer {
     private _classifierRenderer: ClassifierNodeRenderer;
+    private _commentRenderer: CommentRenderer;
     readonly ctx: CanvasRenderingContext2D;
     readonly rc: RenderConfiguration;
     
@@ -31,11 +34,14 @@ export class NodeRenderer {
         this.ctx = ctx;
         this.rc = renderConfig;
         this._classifierRenderer = new ClassifierNodeRenderer(this);
+        this._commentRenderer = new CommentRenderer(this);
     }
 
     public render(node: Node) {
         if (node instanceof ClassifierNode) {
             this._classifierRenderer.render(node);
+        } else if (node instanceof CommentNode) {
+            this._commentRenderer.render(node);
         } else if (node instanceof PrimitiveTypeNode) {
             this.renderPrimitiveType(node);
         } else if (node instanceof EnumerationNode) {

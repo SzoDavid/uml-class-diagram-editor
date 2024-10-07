@@ -6,7 +6,6 @@
     "class_stereotype": {
         "name": "sztereotípus",
         "_note_": "Translation is not advised",
-        "interface": "interface",
         "auxiliary": "auxiliary",
         "focus": "focus",
         "implementation_class": "implementation class",
@@ -20,6 +19,7 @@
     "direction": "irány",
     "edit": "szerkesztés",
     "error": {
+        "comment_empty": "A megjegyzés nem lehet üres",
         "default_value_alphanumeric": "az alapértelmezett értéknek alfanumerikusnak kell lennie",
         "invalid_class_property": "invalid attribútum",
         "multiplicity_range": {
@@ -51,6 +51,7 @@
         }
     },
     "grid_size": "rácsméret",
+    "keep_adding": "hozzáadás folytatása",
     "modifier": "módosító | módosítók",
     "move": "mozgatás",
     "multiplicity": "multiplicitás",
@@ -60,6 +61,7 @@
     "navigation": "navigáció",
     "node_types": {
         "class": "osztály",
+        "comment": "megjegyzés",
         "datatype": "adattípus",
         "enumeration": "enumeration",
         "primitive": "primitív típus",
@@ -89,5 +91,6 @@
         "private": "privát",
         "protected": "védett",
         "public": "publikus"
-    }
+    },
+    "width": "szélesség"
 }
