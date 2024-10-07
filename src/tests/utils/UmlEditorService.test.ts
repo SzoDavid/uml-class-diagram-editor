@@ -111,7 +111,7 @@ describe('UCDE-UmlEditorService', () => {
             { addType: NodeType.ENUMERATION, expectedType: EnumerationNode},
         ])('UCDE-UES-07, {addType: $addType}', ({addType, expectedType}) => {
             editorService.tool = UmlEditorTool.ADD;
-            editorService.addConfig = {type: addType};
+            editorService.addConfig = {type: addType, keepAdding: true};
 
             const mouseDownEvent = simulateMouseEvent('mousedown', 100, 100);
             canvas.dispatchEvent(mouseDownEvent);
