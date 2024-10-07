@@ -29,6 +29,7 @@ export class CommentRenderer {
     }
 
     private getLines(text: string, maxWidth: number): string[] {
+        text = text.replace(/\n/g, ' \n ');
         const words = text.split(' ');
         const lines: string[] = [];
         let currentLine = '';
@@ -36,6 +37,12 @@ export class CommentRenderer {
         this._nr.ctx.font = `${this._nr.rc.textSize}px Arial`;
 
         words.forEach((word) => {
+            if (word === '\n') {
+                lines.push(currentLine.trim());
+                currentLine = '';
+                return;
+            }
+
             if (this._nr.ctx.measureText(currentLine + word).width < maxWidth - (lines.length === 0 ? this._nr.rc.lineHeight / 2 : 0)) {
                 currentLine += word + ' ';
             } else {
@@ -77,7 +84,6 @@ export class CommentRenderer {
         this._nr.ctx.moveTo(x + width - foldSize, y);
         this._nr.ctx.lineTo(x + width - foldSize, y + foldSize);
         this._nr.ctx.lineTo(x + width, y + foldSize);
-        this._nr.ctx.closePath();
 
         this._nr.ctx.lineWidth = this._nr.rc.borderSize;
         this._nr.ctx.strokeStyle = strokeStyle;
