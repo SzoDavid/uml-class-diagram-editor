@@ -18,6 +18,7 @@
     "detail": "detail | details",
     "direction": "direction",
     "edit": "edit",
+    "editor": "editor",
     "error": {
         "comment_empty": "comment cannot be empty",
         "default_value_alphanumeric": "default value must be alphanumeric",
@@ -81,6 +82,32 @@
     "save": "save",
     "scale": "scale",
     "set": "set",
+    "settings": {
+        "title": "settings",
+        "renderer": {
+            "border_thickness": "border thickness",
+            "color": {
+                "accent": "accent",
+                "default": "default",
+                "fill": "fill",
+                "selected": "selected",
+                "title": "color",
+                "invalid": "invalid",
+                "invalid_selected": "invalid and selected"
+            },
+            "default_width": "default width",
+            "line_height": "line height",
+            "line_margin": "line margin",
+            "separate_object_parameters_width_limit": "width limit to separate parameters",
+            "show_invalidity": "show invalidity",
+            "tab_size": "tab size",
+            "text_size": "text size",
+            "title": "renderer",
+            "underline_delta": "underline delta",
+            "underline_thickness": "underline thickness",
+            "warning": "Change values only if you know what you are doing!"
+        }
+    },
     "subsets": "subsets",
     "static_type": "static",
     "type": "type",

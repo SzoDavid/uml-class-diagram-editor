@@ -18,6 +18,7 @@
     "detail": "részlet | részletek",
     "direction": "irány",
     "edit": "szerkesztés",
+    "editor": "szerkesztő",
     "error": {
         "comment_empty": "A megjegyzés nem lehet üres",
         "default_value_alphanumeric": "az alapértelmezett értéknek alfanumerikusnak kell lennie",
@@ -81,6 +82,32 @@
     "save": "mentés",
     "scale": "méretarány",
     "set": "beállítás",
+    "settings": {
+        "title": "beállítások",
+        "renderer": {
+            "border_thickness": "keret vastagság",
+            "color": {
+                "accent": "kiemelő",
+                "default": "alap",
+                "fill": "kitöltő",
+                "selected": "kijelölt",
+                "title": "szín",
+                "invalid": "invalid",
+                "invalid_selected": "invalid és kijelölt"
+            },
+            "default_width": "alap szélesség",
+            "line_height": "vonal magasság",
+            "line_margin": "vonal margó",
+            "separate_object_parameters_width_limit": "szélesség limit a paraméterek szétválasztására",
+            "show_invalidity": "invaliditás kimutatása",
+            "tab_size": "tab méret",
+            "text_size": "betűméret",
+            "title": "renderelő",
+            "underline_delta": "aláhúzás delta",
+            "underline_thickness": "aláhúzás vastagság",
+            "warning": "Csak akkor változtass értékeket, ha tudod mit csinálsz!"
+        }
+    },
     "subsets": "részhalmaza",
     "static_type": "statikus",
     "type": "típus",

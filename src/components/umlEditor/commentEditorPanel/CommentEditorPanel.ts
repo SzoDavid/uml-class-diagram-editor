@@ -1,34 +1,34 @@
 import {defineComponent, ref, watch} from 'vue';
-import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
-import {ErrorContext, NodeData} from '../../utils/types.ts';
+import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../utils/nodes/types.ts';
+import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
+import {CommentNode} from '../../../utils/nodes/CommentNode.ts';
 
-interface PrimitiveEditorPanelProperties {
-    primitiveData: NodeData<PrimitiveTypeNode>
+interface CommentEditorPanelProperties {
+    commentData: NodeData<CommentNode>
 }
 
-interface PrimitiveEditorPanelEmits {
-    (e: 'save', data: NodeData<PrimitiveTypeNode>): void;
+interface CommentEditorPanelEmits {
+    (e: 'save', data: NodeData<CommentNode>): void;
 }
 
 export default defineComponent({
     props: {
-        primitiveData: {
-            type: Object as () => NodeData<PrimitiveTypeNode>,
+        commentData: {
+            type: Object as () => NodeData<CommentNode>,
             required: true
         }
     },
     emits: ['save'],
-    setup(props: PrimitiveEditorPanelProperties, { emit }: { emit: PrimitiveEditorPanelEmits }) {
+    setup(props: CommentEditorPanelProperties, { emit }: { emit: CommentEditorPanelEmits }) {
         const { t } = useI18n();
 
-        const data = ref<NodeData<PrimitiveTypeNode>>(props.primitiveData);
+        const data = ref<NodeData<CommentNode>>(props.commentData);
 
         let errors: InvalidNodeParameterCause[] = [];
 
         watch(
-            () => props.primitiveData,
+            () => props.commentData,
             (newData) => {
                 data.value = newData;
             },
@@ -46,7 +46,7 @@ export default defineComponent({
 
         // TODO: resolve duplication
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'primitive') return '';
+            if (data.value === null || data.value.type !== 'comment') return '';
 
             return findError(errors, context);
         };

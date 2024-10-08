@@ -1,11 +1,12 @@
 import {describe, beforeEach, afterAll, vi, test, expect} from 'vitest';
-import {defaultRenderConfiguration, RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
+import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
 import {MockProperty} from '../nodes/features/mocks/MockProperty.ts';
 import {MockOperation} from '../nodes/features/mocks/MockOperation.ts';
 import {Parameter} from '../../../utils/nodes/features/Parameter.ts';
 import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
 import {ClassifierNodeRenderer} from '../../../utils/renderer/ClassifierNodeRenderer.ts';
+import {useSettingsService} from '../../../services/SettingsService.ts';
 
 describe('UCDE-ClassifierNodeRenderer', () => {
     const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -15,6 +16,8 @@ describe('UCDE-ClassifierNodeRenderer', () => {
     let classifierNodeRenderer: ClassifierNodeRenderer;
 
     beforeEach(() => {
+        const { settings } = useSettingsService();
+
         canvas = document.createElement('canvas');
         canvas.width = 500;
         canvas.height = 500;
@@ -35,7 +38,7 @@ describe('UCDE-ClassifierNodeRenderer', () => {
             fillText: vi.fn(),
         } as unknown as CanvasRenderingContext2D;
 
-        renderConf = defaultRenderConfiguration;
+        renderConf = settings.renderer;
         classifierNodeRenderer = new NodeRenderer(context2D, renderConf)['_classifierRenderer'];
     });
 

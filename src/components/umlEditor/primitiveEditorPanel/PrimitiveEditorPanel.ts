@@ -1,34 +1,34 @@
 import {defineComponent, ref, watch} from 'vue';
-import {ErrorContext, NodeData} from '../../utils/types.ts';
+import {PrimitiveTypeNode} from '../../../utils/nodes/PrimitiveTypeNode.ts';
+import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../utils/nodes/types.ts';
-import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
+import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
 
-interface EnumerationEditorPanelProperties {
-    enumerationData: NodeData<EnumerationNode>
+interface PrimitiveEditorPanelProperties {
+    primitiveData: NodeData<PrimitiveTypeNode>
 }
 
-interface EnumerationEditorPanelEmits {
-    (e: 'save', data: NodeData<EnumerationNode>): void;
+interface PrimitiveEditorPanelEmits {
+    (e: 'save', data: NodeData<PrimitiveTypeNode>): void;
 }
 
 export default defineComponent({
     props: {
-        enumerationData: {
-            type: Object as () => NodeData<EnumerationNode>,
+        primitiveData: {
+            type: Object as () => NodeData<PrimitiveTypeNode>,
             required: true
         }
     },
     emits: ['save'],
-    setup(props: EnumerationEditorPanelProperties, { emit }: { emit: EnumerationEditorPanelEmits }) {
+    setup(props: PrimitiveEditorPanelProperties, { emit }: { emit: PrimitiveEditorPanelEmits }) {
         const { t } = useI18n();
 
-        const data = ref<NodeData<EnumerationNode>>(props.enumerationData);
+        const data = ref<NodeData<PrimitiveTypeNode>>(props.primitiveData);
 
         let errors: InvalidNodeParameterCause[] = [];
 
         watch(
-            () => props.enumerationData,
+            () => props.primitiveData,
             (newData) => {
                 data.value = newData;
             },
@@ -44,19 +44,9 @@ export default defineComponent({
             { immediate: true, deep: true }
         );
 
-        const addValue = () => {
-            data.value.instance.values.push('');
-        };
-
-        const removeValue = (index: number) => {
-            data.value.instance.values.splice(index, 1);
-        };
-
         // TODO: resolve duplication
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'enumeration') return '';
-
-            console.log(context, errors);
+            if (data.value === null || data.value.type !== 'primitive') return '';
 
             return findError(errors, context);
         };
@@ -83,11 +73,7 @@ export default defineComponent({
         };
 
         return {
-            t, data,
-            addValue,
-            removeValue,
-            onSave,
-            getError
+            t, data, onSave, getError
         };
     }
 });

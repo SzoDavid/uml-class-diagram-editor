@@ -1,13 +1,13 @@
 import mitt, {Emitter} from 'mitt';
-import {Node} from './nodes/Node.ts';
-import {Renderer} from './renderer/Renderer.ts';
-import {ClassNode} from './nodes/ClassNode.ts';
-import {InterfaceNode} from './nodes/InterfaceNode.ts';
-import {DataTypeNode} from './nodes/DataTypeNode.ts';
-import {NodeType} from './nodes/types.ts';
-import {PrimitiveTypeNode} from './nodes/PrimitiveTypeNode.ts';
-import {EnumerationNode} from './nodes/EnumerationNode.ts';
-import {CommentNode} from './nodes/CommentNode.ts';
+import {Node} from '../utils/nodes/Node.ts';
+import {Renderer} from '../utils/renderer/Renderer.ts';
+import {ClassNode} from '../utils/nodes/ClassNode.ts';
+import {InterfaceNode} from '../utils/nodes/InterfaceNode.ts';
+import {DataTypeNode} from '../utils/nodes/DataTypeNode.ts';
+import {NodeType} from '../utils/nodes/types.ts';
+import {PrimitiveTypeNode} from '../utils/nodes/PrimitiveTypeNode.ts';
+import {EnumerationNode} from '../utils/nodes/EnumerationNode.ts';
+import {CommentNode} from '../utils/nodes/CommentNode.ts';
 
 export enum UmlEditorTool {
     EDIT,

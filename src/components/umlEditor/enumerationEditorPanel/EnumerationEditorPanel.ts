@@ -1,34 +1,34 @@
 import {defineComponent, ref, watch} from 'vue';
-import {ErrorContext, NodeData} from '../../utils/types.ts';
+import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../utils/nodes/types.ts';
-import {CommentNode} from '../../utils/nodes/CommentNode.ts';
+import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
+import {EnumerationNode} from '../../../utils/nodes/EnumerationNode.ts';
 
-interface CommentEditorPanelProperties {
-    commentData: NodeData<CommentNode>
+interface EnumerationEditorPanelProperties {
+    enumerationData: NodeData<EnumerationNode>
 }
 
-interface CommentEditorPanelEmits {
-    (e: 'save', data: NodeData<CommentNode>): void;
+interface EnumerationEditorPanelEmits {
+    (e: 'save', data: NodeData<EnumerationNode>): void;
 }
 
 export default defineComponent({
     props: {
-        commentData: {
-            type: Object as () => NodeData<CommentNode>,
+        enumerationData: {
+            type: Object as () => NodeData<EnumerationNode>,
             required: true
         }
     },
     emits: ['save'],
-    setup(props: CommentEditorPanelProperties, { emit }: { emit: CommentEditorPanelEmits }) {
+    setup(props: EnumerationEditorPanelProperties, { emit }: { emit: EnumerationEditorPanelEmits }) {
         const { t } = useI18n();
 
-        const data = ref<NodeData<CommentNode>>(props.commentData);
+        const data = ref<NodeData<EnumerationNode>>(props.enumerationData);
 
         let errors: InvalidNodeParameterCause[] = [];
 
         watch(
-            () => props.commentData,
+            () => props.enumerationData,
             (newData) => {
                 data.value = newData;
             },
@@ -44,9 +44,19 @@ export default defineComponent({
             { immediate: true, deep: true }
         );
 
+        const addValue = () => {
+            data.value.instance.values.push('');
+        };
+
+        const removeValue = (index: number) => {
+            data.value.instance.values.splice(index, 1);
+        };
+
         // TODO: resolve duplication
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'comment') return '';
+            if (data.value === null || data.value.type !== 'enumeration') return '';
+
+            console.log(context, errors);
 
             return findError(errors, context);
         };
@@ -73,7 +83,11 @@ export default defineComponent({
         };
 
         return {
-            t, data, onSave, getError
+            t, data,
+            addValue,
+            removeValue,
+            onSave,
+            getError
         };
     }
 });

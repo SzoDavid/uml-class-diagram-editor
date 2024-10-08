@@ -1,14 +1,14 @@
-import {ClickContext, ErrorContext, NodeData} from '../../utils/types.ts';
+import {ClickContext, ErrorContext, NodeData} from '../../../utils/types.ts';
 import {ref, watch, defineComponent} from 'vue';
-import {ClassNode, ClassStereotype} from '../../utils/nodes/ClassNode.ts';
-import {InvalidNodeParameterCause, Visibility} from '../../utils/nodes/types.ts';
-import {Property} from '../../utils/nodes/features/Property.ts';
-import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
-import {Operation} from '../../utils/nodes/features/Operation.ts';
-import {Parameter} from '../../utils/nodes/features/Parameter.ts';
+import {ClassNode, ClassStereotype} from '../../../utils/nodes/ClassNode.ts';
+import {InvalidNodeParameterCause, Visibility} from '../../../utils/nodes/types.ts';
+import {Property} from '../../../utils/nodes/features/Property.ts';
+import {MultiplicityRange} from '../../../utils/nodes/features/MultiplicityRange.ts';
+import {Operation} from '../../../utils/nodes/features/Operation.ts';
+import {Parameter} from '../../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
-import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
-import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
+import {ClassifierNode} from '../../../utils/nodes/ClassifierNode.ts';
+import {DataTypeNode} from '../../../utils/nodes/DataTypeNode.ts';
 
 interface ClassifierEditorPanelProperties {
     classifierData: NodeData<ClassifierNode>

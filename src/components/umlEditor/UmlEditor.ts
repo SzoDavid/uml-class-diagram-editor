@@ -1,10 +1,9 @@
 import {onMounted, ref} from 'vue';
-import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/UmlEditorService.ts';
+import {EmitType, UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
 import {DataContext} from '../../utils/types.ts';
-import ClassifierEditorPanel from '../classifierEditorPanel/ClassifierEditorPanel.vue';
-import PrimitiveEditorPanel from '../primitiveEditorPanel/PrimitiveEditorPanel.vue';
+import ClassifierEditorPanel from './classifierEditorPanel/ClassifierEditorPanel.vue';
+import PrimitiveEditorPanel from './primitiveEditorPanel/PrimitiveEditorPanel.vue';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
-import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
 import {Node} from '../../utils/nodes/Node.ts';
 import {ClassNode} from '../../utils/nodes/ClassNode.ts';
 import {Property} from '../../utils/nodes/features/Property.ts';
@@ -17,10 +16,11 @@ import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
 import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
 import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
-import EnumerationEditorPanel from '../enumerationEditorPanel/EnumerationEditorPanel.vue';
+import EnumerationEditorPanel from './enumerationEditorPanel/EnumerationEditorPanel.vue';
 import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
-import CommentEditorPanel from '../commentEditorPanel/CommentEditorPanel.vue';
+import CommentEditorPanel from './commentEditorPanel/CommentEditorPanel.vue';
 import {CommentNode} from '../../utils/nodes/CommentNode.ts';
+import {useSettingsService} from '../../services/SettingsService.ts';
 
 export default {
     components: {CommentEditorPanel, EnumerationEditorPanel, ClassifierEditorPanel, PrimitiveEditorPanel},
@@ -34,6 +34,7 @@ export default {
     },
     setup() {
         const { t } = useI18n();
+        const { settings } = useSettingsService();
 
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
@@ -49,7 +50,7 @@ export default {
             }
 
             const canvas = umlCanvas.value as HTMLCanvasElement;
-            editor = new UmlEditorService(canvas, new Renderer(canvas, defaultRenderConfiguration));
+            editor = new UmlEditorService(canvas, new Renderer(canvas, settings.renderer));
             tool.value = editor.tool;
 
             window.addEventListener('keydown', onKeyPress);

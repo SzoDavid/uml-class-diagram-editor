@@ -1,9 +1,10 @@
 import {beforeEach, describe, vi, test, expect} from 'vitest';
 import {Renderer} from '../../../utils/renderer/Renderer.ts';
-import {defaultRenderConfiguration, RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
+import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
 import {Node} from '../../../utils/nodes/Node.ts';
 import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
+import {useSettingsService} from '../../../services/SettingsService.ts';
 
 describe('UCDE-Renderer', () => {
     let canvas: HTMLCanvasElement;
@@ -13,6 +14,8 @@ describe('UCDE-Renderer', () => {
     let renderer: Renderer;
     
     beforeEach(() => {
+        const { settings } = useSettingsService();
+
         canvas = document.createElement('canvas');
         canvas.width = 500;
         canvas.height = 500;
@@ -35,7 +38,7 @@ describe('UCDE-Renderer', () => {
 
         vi.spyOn(canvas, 'getContext').mockReturnValue(context2D);
 
-        renderConf = defaultRenderConfiguration;
+        renderConf = settings.renderer;
         nodeRenderer = new NodeRenderer(context2D, renderConf);
         vi.spyOn(nodeRenderer, 'render');
         vi.spyOn(nodeRenderer['_classifierRenderer'], 'render');
