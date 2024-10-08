@@ -13,7 +13,7 @@
     </div>
   </fieldset>
 
-  <fieldset :key="renderKey">
+  <fieldset>
     <legend class="capitalized">{{ t("detail", 2) }}</legend>
     <div class="grid-form">
       <label for="className" class="capitalized">{{ t("name") }}</label>
@@ -50,14 +50,16 @@
         </div>
         <div class="details sep">
           <div class="grid-form">
-            <label :for="`propVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
-            <select :id="`propVisibility${index}`" v-model="prop.visibility">
-              <option :value="null">--</option>
-              <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
-              <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
-              <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
-              <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
-            </select>
+            <template v-if="!(data.instance instanceof DataTypeNode)">
+              <label :for="`propVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
+              <select :id="`propVisibility${index}`" v-model="prop.visibility">
+                <option :value="null">--</option>
+                <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
+                <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
+                <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
+                <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
+              </select>
+            </template>
 
             <label :for="`propName${index}`" class="capitalized">{{ t("name") }}</label>
             <input :id="`propName${index}`" type="text" v-model="prop.name">
@@ -154,14 +156,16 @@
 
         <div class="details sep">
           <div class="grid-form">
-            <label :for="`operationVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
-            <select :id="`operationVisibility${index}`" v-model="operation.visibility">
-              <option :value="null">--</option>
-              <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
-              <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
-              <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
-              <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
-            </select>
+            <template v-if="!(data.instance instanceof DataTypeNode)">
+              <label :for="`operationVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
+              <select :id="`operationVisibility${index}`" v-model="operation.visibility">
+                <option :value="null">--</option>
+                <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
+                <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
+                <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
+                <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
+              </select>
+            </template>
 
             <label :for="`operationName${index}`" class="capitalized">{{ t("name") }}</label>
             <input :id="`operationName${index}`" type="text" v-model="operation.name">
@@ -337,5 +341,5 @@
     </fieldset>
   </fieldset>
 
-  <button v-on:click="onSave" class="capitalized">{{ t("save") }}</button>
+  <button @click="onSave" class="capitalized">{{ t("save") }}</button>
 </template>

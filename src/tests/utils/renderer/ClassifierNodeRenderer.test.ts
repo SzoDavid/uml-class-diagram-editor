@@ -1,18 +1,23 @@
-import {describe, beforeEach, vi, test, expect} from 'vitest';
-import {defaultRenderConfiguration, RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
-import {ClassifierNodeRenderer} from '../../../utils/renderer/ClassifierNodeRenderer.ts';
+import {describe, beforeEach, afterAll, vi, test, expect} from 'vitest';
+import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
 import {MockProperty} from '../nodes/features/mocks/MockProperty.ts';
 import {MockOperation} from '../nodes/features/mocks/MockOperation.ts';
 import {Parameter} from '../../../utils/nodes/features/Parameter.ts';
+import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
+import {ClassifierNodeRenderer} from '../../../utils/renderer/ClassifierNodeRenderer.ts';
+import {useSettingsService} from '../../../services/SettingsService.ts';
 
-describe('UCDE-ClassNodeRenderer', () => {
+describe('UCDE-ClassifierNodeRenderer', () => {
+    const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     let canvas: HTMLCanvasElement;
     let context2D: CanvasRenderingContext2D;
     let renderConf: RenderConfiguration;
-    let classNodeRenderer: ClassifierNodeRenderer;
+    let classifierNodeRenderer: ClassifierNodeRenderer;
 
     beforeEach(() => {
+        const { settings } = useSettingsService();
+
         canvas = document.createElement('canvas');
         canvas.width = 500;
         canvas.height = 500;
@@ -33,15 +38,19 @@ describe('UCDE-ClassNodeRenderer', () => {
             fillText: vi.fn(),
         } as unknown as CanvasRenderingContext2D;
 
-        renderConf = defaultRenderConfiguration;
-        classNodeRenderer = new ClassifierNodeRenderer(context2D, renderConf);
+        renderConf = settings.renderer;
+        classifierNodeRenderer = new NodeRenderer(context2D, renderConf)['_classifierRenderer'];
+    });
+
+    afterAll(() => {
+        consoleMock.mockReset();
     });
 
     test('UCDE-CNR-01 GIVEN a class node with features WHEN render is called THEN the width of the class node should be adjusted accordingly', () => {
         const classNode = new ClassNode('TestClass', 100, 100);
         classNode.properties = [ new MockProperty('valid') ];
         classNode.operations = [ new MockOperation('valid') ];
-        classNodeRenderer.render(classNode);
+        classifierNodeRenderer.render(classNode);
 
         expect(classNode.width).toBeGreaterThan(renderConf.defaultWidth);
     });
@@ -54,7 +63,7 @@ describe('UCDE-ClassNodeRenderer', () => {
         mockOperation.params = [ new Parameter('valid') ];
         classNode.operations = [ mockOperation ];
 
-        const totalLines = classNodeRenderer['calculateTotalFeatureLines']([...classNode.properties, ...classNode.operations]);
+        const totalLines = classifierNodeRenderer['calculateTotalFeatureLines']([...classNode.properties, ...classNode.operations]);
         expect(totalLines).toBe(4); //  property + 3 from wide operation
     });
 
@@ -67,7 +76,7 @@ describe('UCDE-ClassNodeRenderer', () => {
         mockOperation.params = [ new Parameter('valid') ];
         classNode.operations = [ mockOperation ];
 
-        classNodeRenderer.render(classNode);
+        classifierNodeRenderer.render(classNode);
 
         expect(context2D.fillText).toHaveBeenCalledTimes(6);
 
@@ -80,8 +89,17 @@ describe('UCDE-ClassNodeRenderer', () => {
     });
 
     test('UCDE-CNR-04 GIVEN no features WHEN renderFeatureGroup is called THEN it should return 0 lines', () => {
-        const lines = classNodeRenderer['renderFeatureGroup']([], 100, 100, 200, false, false, false);
+        const lines = classifierNodeRenderer['renderFeatureGroup']([], 100, 100, 200, false, false, false);
 
         expect(lines).toBe(0);
+    });
+
+    test('UCDE-CNR-05 GIVEN invalid class node WHEN rendering THEN log error', () => {
+        const classNode = new ClassNode('TestClass', 100, 100);
+        classNode.properties.push(new MockProperty('invalid'));
+
+        classifierNodeRenderer.render(classNode);
+
+        expect(consoleMock).toHaveBeenCalledOnce();
     });
 });

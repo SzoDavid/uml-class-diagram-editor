@@ -1,14 +1,11 @@
 {
     "abstract": "abstract",
     "add": "add",
-    "add_class": "add class",
-    "add_interface": "add interface",
     "appearance": "appearance",
     "class_property": "property | properties",
     "class_stereotype": {
         "name": "stereotype",
         "_note_": "Translation is not advised",
-        "interface": "interface",
         "auxiliary": "auxiliary",
         "focus": "focus",
         "implementation_class": "implementation class",
@@ -21,7 +18,9 @@
     "detail": "detail | details",
     "direction": "direction",
     "edit": "edit",
+    "editor": "editor",
     "error": {
+        "comment_empty": "comment cannot be empty",
         "default_value_alphanumeric": "default value must be alphanumeric",
         "invalid_class_property": "property is invalid",
         "multiplicity_range": {
@@ -45,9 +44,15 @@
             "alphanumeric": "name must be alphanumeric",
             "required": "name is required"
         },
-        "type_alphanumeric": "type must be alphanumeric"
+        "type_alphanumeric": "type must be alphanumeric",
+        "value": {
+            "name": "value",
+            "alphanumeric": "value must be alphanumeric",
+            "required": "value is required"
+        }
     },
     "grid_size": "grid size",
+    "keep_adding": "keep adding",
     "modifier": "modifier | modifiers",
     "move": "move",
     "multiplicity": "multiplicity",
@@ -55,6 +60,14 @@
     "multiplicity_upper": "upper",
     "name": "name",
     "navigation": "navigation",
+    "node_types": {
+        "class": "class",
+        "comment": "comment",
+        "datatype": "datatype",
+        "enumeration": "enumeration",
+        "primitive": "primitive type",
+        "interface": "interface"
+    },
     "not_shown_operations": "not shown operations",
     "not_shown_properties": "not shown properties",
     "operation": "operation | operations",
@@ -69,14 +82,42 @@
     "save": "save",
     "scale": "scale",
     "set": "set",
+    "settings": {
+        "title": "settings",
+        "renderer": {
+            "border_thickness": "border thickness",
+            "color": {
+                "accent": "accent",
+                "default": "default",
+                "fill": "fill",
+                "selected": "selected",
+                "title": "color",
+                "invalid": "invalid",
+                "invalid_selected": "invalid and selected"
+            },
+            "default_width": "default width",
+            "line_height": "line height",
+            "line_margin": "line margin",
+            "separate_object_parameters_width_limit": "width limit to separate parameters",
+            "show_invalidity": "show invalidity",
+            "tab_size": "tab size",
+            "text_size": "text size",
+            "title": "renderer",
+            "underline_delta": "underline delta",
+            "underline_thickness": "underline thickness",
+            "warning": "Change values only if you know what you are doing!"
+        }
+    },
     "subsets": "subsets",
     "static_type": "static",
     "type": "type",
+    "value": "value | values",
     "visibility": {
         "name": "visibility",
         "package": "package",
         "private": "private",
         "protected": "protected",
         "public": "public"
-    }
+    },
+    "width": "width"
 }

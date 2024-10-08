@@ -16,3 +16,12 @@ export interface InvalidNodeParameterCause {
     index?: number;
     context?: InvalidNodeParameterCause[]
 }
+
+export enum NodeType {
+    CLASS,
+    INTERFACE,
+    DATATYPE,
+    PRIMITIVE,
+    ENUMERATION,
+    COMMENT
+}

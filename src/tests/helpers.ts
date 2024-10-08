@@ -1,6 +1,6 @@
 import {InvalidNodeParameterCause} from '../utils/nodes/types.ts';
 
-const messages = Object.fromEntries(
+export const messages = Object.fromEntries(
     Object.entries(
         import.meta.glob('./../locales/*.json', { eager: true })
     ).map(([key, value]) => {

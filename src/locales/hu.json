@@ -1,14 +1,11 @@
 {
     "abstract": "absztrakt",
     "add": "hozzáadás",
-    "add_class": "osztály hozzáadása",
-    "add_interface": "interface hozzáadása",
     "appearance": "megjelenés",
     "class_property": "attribútum | attribútumok",
     "class_stereotype": {
         "name": "sztereotípus",
         "_note_": "Translation is not advised",
-        "interface": "interface",
         "auxiliary": "auxiliary",
         "focus": "focus",
         "implementation_class": "implementation class",
@@ -21,7 +18,9 @@
     "detail": "részlet | részletek",
     "direction": "irány",
     "edit": "szerkesztés",
+    "editor": "szerkesztő",
     "error": {
+        "comment_empty": "A megjegyzés nem lehet üres",
         "default_value_alphanumeric": "az alapértelmezett értéknek alfanumerikusnak kell lennie",
         "invalid_class_property": "invalid attribútum",
         "multiplicity_range": {
@@ -45,9 +44,15 @@
             "alphanumeric": "a névnek alfanumerikusnak kell lennie",
             "required": "a név kötelező"
         },
-        "type_alphanumeric": "a típusnak alfanumerikusnak kell lennie"
+        "type_alphanumeric": "a típusnak alfanumerikusnak kell lennie",
+        "value": {
+            "name": "érték",
+            "alphanumeric": "az értéknek alfanumerikusnak kell lennie",
+            "required": "az érték kötelező"
+        }
     },
     "grid_size": "rácsméret",
+    "keep_adding": "hozzáadás folytatása",
     "modifier": "módosító | módosítók",
     "move": "mozgatás",
     "multiplicity": "multiplicitás",
@@ -55,6 +60,14 @@
     "multiplicity_upper": "alsó",
     "name": "név",
     "navigation": "navigáció",
+    "node_types": {
+        "class": "osztály",
+        "comment": "megjegyzés",
+        "datatype": "adattípus",
+        "enumeration": "enumeration",
+        "primitive": "primitív típus",
+        "interface": "interface"
+    },
     "not_shown_operations": "nem mutatott operációk",
     "not_shown_properties": "nem mutatott attribútumok",
     "operation": "operáció | operációk",
@@ -69,14 +82,42 @@
     "save": "mentés",
     "scale": "méretarány",
     "set": "beállítás",
+    "settings": {
+        "title": "beállítások",
+        "renderer": {
+            "border_thickness": "keret vastagság",
+            "color": {
+                "accent": "kiemelő",
+                "default": "alap",
+                "fill": "kitöltő",
+                "selected": "kijelölt",
+                "title": "szín",
+                "invalid": "invalid",
+                "invalid_selected": "invalid és kijelölt"
+            },
+            "default_width": "alap szélesség",
+            "line_height": "vonal magasság",
+            "line_margin": "vonal margó",
+            "separate_object_parameters_width_limit": "szélesség limit a paraméterek szétválasztására",
+            "show_invalidity": "invaliditás kimutatása",
+            "tab_size": "tab méret",
+            "text_size": "betűméret",
+            "title": "renderelő",
+            "underline_delta": "aláhúzás delta",
+            "underline_thickness": "aláhúzás vastagság",
+            "warning": "Csak akkor változtass értékeket, ha tudod mit csinálsz!"
+        }
+    },
     "subsets": "részhalmaza",
     "static_type": "statikus",
     "type": "típus",
+    "value": "érték | értékek",
     "visibility": {
         "name": "láthatóság",
         "package": "csomag",
         "private": "privát",
         "protected": "védett",
         "public": "publikus"
-    }
+    },
+    "width": "szélesség"
 }

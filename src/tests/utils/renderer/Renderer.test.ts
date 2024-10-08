@@ -1,18 +1,21 @@
 import {beforeEach, describe, vi, test, expect} from 'vitest';
 import {Renderer} from '../../../utils/renderer/Renderer.ts';
-import {ClassifierNodeRenderer} from '../../../utils/renderer/ClassifierNodeRenderer.ts';
-import {defaultRenderConfiguration, RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
+import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
 import {Node} from '../../../utils/nodes/Node.ts';
+import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
+import {useSettingsService} from '../../../services/SettingsService.ts';
 
 describe('UCDE-Renderer', () => {
     let canvas: HTMLCanvasElement;
     let context2D: CanvasRenderingContext2D;
     let renderConf: RenderConfiguration;
-    let classifierNodeRenderer: ClassifierNodeRenderer;
+    let nodeRenderer: NodeRenderer;
     let renderer: Renderer;
     
     beforeEach(() => {
+        const { settings } = useSettingsService();
+
         canvas = document.createElement('canvas');
         canvas.width = 500;
         canvas.height = 500;
@@ -35,13 +38,14 @@ describe('UCDE-Renderer', () => {
 
         vi.spyOn(canvas, 'getContext').mockReturnValue(context2D);
 
-        renderConf = defaultRenderConfiguration;
-        classifierNodeRenderer = new ClassifierNodeRenderer(context2D, renderConf);
-        vi.spyOn(classifierNodeRenderer, 'render');
+        renderConf = settings.renderer;
+        nodeRenderer = new NodeRenderer(context2D, renderConf);
+        vi.spyOn(nodeRenderer, 'render');
+        vi.spyOn(nodeRenderer['_classifierRenderer'], 'render');
 
         renderer = new Renderer(canvas, renderConf);
 
-        (renderer as any)._classifierRenderer = classifierNodeRenderer;
+        (renderer as any)._nodeRenderer = nodeRenderer;
     });
 
     test('UCDE-R-01 GIVEN an empty node list WHEN render is called THEN clearRect and transformation methods should be called', () => {
@@ -54,18 +58,18 @@ describe('UCDE-Renderer', () => {
         expect(context2D.scale).toHaveBeenCalledWith(1, 1);
     });
 
-    test('UCDE-R-02 GIVEN nodes with a ClassNode WHEN render is called THEN ClassNodeRenderer.render should be called', () => {
+    test('UCDE-R-02 GIVEN nodes with a ClassNode WHEN render is called THEN NodeRenderer.render should be called', () => {
         const classNode = new ClassNode('TestClass', 100, 100);
         renderer.render([classNode], 1, 0, 0);
 
-        expect(classifierNodeRenderer.render).toHaveBeenCalledWith(classNode);
+        expect(nodeRenderer.render).toHaveBeenCalledWith(classNode);
     });
 
     test('UCDE-R-03 GIVEN a non-ClassNode node WHEN render is called THEN ClassNodeRenderer.render should not be called', () => {
         const aNode = { x: 100, y: 100, width: 50, height: 50 } as Node;
         renderer.render([aNode], 1, 0, 0);
 
-        expect(classifierNodeRenderer.render).not.toHaveBeenCalled();
+        expect(nodeRenderer['_classifierRenderer'].render).not.toHaveBeenCalled();
     });
 
     test('UCDE-R-04 GIVEN a scale and offsets WHEN render is called THEN transformations should be applied correctly', () => {

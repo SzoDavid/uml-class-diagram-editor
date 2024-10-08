@@ -1,8 +1,8 @@
 import {Node} from './nodes/Node.ts';
-import {EditorConfig} from './UmlEditorService.ts';
+import {AddConfig, EditorConfig} from '../services/UmlEditorService.ts';
 
 export interface NodeData<T extends Node> {
-    type: 'classifier'
+    type: 'classifier'|'primitive'|'enumeration'|'comment'
     instance: T;
 }
 
@@ -10,5 +10,17 @@ export interface ConfigData {
     type: 'editor';
     instance: EditorConfig
 }
-export type DataContext<T extends Node> = NodeData<T> | ConfigData | null;
+
+export interface AddOption {
+    type: 'addOption';
+    instance: AddConfig
+}
+
+export type DataContext<T extends Node> = NodeData<T> | ConfigData | AddOption | null;
 export type ClickContext = 'prop' | 'operation' | 'param';
+
+export interface ErrorContext {
+    parameter: string,
+    index?: number|string,
+    child?: ErrorContext
+}

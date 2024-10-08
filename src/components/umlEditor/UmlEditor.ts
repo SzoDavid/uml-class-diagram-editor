@@ -1,29 +1,40 @@
 import {onMounted, ref} from 'vue';
-import {EmitType, UmlEditorService, UmlEditorTool} from '../../utils/UmlEditorService.ts';
+import {EmitType, UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
 import {DataContext} from '../../utils/types.ts';
-import ClassifierEditorPanel from '../classifierEditorPanel/ClassifierEditorPanel.vue';
+import ClassifierEditorPanel from './classifierEditorPanel/ClassifierEditorPanel.vue';
+import PrimitiveEditorPanel from './primitiveEditorPanel/PrimitiveEditorPanel.vue';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
-import {defaultRenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
 import {Node} from '../../utils/nodes/Node.ts';
 import {ClassNode} from '../../utils/nodes/ClassNode.ts';
 import {Property} from '../../utils/nodes/features/Property.ts';
-import {Visibility} from '../../utils/nodes/types.ts';
+import {NodeType, Visibility} from '../../utils/nodes/types.ts';
 import {MultiplicityRange} from '../../utils/nodes/features/MultiplicityRange.ts';
 import {Operation} from '../../utils/nodes/features/Operation.ts';
 import {Parameter} from '../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
 import {ClassifierNode} from '../../utils/nodes/ClassifierNode.ts';
 import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
+import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
+import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
+import EnumerationEditorPanel from './enumerationEditorPanel/EnumerationEditorPanel.vue';
+import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
+import CommentEditorPanel from './commentEditorPanel/CommentEditorPanel.vue';
+import {CommentNode} from '../../utils/nodes/CommentNode.ts';
+import {useSettingsService} from '../../services/SettingsService.ts';
 
 export default {
-    components: {ClassifierEditorPanel},
+    components: {CommentEditorPanel, EnumerationEditorPanel, ClassifierEditorPanel, PrimitiveEditorPanel},
     computed: {
+        NodeType() {
+            return NodeType;
+        },
         UmlEditorTool() {
             return UmlEditorTool;
         }
     },
     setup() {
         const { t } = useI18n();
+        const { settings } = useSettingsService();
 
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
@@ -39,7 +50,7 @@ export default {
             }
 
             const canvas = umlCanvas.value as HTMLCanvasElement;
-            editor = new UmlEditorService(canvas, new Renderer(canvas, defaultRenderConfiguration));
+            editor = new UmlEditorService(canvas, new Renderer(canvas, settings.renderer));
             tool.value = editor.tool;
 
             window.addEventListener('keydown', onKeyPress);
@@ -65,9 +76,9 @@ export default {
             editor.addNode(new ClassNode('ClassA', 50, 50,
                                          [new Property('prop', 'type', Visibility.PUBLIC),
                                              new Property('prop2', 'type', Visibility.PUBLIC, false, new MultiplicityRange('*'), 'value', true)],
-                                         [new Operation('operationA', [], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
-            editor.addNode(new ClassNode('ClassB', 300, 200, [],
-                                         [new Operation('operationB', [new Parameter('param', 'type')], Visibility.PROTECTED, 'string', new MultiplicityRange(5, 1))]));
+                                         [new Operation('operationA', [new Parameter('param', 'type')], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
+            editor.addNode(new InterfaceNode('InterfaceB', 400, 200, [], [new Operation('operationB', [new Parameter('param', 'type')])]));
+            editor.addNode(new EnumerationNode('EnumerationC', 70, 250, ['VALUE_A', 'VALUE_B']));
         });
 
         const onSave = (data: DataContext<Node>) => {
@@ -76,11 +87,24 @@ export default {
                 return;
             }
 
-            if (data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) {
+            if ((data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) ||
+                (data.type === 'primitive' && selectedNode.value instanceof PrimitiveTypeNode) ||
+                (data.type === 'comment' && selectedNode.value instanceof CommentNode) ||
+                (data.type === 'enumeration' && selectedNode.value instanceof EnumerationNode)) {
                 if (selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof InterfaceNode && data.instance instanceof InterfaceNode) {
                     selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof DataTypeNode && data.instance instanceof DataTypeNode) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof PrimitiveTypeNode && data.instance instanceof PrimitiveTypeNode) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof EnumerationNode && data.instance instanceof EnumerationNode) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof CommentNode && data.instance instanceof CommentNode) {
+                    selectedNode.value.copy(data.instance);
+                } else {
+                    console.error('Not matching node types');
                 }
 
                 editor.render();
@@ -107,14 +131,25 @@ export default {
             }
 
             if (node instanceof ClassifierNode) {
-                const classifierNode = node.clone();
-
                 data.value = {
                     type: 'classifier',
-                    instance: classifierNode
+                    instance: node.clone()
                 };
-
-                return;
+            } else if (node instanceof PrimitiveTypeNode) {
+                data.value = {
+                    type: 'primitive',
+                    instance: node.clone()
+                };
+            } else if (node instanceof EnumerationNode) {
+                data.value = {
+                    type: 'enumeration',
+                    instance: node.clone()
+                };
+            } else if (node instanceof CommentNode) {
+                data.value = {
+                    type: 'comment',
+                    instance: node.clone()
+                };
             }
         };
 
@@ -128,8 +163,9 @@ export default {
                 case UmlEditorTool.MOVE:
                     data.value = { type: 'editor', instance: editor.editorConfig };
                     break;
-                case UmlEditorTool.ADD_CLASS:
-                case UmlEditorTool.ADD_INTERFACE:
+                case UmlEditorTool.ADD:
+                    data.value = { type: 'addOption', instance: editor.addConfig };
+                    break;
                 case UmlEditorTool.REMOVE:
                     data.value = null;
                     break;}
@@ -154,7 +190,7 @@ export default {
                 case 'c':
                     event.preventDefault();
                     event.stopPropagation();
-                    onToolSelected(UmlEditorTool.ADD_CLASS);
+                    onToolSelected(UmlEditorTool.ADD);
                     break;
                 case 'r':
                     event.preventDefault();

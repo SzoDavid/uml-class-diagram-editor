@@ -3,7 +3,8 @@ import i18n from './i18n.ts';
 
 const routes = [
     { path: '/:locale', children: [
-        { path: '', component: () => import('./components/umlEditor/UmlEditor.vue') },
+        { path: '', name: 'editor', component: () => import('./components/umlEditor/UmlEditor.vue') },
+        { path: 'settings', name: 'settings', component: () => import('./components/settings/settingsPage.vue') },
     ]}
 ];
 
