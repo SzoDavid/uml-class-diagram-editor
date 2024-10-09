@@ -22,14 +22,14 @@ const defaultRenderConfiguration: RenderConfiguration = {
     separateObjectParametersWidthLimit: 500,
 };
 
-type settingsType = { renderer: RenderConfiguration };
+export type SettingsType = { renderer: RenderConfiguration };
 
-const settings: settingsType = reactive({
+const settings: SettingsType = reactive({
     renderer: defaultRenderConfiguration
 });
 
 export const useSettingsService = () => {
-    const updateSettings = (newSettings: Partial<settingsType>) => {
+    const updateSettings = (newSettings: SettingsType) => {
         Object.assign(settings, newSettings);
     };
 

@@ -9,6 +9,7 @@ import {Parameter} from '../../../utils/nodes/features/Parameter.ts';
 import {useI18n} from 'vue-i18n';
 import {ClassifierNode} from '../../../utils/nodes/ClassifierNode.ts';
 import {DataTypeNode} from '../../../utils/nodes/DataTypeNode.ts';
+import {findError} from '../../../utils/functions.ts';
 
 interface ClassifierEditorPanelProperties {
     classifierData: NodeData<ClassifierNode>
@@ -142,23 +143,6 @@ export default defineComponent({
             if (data.value === null || data.value.type !== 'classifier') return '';
 
             return findError(errors, context);
-        };
-
-        const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string => {
-            let error;
-
-            if (context.index !== undefined && typeof context.index === 'number') {
-                error = errors.find(error =>
-                    error.parameter === context.parameter
-                    && error.index === context.index);
-            } else {
-                error = errors.find(error => error.parameter === context.parameter);
-            }
-
-            if (!error) return '';
-            if (context.child && error.context) return findError(error.context, context.child);
-
-            return error.message;
         };
 
         return {
