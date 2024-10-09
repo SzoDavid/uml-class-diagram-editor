@@ -84,6 +84,13 @@
     "set": "set",
     "settings": {
         "title": "settings",
+        "options": {
+            "class_abstraction_display_mode": {
+                "italic": "italic",
+                "keyword": "keyword",
+                "title": "Class abstraction display mode"
+            }
+        },
         "renderer": {
             "border_thickness": "border thickness",
             "color": {

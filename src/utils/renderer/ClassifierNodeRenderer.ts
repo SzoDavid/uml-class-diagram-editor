@@ -4,6 +4,7 @@ import {IsDecoratedFeature} from '../nodes/features/DecoratedFeature.ts';
 import {IsMultilineFeature} from '../nodes/features/MultilineFeature.ts';
 import {ClassifierNode} from '../nodes/ClassifierNode.ts';
 import {ClassNode} from '../nodes/ClassNode.ts';
+import {ClassAbstractionDisplayMode} from './RenderConfiguration.ts';
 
 export class ClassifierNodeRenderer {
     private _nr: NodeRenderer;
@@ -15,6 +16,8 @@ export class ClassifierNodeRenderer {
     // NOTE: optimize by caching width and line counts, and not rendering not visible nodes
 
     public render(node: ClassifierNode): void {
+        const abstractKeyword = this._nr.rc.options.classAbstractionDisplayMode === ClassAbstractionDisplayMode.KEYWORD;
+
         let invalid = false;
         const nodeErrors = node.validate();
         if (nodeErrors.length > 0) {
@@ -24,8 +27,10 @@ export class ClassifierNodeRenderer {
 
         this.adjustWidth(node);
 
-        this._nr.drawHeader(node.x, node.y, node.width, node.name, node.header, node.isSelected, invalid, node instanceof ClassNode && node.isAbstract);
-        node.height = this._nr.rc.lineHeight * (node.header ? 2 : 1);
+        this._nr.drawHeader(node.x, node.y, node.width, node.name, node.header,
+                            abstractKeyword && node instanceof ClassNode && node.isAbstract ? '{abstract}' : '',
+                            node.isSelected, invalid, !abstractKeyword && node instanceof ClassNode && node.isAbstract);
+        node.height = this._nr.rc.lineHeight * ((node.header ? 2 : 1) + (abstractKeyword && node instanceof ClassNode && node.isAbstract ? 1 : 0));
 
         node.height += this._nr.rc.lineHeight * this.renderFeatureGroup(
             node.properties, node.x, node.y + node.height, node.width,
@@ -46,7 +51,9 @@ export class ClassifierNodeRenderer {
         node.width = Math.max(
             node.width,
             this._nr.ctx.measureText(node.name).width + 2 * this._nr.rc.lineMargin,
-            node.header ? this._nr.ctx.measureText(`«${node.header}»`).width + 2 * this._nr.rc.lineMargin : 0
+            node.header ? this._nr.ctx.measureText(`«${node.header}»`).width + 2 * this._nr.rc.lineMargin : 0,
+            this._nr.rc.options.classAbstractionDisplayMode === ClassAbstractionDisplayMode.KEYWORD && node instanceof ClassNode && node.isAbstract
+                ? this._nr.ctx.measureText('{abstract}').width + 2 * this._nr.rc.lineMargin : 0
         );
 
         this._nr.ctx.font = `${this._nr.rc.textSize}px Arial`;
