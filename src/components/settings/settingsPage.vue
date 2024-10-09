@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useSettingsService} from '../../services/SettingsService.ts';
 import {useI18n} from 'vue-i18n';
+import {ClassAbstractionDisplayMode} from '../../utils/renderer/RenderConfiguration.ts';
 
 const { settings } = useSettingsService();
 const { t } = useI18n();
@@ -9,6 +10,12 @@ const { t } = useI18n();
 <template>
   <fieldset>
     <legend class="capitalized">{{ t('settings.title') }}</legend>
+
+    <label for="classAbstractionDisplayMode">{{ t('settings.options.class_abstraction_display_mode.title') }}</label>
+    <select id="classAbstractionDisplayMode" v-model="settings.renderer.options.classAbstractionDisplayMode">
+      <option :value="ClassAbstractionDisplayMode.ITALIC">{{ t('settings.options.class_abstraction_display_mode.italic') }}</option>
+      <option :value="ClassAbstractionDisplayMode.KEYWORD">{{ t('settings.options.class_abstraction_display_mode.keyword') }}</option>
+    </select>
 
     <fieldset>
       <legend class="capitalized">{{ t('settings.renderer.title') }}</legend>

@@ -1,3 +1,8 @@
+export enum ClassAbstractionDisplayMode {
+    ITALIC,
+    KEYWORD
+}
+
 export interface RenderConfiguration {
     textSize: number,
     defaultWidth: number,
@@ -16,5 +21,8 @@ export interface RenderConfiguration {
     accentColorSelected: string,
     accentColorInvalid: string,
     accentColorInvalidSelected: string,
-    separateObjectParametersWidthLimit: number
+    separateObjectParametersWidthLimit: number,
+    options: {
+        classAbstractionDisplayMode: ClassAbstractionDisplayMode;
+    }
 }

@@ -49,8 +49,8 @@ export class NodeRenderer {
         }
     }
 
-    drawHeader(x: number, y: number, width: number, name: string, header: string, isSelected: boolean, isInvalid: boolean, isItalic: boolean) {
-        this.drawRect(x, y, width, this.rc.lineHeight * (header ? 2 : 1), isSelected, isInvalid);
+    drawHeader(x: number, y: number, width: number, name: string, header: string, footer: string, isSelected: boolean, isInvalid: boolean, isItalic: boolean) {
+        this.drawRect(x, y, width, this.rc.lineHeight * ((header ? 2 : 1) + (footer ? 1 : 0)), isSelected, isInvalid);
 
         if (header) {
             this.drawText(`«${header}»`, x, y, width, {
@@ -68,6 +68,15 @@ export class NodeRenderer {
             italic: isItalic,
             textAlign: 'center'
         });
+
+        if (footer) {
+            this.drawText(footer, x, y + this.rc.lineHeight * (header ? 2 : 1), width, {
+                isSelected: isSelected,
+                isInvalid: isInvalid,
+                textWeight: 'bold',
+                textAlign: 'center'
+            });
+        }
     }
 
     drawRect(x: number, y: number, width: number, height: number, isSelected=false, isInvalid=false): void {
@@ -145,7 +154,7 @@ export class NodeRenderer {
             this.ctx.measureText('«Primitive»').width + 2 * this.rc.lineMargin,
         );
 
-        this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive',
+        this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive', '',
                         node.isSelected, node.validate().length > 0, false);
         node.height = this.rc.lineHeight * 2;
     }
@@ -167,7 +176,7 @@ export class NodeRenderer {
             node.width = Math.max(node.width, this.ctx.measureText(value).width + 2 * this.rc.lineMargin);
         });
 
-        this.drawHeader(node.x, node.y, node.width, node.name, 'Enumeration',
+        this.drawHeader(node.x, node.y, node.width, node.name, 'Enumeration', '',
                         node.isSelected, invalid, false);
         node.height = this.rc.lineHeight * 2;
 

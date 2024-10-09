@@ -1,4 +1,4 @@
-import {RenderConfiguration} from '../utils/renderer/RenderConfiguration.ts';
+import {ClassAbstractionDisplayMode, RenderConfiguration} from '../utils/renderer/RenderConfiguration.ts';
 import {reactive} from 'vue';
 
 const defaultRenderConfiguration: RenderConfiguration = {
@@ -20,6 +20,9 @@ const defaultRenderConfiguration: RenderConfiguration = {
     accentColorInvalid: '#F00',
     accentColorInvalidSelected: '#F06',
     separateObjectParametersWidthLimit: 500,
+    options: {
+        classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
+    }
 };
 
 export type SettingsType = { renderer: RenderConfiguration };
