@@ -249,7 +249,8 @@ export class UmlEditorService {
         const transformedX = (x - this._panOffsetX) / this._scale;
         const transformedY = (y - this._panOffsetY) / this._scale;
 
-        for (const node of this._nodes) {
+        for (let i = this._nodes.length - 1; i >= 0; i--) {
+            const node = this._nodes[i];
             if (
                 transformedX >= node.x &&
                 transformedX <= node.x + node.width &&

@@ -129,7 +129,7 @@ export class NodeRenderer {
             this.ctx.lineTo(x + xDelta + uDelta + this.ctx.measureText(puc.prefix).width + this.ctx.measureText(puc.underlined).width,
                             y + (this.rc.lineHeight / 2) + (this.rc.textSize / 2) + this.rc.underlineDelta);
 
-            this.ctx.lineWidth = this.rc.borderSize;
+            this.ctx.lineWidth = this.rc.underlineWidth;
             this.ctx.strokeStyle = isSelected ? (isInvalid ? this.rc.accentColorInvalidSelected : this.rc.accentColorSelected)
                 : (isInvalid ? this.rc.accentColorInvalid : this.rc.accentColor);
             this.ctx.stroke();

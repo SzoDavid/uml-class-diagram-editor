@@ -3,6 +3,7 @@ import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
 import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
 import {EnumerationNode} from '../../../utils/nodes/EnumerationNode.ts';
+import {findError} from '../../../utils/functions.ts';
 
 interface EnumerationEditorPanelProperties {
     enumerationData: NodeData<EnumerationNode>
@@ -52,30 +53,12 @@ export default defineComponent({
             data.value.instance.values.splice(index, 1);
         };
 
-        // TODO: resolve duplication
         const getError = (context: ErrorContext) => {
             if (data.value === null || data.value.type !== 'enumeration') return '';
 
             console.log(context, errors);
 
             return findError(errors, context);
-        };
-
-        const findError = (errors: InvalidNodeParameterCause[], context: ErrorContext): string => {
-            let error;
-
-            if (context.index !== undefined && typeof context.index === 'number') {
-                error = errors.find(error =>
-                    error.parameter === context.parameter
-                    && error.index === context.index);
-            } else {
-                error = errors.find(error => error.parameter === context.parameter);
-            }
-
-            if (!error) return '';
-            if (context.child && error.context) return findError(error.context, context.child);
-
-            return error.message;
         };
 
         const onSave = () => {
