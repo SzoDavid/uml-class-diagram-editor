@@ -1,6 +1,6 @@
 import {describe, beforeEach, afterAll, vi, test, expect} from 'vitest';
 import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
-import {ClassNode} from '../../../utils/nodes/ClassNode.ts';
+import {ClassNode} from '../../../utils/nodes/classifier/ClassNode.ts';
 import {MockProperty} from '../nodes/features/mocks/MockProperty.ts';
 import {MockOperation} from '../nodes/features/mocks/MockOperation.ts';
 import {Parameter} from '../../../utils/nodes/features/Parameter.ts';

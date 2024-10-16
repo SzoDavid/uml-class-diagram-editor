@@ -1,10 +1,10 @@
 import {beforeEach, describe, expect, test, vi} from 'vitest';
 import {Renderer} from '../../utils/renderer/Renderer.ts';
 import {UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
-import {ClassNode} from '../../utils/nodes/ClassNode.ts';
+import {ClassNode} from '../../utils/nodes/classifier/ClassNode.ts';
 import {NodeType} from '../../utils/nodes/types.ts';
-import {InterfaceNode} from '../../utils/nodes/InterfaceNode.ts';
-import {DataTypeNode} from '../../utils/nodes/DataTypeNode.ts';
+import {InterfaceNode} from '../../utils/nodes/classifier/InterfaceNode.ts';
+import {DataTypeNode} from '../../utils/nodes/classifier/DataTypeNode.ts';
 import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
 import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
 import {CommentNode} from '../../utils/nodes/CommentNode.ts';

@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, test} from 'vitest';
-import {ClassNode, ClassStereotype} from '../../../utils/nodes/ClassNode.ts';
+import {ClassNode, ClassStereotype} from '../../../utils/nodes/classifier/ClassNode.ts';
 import {MockOperation} from './features/mocks/MockOperation.ts';
 import {MockProperty} from './features/mocks/MockProperty.ts';
 import {validateStringKeys} from '../../helpers.ts';

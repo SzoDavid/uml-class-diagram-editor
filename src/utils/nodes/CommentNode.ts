@@ -1,7 +1,7 @@
-import {Node} from './Node.ts';
 import {InvalidNodeParameterCause} from './types.ts';
+import {PositionalNode} from './PositionalNode.ts';
 
-export class CommentNode extends Node {
+export class CommentNode extends PositionalNode {
     text: string;
 
 
