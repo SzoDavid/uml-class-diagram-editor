@@ -174,8 +174,8 @@ export class UmlEditorService {
             switch (this._tool) {
                 case UmlEditorTool.MOVE:
                     this._selectedNode.isDragging = true;
-                    this._dragOffsetX = offsetX - this._selectedNode.x;
-                    this._dragOffsetY = offsetY - this._selectedNode.y;
+                    this._dragOffsetX = offsetX / this._scale - this._selectedNode.x;
+                    this._dragOffsetY = offsetY / this._scale - this._selectedNode.y;
                     break;
                 case UmlEditorTool.REMOVE:
                     this._nodes.splice(this._nodes.indexOf(this._selectedNode), 1);
@@ -197,16 +197,16 @@ export class UmlEditorService {
 
         if (this._selectedNode) {
             this._selectedNode.isDragging = false;
+            this.render();
         }
-        this.render();
     }
 
     private onMouseMove(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
         if (this._tool === UmlEditorTool.MOVE && this._selectedNode && this._selectedNode.isDragging) {
-            this._selectedNode.x = this.roundToNearest(offsetX - this._dragOffsetX, this.editorConfig.gridSize);
-            this._selectedNode.y = this.roundToNearest(offsetY - this._dragOffsetY, this.editorConfig.gridSize);
+            this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
+            this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
             this.render();
             return;
         }
