@@ -9,8 +9,6 @@ export class ConnectionRenderer {
     }
 
     public render(node: Connection) {
-        console.log(node);
-
         this._nr.ctx.lineWidth = this._nr.rc.borderSize;
 
         node.parts.forEach(part => {

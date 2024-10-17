@@ -10,6 +10,7 @@ import {EnumerationNode} from '../utils/nodes/EnumerationNode.ts';
 import {CommentNode} from '../utils/nodes/CommentNode.ts';
 import {PositionalNode} from '../utils/nodes/PositionalNode.ts';
 import {Connection} from '../utils/nodes/connection/Connection.ts';
+import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -40,6 +41,9 @@ export class UmlEditorService {
 
     private _dragOffsetX: number = 0;
     private _dragOffsetY: number = 0;
+
+    private _secondaryDragOffsetX: number = 0;
+    private _secondaryDragOffsetY: number = 0;
 
     private _scale: number = 1;
     private _isPanning: boolean = false;
@@ -180,6 +184,13 @@ export class UmlEditorService {
                         this._dragOffsetX = offsetX / this._scale - this._selectedNode.x;
                         this._dragOffsetY = offsetY / this._scale - this._selectedNode.y;
                     }
+                    if (this._selectedNode instanceof ConnectionPart) {
+                        this._selectedNode.isDragging = true;
+                        this._dragOffsetX = offsetX / this._scale - this._selectedNode.startPoint.x;
+                        this._dragOffsetY = offsetY / this._scale - this._selectedNode.startPoint.y;
+                        this._secondaryDragOffsetX = offsetX / this._scale - this._selectedNode.endPoint.x;
+                        this._secondaryDragOffsetY = offsetY / this._scale - this._selectedNode.endPoint.y;
+                    }
                     break;
                 case UmlEditorTool.REMOVE:
                     this._nodes.splice(this._nodes.indexOf(this._selectedNode), 1);
@@ -208,9 +219,16 @@ export class UmlEditorService {
     private onMouseMove(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
-        if (this._tool === UmlEditorTool.MOVE && this._selectedNode && this._selectedNode.isDragging && this._selectedNode instanceof PositionalNode) {
-            this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
-            this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
+        if (this._tool === UmlEditorTool.MOVE && this._selectedNode && this._selectedNode.isDragging) {
+            if (this._selectedNode instanceof PositionalNode) {
+                this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
+                this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
+            } else if (this._selectedNode instanceof ConnectionPart) {
+                this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
+                this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
+                this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, this.editorConfig.gridSize);
+                this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, this.editorConfig.gridSize);
+            }
             this.render();
             return;
         }
@@ -276,9 +294,7 @@ export class UmlEditorService {
                 }
 
                 if (part.containsDot(transformedX, transformedY)) {
-                    console.log('owo');
                     if (this._tool !== UmlEditorTool.MOVE && part.isSelected) return node;
-                    console.log('uwu');
                     return part;
                 }
             }
