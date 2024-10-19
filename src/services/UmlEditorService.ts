@@ -115,12 +115,14 @@ export class UmlEditorService {
     }
 
     public render(): void {
+        // If adding a connection is in progress, render its ghost
         if (this._isAddingConnection) {
             this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY, {
                 start: {x: this._dragOffsetX, y: this._dragOffsetY},
                 end: {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY} });
             return;
         }
+
         this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
     }
 
@@ -223,13 +225,16 @@ export class UmlEditorService {
     /**
      * Handles the `mousemove` event on the diagram editor's canvas.
      *
-     * This method is primarily responsible for two actions:
+     * This method is primarily responsible for three actions:
      *
      * 1. **Move a selected node**: If the editor is in the MOVE tool mode and a node
      *    is selected, the node will be moved to follow the mouse position.
      *    - The node's position is updated based on grid alignment and scaling.
      *    - For `PositionalNode` types, the X and Y coordinates of the node are adjusted.
      *    - For `ConnectionPart` types, both the start and end points are adjusted to follow the mouse.
+     *
+     * 3. **Drag connection line ghost**: Adjusts the end coordinates of the connection ghost
+     *    until the `mouseup` event.
      *
      * 2. **Pan the canvas**: If panning mode is active (i.e., the user is dragging the canvas),
      *    the viewport will be updated to follow the mouse movement, allowing the user to navigate the canvas.
@@ -334,6 +339,7 @@ export class UmlEditorService {
      * It transforms the given x and y coordinates based on the current pan offset and scale,
      * instantiates the appropriate node type, and adds it to the diagram.
      * If configured, it can switch the current tool back to the edit mode after adding a node.
+     * When adding a connection, it only starts a process which will end with a `mouseup` event.
      *
      * **Key Behaviors:**
      *
@@ -345,10 +351,13 @@ export class UmlEditorService {
      *    - Depending on the node type specified in `this.addConfig.type`, it instantiates one of the following
      *      node types: `ClassNode`, `InterfaceNode`, `DataTypeNode`, `PrimitiveTypeNode`, `EnumerationNode`, or `CommentNode`.
      *
-     * 3. **Node Addition**:
+     * 3. **Start drawing connection**:
+     *    - Saves the click coordinates where the connection will begin from.
+     *
+     * 4. **Node Addition**:
      *    - After creating the node, it calls the `addNode` method to add it to the diagram's node collection.
      *
-     * 4. **Tool State Management**:
+     * 5. **Tool State Management**:
      *    - If `this.addConfig.keepAdding` is false, it switches the current tool to `UmlEditorTool.EDIT`,
      *      allowing for subsequent editing actions instead of continuous node addition.
      *
