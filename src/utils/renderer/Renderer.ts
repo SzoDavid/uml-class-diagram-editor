@@ -27,13 +27,7 @@ export class Renderer {
         });
 
         if (connectionLine) {
-            console.log(connectionLine);
-            this._ctx.lineWidth = this._rc.borderSize;
-            this._ctx.beginPath();
-            this._ctx.moveTo(connectionLine.start.x, connectionLine.start.y);
-            this._ctx.lineTo(connectionLine.end.x, connectionLine.end.y);
-            this._ctx.strokeStyle = this._rc.accentColorSelected;
-            this._ctx.stroke();
+            this._nodeRenderer.renderGhostLine(connectionLine.start, connectionLine.end);
         }
 
         this._ctx.restore();

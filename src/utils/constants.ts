@@ -1,3 +1,4 @@
 export const EditorConstants = {
-    maximumClickDistance: 10
+    maxClickDistance: 10,
+    minConnectionLength: 20
 };

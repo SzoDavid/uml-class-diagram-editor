@@ -38,7 +38,7 @@ export class ConnectionPart extends Node {
             this.startPoint.y, 
             this.endPoint.x, 
             this.endPoint.y, 
-            EditorConstants.maximumClickDistance
+            EditorConstants.maxClickDistance
         );
     }
 

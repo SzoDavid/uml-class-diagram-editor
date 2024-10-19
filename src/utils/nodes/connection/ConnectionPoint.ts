@@ -27,6 +27,6 @@ export class ConnectionPoint extends PositionalNode {
     }
 
     containsDot(x: number, y: number): boolean {
-        return GeometryUtils.isPointWithinRadius(x, y, this.x, this.y, EditorConstants.maximumClickDistance);
+        return GeometryUtils.isPointWithinRadius(x, y, this.x, this.y, EditorConstants.maxClickDistance);
     }
 }

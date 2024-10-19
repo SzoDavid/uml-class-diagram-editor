@@ -55,6 +55,15 @@ export class NodeRenderer {
         }
     }
 
+    public renderGhostLine(start: {x: number, y: number}, end: {x: number, y: number}) {
+        this.ctx.lineWidth = this.rc.borderSize;
+        this.ctx.beginPath();
+        this.ctx.moveTo(start.x, start.y);
+        this.ctx.lineTo(end.x, end.y);
+        this.ctx.strokeStyle = this.rc.accentColorSelected;
+        this.ctx.stroke();
+    }
+
     drawHeader(x: number, y: number, width: number, name: string, header: string, footer: string, isSelected: boolean, isInvalid: boolean, isItalic: boolean) {
         this.drawRect(x, y, width, this.rc.lineHeight * ((header ? 2 : 1) + (footer ? 1 : 0)), isSelected, isInvalid);
 
