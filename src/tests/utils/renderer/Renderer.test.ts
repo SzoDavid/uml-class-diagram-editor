@@ -2,9 +2,9 @@ import {beforeEach, describe, vi, test, expect} from 'vitest';
 import {Renderer} from '../../../utils/renderer/Renderer.ts';
 import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/classifier/ClassNode.ts';
-import {Node} from '../../../utils/nodes/Node.ts';
 import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
 import {useSettingsService} from '../../../services/SettingsService.ts';
+import {PositionalNode} from '../../../utils/nodes/PositionalNode.ts';
 
 describe('UCDE-Renderer', () => {
     let canvas: HTMLCanvasElement;
@@ -66,7 +66,7 @@ describe('UCDE-Renderer', () => {
     });
 
     test('UCDE-R-03 GIVEN a non-ClassNode node WHEN render is called THEN ClassNodeRenderer.render should not be called', () => {
-        const aNode = { x: 100, y: 100, width: 50, height: 50 } as Node;
+        const aNode = { x: 100, y: 100, width: 50, height: 50 } as PositionalNode;
         renderer.render([aNode], 1, 0, 0);
 
         expect(nodeRenderer['_classifierRenderer'].render).not.toHaveBeenCalled();
