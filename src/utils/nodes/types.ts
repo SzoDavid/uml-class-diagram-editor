@@ -23,5 +23,6 @@ export enum NodeType {
     DATATYPE,
     PRIMITIVE,
     ENUMERATION,
-    COMMENT
+    COMMENT,
+    CONNECTION
 }

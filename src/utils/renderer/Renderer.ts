@@ -15,7 +15,7 @@ export class Renderer {
         this._nodeRenderer = new NodeRenderer(this._ctx, this._rc);
     }
 
-    public render(nodes: Node[], scale: number, offsetX: number, offsetY: number): void {
+    public render(nodes: Node[], scale: number, offsetX: number, offsetY: number, connectionLine?: {start: {x: number, y: number}, end: {x: number, y: number} }): void {
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
         this._ctx.save();
@@ -25,6 +25,16 @@ export class Renderer {
         nodes.forEach(node => {
             this._nodeRenderer.render(node);
         });
+
+        if (connectionLine) {
+            console.log(connectionLine);
+            this._ctx.lineWidth = this._rc.borderSize;
+            this._ctx.beginPath();
+            this._ctx.moveTo(connectionLine.start.x, connectionLine.start.y);
+            this._ctx.lineTo(connectionLine.end.x, connectionLine.end.y);
+            this._ctx.strokeStyle = this._rc.accentColorSelected;
+            this._ctx.stroke();
+        }
 
         this._ctx.restore();
     }

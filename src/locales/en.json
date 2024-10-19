@@ -63,6 +63,7 @@
     "node_types": {
         "class": "class",
         "comment": "comment",
+        "connection": "connection",
         "datatype": "datatype",
         "enumeration": "enumeration",
         "primitive": "primitive type",

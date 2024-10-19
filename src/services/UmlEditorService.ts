@@ -14,6 +14,7 @@ import {CommentNode} from '../utils/nodes/CommentNode.ts';
 import {PositionalNode} from '../utils/nodes/PositionalNode.ts';
 import {Connection} from '../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
+import {ConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -41,6 +42,8 @@ export class UmlEditorService {
     private _tool: UmlEditorTool = UmlEditorTool.EDIT;
 
     private readonly _emitter: Emitter<Record<EmitReason, EmitType>> = mitt();
+
+    private _isAddingConnection: boolean = false;
 
     private _dragOffsetX: number = 0;
     private _dragOffsetY: number = 0;
@@ -111,6 +114,12 @@ export class UmlEditorService {
     }
 
     public render(): void {
+        if (this._isAddingConnection) {
+            this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY, {
+                start: {x: this._dragOffsetX, y: this._dragOffsetY},
+                end: {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY} });
+            return;
+        }
         this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
     }
 
@@ -188,6 +197,18 @@ export class UmlEditorService {
         if (this._selectedNode) {
             this._selectedNode.isDragging = false;
             this.render();
+            return;
+        }
+
+        if (this._isAddingConnection) {
+            this._isAddingConnection = false;
+            this.addNode(new Connection([new ConnectionPart(new ConnectionPoint(this._dragOffsetX, this._dragOffsetY),
+                                                            new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY))]));
+
+            if (!this.addConfig.keepAdding) {
+                this.tool = UmlEditorTool.EDIT;
+            }
+            this.render();
         }
     }
 
@@ -221,6 +242,13 @@ export class UmlEditorService {
                 this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, this.editorConfig.gridSize);
                 this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, this.editorConfig.gridSize);
             }
+            this.render();
+            return;
+        }
+
+        if (this._isAddingConnection) {
+            this._secondaryDragOffsetX = this.roundToNearest((offsetX - this._panOffsetX) / this._scale, this.editorConfig.gridSize);
+            this._secondaryDragOffsetY = this.roundToNearest((offsetY - this._panOffsetY) / this._scale, this.editorConfig.gridSize);
             this.render();
             return;
         }
@@ -343,6 +371,14 @@ export class UmlEditorService {
             case NodeType.COMMENT:
                 node = new CommentNode('...', transformedX, transformedY);
                 break;
+            case NodeType.CONNECTION:
+                console.log('adding');
+                this._isAddingConnection = true;
+                this._dragOffsetX = transformedX;
+                this._dragOffsetY = transformedY;
+                this._secondaryDragOffsetX = transformedX;
+                this._secondaryDragOffsetY = transformedY;
+                return;
         }
 
         this.addNode(node);
