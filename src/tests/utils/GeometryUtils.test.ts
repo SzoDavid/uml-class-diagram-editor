@@ -54,5 +54,15 @@ describe('UCDE-GeometryUtils', () => {
             const result = GeometryUtils.isPointOnLine(1, 2, 0, 0, 2, 2, 0.5);
             expect(result).toBe(false);
         });
+
+        test('UCDE-GU-0207 GIVEN a point within the tolerance on a horizontal line WHEN isPointOnLine is called THEN return true', () => {
+            const result = GeometryUtils.isPointOnLine(2, 1, 0, 0, 5, 0, 2);
+            expect(result).toBe(true);
+        });
+
+        test('UCDE-GU-0208 GIVEN a point within the tolerance on a vertical line WHEN isPointOnLine is called THEN return true', () => {
+            const result = GeometryUtils.isPointOnLine(1, 2, 0, 0, 0, 5, 2);
+            expect(result).toBe(true);
+        });
     });
 });
