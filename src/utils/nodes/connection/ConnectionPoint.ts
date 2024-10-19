@@ -1,5 +1,7 @@
 import {PositionalNode} from '../PositionalNode.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
+import {EditorConstants} from '../../constants.ts';
+import {GeometryUtils} from '../../GeometryUtils.ts';
 
 export class ConnectionPoint extends PositionalNode {
 
@@ -25,9 +27,6 @@ export class ConnectionPoint extends PositionalNode {
     }
 
     containsDot(x: number, y: number): boolean {
-        return x >= this.x - 10 && // TODO make these constants
-            x <= this.x + 10 &&
-            y >= this.y - 10 &&
-            y <= this.y + 10;
+        return GeometryUtils.isPointWithinRadius(x, y, this.x, this.y, EditorConstants.maximumClickDistance);
     }
 }

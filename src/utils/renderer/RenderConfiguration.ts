@@ -22,6 +22,7 @@ export interface RenderConfiguration {
     accentColorInvalid: string,
     accentColorInvalidSelected: string,
     separateObjectParametersWidthLimit: number,
+    dotSize: number,
     options: {
         classAbstractionDisplayMode: ClassAbstractionDisplayMode;
     }

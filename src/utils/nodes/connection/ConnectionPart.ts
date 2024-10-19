@@ -1,6 +1,8 @@
 import {Node} from '../Node.ts';
 import {ConnectionPoint} from './ConnectionPoint.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
+import {EditorConstants} from '../../constants.ts';
+import {GeometryUtils} from '../../GeometryUtils.ts';
 
 export class ConnectionPart extends Node {
     startPoint: ConnectionPoint;
@@ -30,26 +32,19 @@ export class ConnectionPart extends Node {
     }
 
     containsDot(x: number, y: number): boolean {
-        const numerator = Math.abs(
-            (this.endPoint.y - this.startPoint.y) * x
-            - (this.endPoint.x - this.startPoint.x) * y
-            + this.endPoint.x * this.startPoint.y
-            - this.endPoint.y * this.startPoint.x
+        return GeometryUtils.isPointOnLine(
+            x, y, 
+            this.startPoint.x, 
+            this.startPoint.y, 
+            this.endPoint.x, 
+            this.endPoint.y, 
+            EditorConstants.maximumClickDistance
         );
-        const denominator = Math.sqrt(
-            Math.pow(this.endPoint.y - this.startPoint.y, 2)
-            + Math.pow(this.endPoint.x - this.startPoint.x, 2)
-        );
-        const distance = numerator / denominator;
+    }
 
-        if (distance > 10) { //TODO make constant
-            return false;
-        }
-
-        // Check if point is within the bounding box of start and end point
-        return x >= Math.min(this.startPoint.x, this.endPoint.x) &&
-            x <= Math.max(this.startPoint.x, this.endPoint.x) &&
-            y >= Math.min(this.startPoint.y, this.endPoint.y) &&
-            y <= Math.max(this.startPoint.y, this.endPoint.y);
+    deselect() {
+        super.deselect();
+        this.startPoint.deselect();
+        this.endPoint.deselect();
     }
 }

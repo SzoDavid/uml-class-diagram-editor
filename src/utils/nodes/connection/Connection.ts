@@ -31,4 +31,9 @@ export class Connection extends Node {
         this.parts.forEach(part => { if (part.containsDot(x, y)) contains = true; });
         return contains;
     }
+
+    deselect(): void {
+        super.deselect();
+        this.parts.forEach(part => part.deselect());
+    }
 }

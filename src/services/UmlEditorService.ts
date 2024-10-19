@@ -89,7 +89,6 @@ export class UmlEditorService {
 
         if (tool !== UmlEditorTool.EDIT) {
             this.deselectAll();
-            this.render();
         }
 
         this._emitter.emit('toolChange', tool);
@@ -131,40 +130,7 @@ export class UmlEditorService {
         const { offsetX, offsetY } = event;
 
         if (this._tool === UmlEditorTool.ADD) {
-            let node: Node;
-            switch (this.addConfig.type) {
-                case NodeType.CLASS:
-                    node = new ClassNode('Class', (offsetX - this._panOffsetX) / this._scale,
-                                         (offsetY - this._panOffsetY) / this._scale);
-                    break;
-                case NodeType.INTERFACE:
-                    node = new InterfaceNode('Interface', (offsetX - this._panOffsetX) / this._scale,
-                                             (offsetY - this._panOffsetY) / this._scale);
-                    break;
-                case NodeType.DATATYPE:
-                    node = new DataTypeNode('DataType', (offsetX - this._panOffsetX) / this._scale,
-                                            (offsetY - this._panOffsetY) / this._scale);
-                    break;
-                case NodeType.PRIMITIVE:
-                    node = new PrimitiveTypeNode('Primitive', (offsetX - this._panOffsetX) / this._scale,
-                                                 (offsetY - this._panOffsetY) / this._scale);
-                    break;
-                case NodeType.ENUMERATION:
-                    node = new EnumerationNode('Enumeration', (offsetX - this._panOffsetX) / this._scale,
-                                               (offsetY - this._panOffsetY) / this._scale);
-                    break;
-                case NodeType.COMMENT:
-                    node = new CommentNode('...', (offsetX - this._panOffsetX) / this._scale,
-                                           (offsetY - this._panOffsetY) / this._scale);
-                    break;
-            }
-
-            this.addNode(node);
-
-            if (!this.addConfig.keepAdding) {
-                this.tool = UmlEditorTool.EDIT;
-            }
-
+            this.handleAddNode(offsetX, offsetY);
             return;
         }
 
@@ -179,18 +145,7 @@ export class UmlEditorService {
 
             switch (this._tool) {
                 case UmlEditorTool.MOVE:
-                    if (this._selectedNode instanceof PositionalNode) { // TODO: implement for non-positional nodes
-                        this._selectedNode.isDragging = true;
-                        this._dragOffsetX = offsetX / this._scale - this._selectedNode.x;
-                        this._dragOffsetY = offsetY / this._scale - this._selectedNode.y;
-                    }
-                    if (this._selectedNode instanceof ConnectionPart) {
-                        this._selectedNode.isDragging = true;
-                        this._dragOffsetX = offsetX / this._scale - this._selectedNode.startPoint.x;
-                        this._dragOffsetY = offsetY / this._scale - this._selectedNode.startPoint.y;
-                        this._secondaryDragOffsetX = offsetX / this._scale - this._selectedNode.endPoint.x;
-                        this._secondaryDragOffsetY = offsetY / this._scale - this._selectedNode.endPoint.y;
-                    }
+                    this.handleMoveNode(offsetX, offsetY);
                     break;
                 case UmlEditorTool.REMOVE:
                     this._nodes.splice(this._nodes.indexOf(this._selectedNode), 1);
@@ -267,6 +222,56 @@ export class UmlEditorService {
         this.render();
     }
 
+    private handleAddNode(offsetX: number, offsetY: number): void {
+        let node: Node;
+        switch (this.addConfig.type) {
+            case NodeType.CLASS:
+                node = new ClassNode('Class', (offsetX - this._panOffsetX) / this._scale,
+                                     (offsetY - this._panOffsetY) / this._scale);
+                break;
+            case NodeType.INTERFACE:
+                node = new InterfaceNode('Interface', (offsetX - this._panOffsetX) / this._scale,
+                                         (offsetY - this._panOffsetY) / this._scale);
+                break;
+            case NodeType.DATATYPE:
+                node = new DataTypeNode('DataType', (offsetX - this._panOffsetX) / this._scale,
+                                        (offsetY - this._panOffsetY) / this._scale);
+                break;
+            case NodeType.PRIMITIVE:
+                node = new PrimitiveTypeNode('Primitive', (offsetX - this._panOffsetX) / this._scale,
+                                             (offsetY - this._panOffsetY) / this._scale);
+                break;
+            case NodeType.ENUMERATION:
+                node = new EnumerationNode('Enumeration', (offsetX - this._panOffsetX) / this._scale,
+                                           (offsetY - this._panOffsetY) / this._scale);
+                break;
+            case NodeType.COMMENT:
+                node = new CommentNode('...', (offsetX - this._panOffsetX) / this._scale,
+                                       (offsetY - this._panOffsetY) / this._scale);
+                break;
+        }
+
+        this.addNode(node);
+
+        if (!this.addConfig.keepAdding) {
+            this.tool = UmlEditorTool.EDIT;
+        }
+    }
+
+    private handleMoveNode(offsetX: number, offsetY: number): void {
+        if (this._selectedNode instanceof PositionalNode) {
+            this._selectedNode.isDragging = true;
+            this._dragOffsetX = offsetX / this._scale - this._selectedNode.x;
+            this._dragOffsetY = offsetY / this._scale - this._selectedNode.y;
+        } else if (this._selectedNode instanceof ConnectionPart) {
+            this._selectedNode.isDragging = true;
+            this._dragOffsetX = offsetX / this._scale - this._selectedNode.startPoint.x;
+            this._dragOffsetY = offsetY / this._scale - this._selectedNode.startPoint.y;
+            this._secondaryDragOffsetX = offsetX / this._scale - this._selectedNode.endPoint.x;
+            this._secondaryDragOffsetY = offsetY / this._scale - this._selectedNode.endPoint.y;
+        }
+    }
+
     private getNodeAtPosition(x: number, y: number): Node | null {
         const transformedX = (x - this._panOffsetX) / this._scale;
         const transformedY = (y - this._panOffsetY) / this._scale;
@@ -308,16 +313,7 @@ export class UmlEditorService {
     }
 
     private deselectAll() {
-        this._nodes.forEach(node => {
-            node.isSelected = false;
-
-            if (node instanceof Connection) {
-                node.parts[0].startPoint.isSelected = false;
-                node.parts.forEach(part => {
-                    part.isSelected = false;
-                    part.endPoint.isSelected = false;
-                });
-            }
-        });
+        this._nodes.forEach(node => node.deselect());
+        this.render();
     }
 }

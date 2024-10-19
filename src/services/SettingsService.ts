@@ -20,6 +20,7 @@ const defaultRenderConfiguration: RenderConfiguration = {
     accentColorInvalid: '#F00',
     accentColorInvalidSelected: '#F06',
     separateObjectParametersWidthLimit: 500,
+    dotSize: 5,
     options: {
         classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
     }
