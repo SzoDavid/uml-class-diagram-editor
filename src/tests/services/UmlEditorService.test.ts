@@ -98,7 +98,7 @@ describe('UCDE-UmlEditorService', () => {
 
             expect(node.x).toBe(150);
             expect(node.y).toBe(150);
-            expect(renderer.render).toHaveBeenCalledTimes(5); // init, add node, set tool, mouse down, mouse move
+            expect(renderer.render).toHaveBeenCalledTimes(6); // init, add node, set tool, mouse down, deselect all other, mouse move
         });
     });
 
