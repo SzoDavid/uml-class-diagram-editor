@@ -95,7 +95,7 @@ export default {
             const b = new ConnectionPoint(100, 100);
             const c = new ConnectionPoint(150, 200);
 
-            editor.addNode(new Connection([ new ConnectionPart(a, b), new ConnectionPart(b, c)]));
+            editor.addNode(new Connection([a, b, c]));
         });
 
         const onSave = (data: DataContext<Node>) => {

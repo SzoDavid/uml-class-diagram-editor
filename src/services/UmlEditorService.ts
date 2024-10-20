@@ -208,10 +208,10 @@ export class UmlEditorService {
 
             // Only add connection if its length is larger than the given constant
             if (Math.abs(Math.sqrt(Math.pow(this._secondaryDragOffsetX - this._dragOffsetX, 2) + Math.pow(this._secondaryDragOffsetY - this._dragOffsetY, 2))) > EditorConstants.minConnectionLength) {
-                this.addNode(new Connection([new ConnectionPart(
+                this.addNode(new Connection([
                     new ConnectionPoint(this._dragOffsetX, this._dragOffsetY),
                     new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY)
-                )]));
+                ]));
 
                 if (!this.addConfig.keepAdding) {
                     this.tool = UmlEditorTool.EDIT;
