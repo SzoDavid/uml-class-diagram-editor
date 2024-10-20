@@ -3,13 +3,16 @@ import {ConnectionPoint} from './ConnectionPoint.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
 import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
+import {Connection} from './Connection.ts';
 
 export class ConnectionPart extends Node {
+    parent: Connection;
     startPoint: ConnectionPoint;
     endPoint: ConnectionPoint;
 
-    constructor(startPoint: ConnectionPoint, endPoint: ConnectionPoint) {
+    constructor(parent: Connection, startPoint: ConnectionPoint, endPoint: ConnectionPoint) {
         super();
+        this.parent = parent;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
     }
@@ -19,7 +22,7 @@ export class ConnectionPart extends Node {
     }
 
     clone(): ConnectionPart {
-        const clone = new ConnectionPart(this.startPoint, this.endPoint);
+        const clone = new ConnectionPart(this.parent, this.startPoint, this.endPoint);
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
 
@@ -27,6 +30,7 @@ export class ConnectionPart extends Node {
     }
 
     copy(node: ConnectionPart) {
+        this.parent = node.parent;
         this.startPoint.copy(node.startPoint);
         this.endPoint.copy(node.endPoint);
     }
@@ -46,5 +50,15 @@ export class ConnectionPart extends Node {
         super.deselect();
         this.startPoint.deselect();
         this.endPoint.deselect();
+    }
+
+    break() {
+        const midPoint = new ConnectionPoint((this.startPoint.x + this.endPoint.x) / 2,
+                                             (this.startPoint.y + this.endPoint.y) / 2);
+
+        const firstHalf = new ConnectionPart(this.parent, this.startPoint, midPoint);
+        const secondHalf = new ConnectionPart(this.parent, midPoint, this.endPoint);
+
+        this.parent.parts.splice(this.parent.parts.indexOf(this), 1, firstHalf, secondHalf);
     }
 }

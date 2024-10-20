@@ -48,6 +48,9 @@
         <template v-else-if="data.type==='comment'">
           <CommentEditorPanel :commentData="data" @save="onSave" />
         </template>
+        <template v-else-if="data.type==='connection'">
+          <ConnectionEditorPanel :connectionData="data" @save="onSave" />
+        </template>
         <template v-else-if="data.type==='editor'">
           <fieldset>
             <legend class="capitalized">{{ t("option", 2) }}</legend>
