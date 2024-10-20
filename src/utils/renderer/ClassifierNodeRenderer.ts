@@ -2,8 +2,8 @@ import {NodeRenderer} from './NodeRenderer.ts';
 import {Feature} from '../nodes/features/Feature.ts';
 import {IsDecoratedFeature} from '../nodes/features/DecoratedFeature.ts';
 import {IsMultilineFeature} from '../nodes/features/MultilineFeature.ts';
-import {ClassifierNode} from '../nodes/ClassifierNode.ts';
-import {ClassNode} from '../nodes/ClassNode.ts';
+import {ClassifierNode} from '../nodes/classifier/ClassifierNode.ts';
+import {ClassNode} from '../nodes/classifier/ClassNode.ts';
 import {ClassAbstractionDisplayMode} from './RenderConfiguration.ts';
 
 export class ClassifierNodeRenderer {

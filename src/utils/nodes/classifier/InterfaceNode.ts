@@ -1,8 +1,8 @@
 import {ClassifierNode} from './ClassifierNode.ts';
-import {Property} from './features/Property.ts';
-import {Operation} from './features/Operation.ts';
+import {Property} from '../features/Property.ts';
+import {Operation} from '../features/Operation.ts';
 
-export class DataTypeNode extends ClassifierNode {
+export class InterfaceNode extends ClassifierNode {
     constructor(name: string,
                 x: number,
                 y: number,
@@ -13,8 +13,8 @@ export class DataTypeNode extends ClassifierNode {
         super(name, x, y, properties, operations, isNotShownPropertiesExist, isNotShownOperationsExist);
     }
 
-    public clone(): DataTypeNode {
-        const clone = new DataTypeNode(
+    public clone(): InterfaceNode {
+        const clone = new InterfaceNode(
             this.name,
             this.x,
             this.y,
@@ -32,11 +32,11 @@ export class DataTypeNode extends ClassifierNode {
         return clone;
     }
 
-    public copy(node: DataTypeNode) {
+    public copy(node: InterfaceNode) {
         super.copy(node);
     }
 
     public get header(): string {
-        return 'DataType';
+        return 'Interface';
     }
 }

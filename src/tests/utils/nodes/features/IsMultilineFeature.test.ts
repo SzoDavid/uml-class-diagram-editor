@@ -25,7 +25,7 @@ describe('UCDE-IsMultilineFeature', () => {
         expect(IsMultilineFeature(simpleFeature)).toBe(false);
     });
 
-    test('UCDE-IDF-04 GIVEN a feature object WHEN the object has extra properties but is a valid MultilineFeature THEN it should return true', () => {
+    test('UCDE-IMF-03 GIVEN a feature object WHEN the object has extra properties but is a valid MultilineFeature THEN it should return true', () => {
         const extendedMultilineFeature = {
             extraProperty: 'extra',
             toMultilineString: () => [],

@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, test} from 'vitest';
 import {MockProperty} from './features/mocks/MockProperty.ts';
 import {MockOperation} from './features/mocks/MockOperation.ts';
-import {DataTypeNode} from '../../../utils/nodes/DataTypeNode.ts';
+import {DataTypeNode} from '../../../utils/nodes/classifier/DataTypeNode.ts';
 
 describe('UCDE-DataTypeNode', () => {
     let dataTypeNode: DataTypeNode;

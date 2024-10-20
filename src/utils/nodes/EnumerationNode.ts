@@ -1,8 +1,8 @@
-import {Node} from './Node.ts';
 import {InvalidNodeParameterCause} from './types.ts';
 import {Validator} from '../Validator.ts';
+import {PositionalNode} from './PositionalNode.ts';
 
-export class EnumerationNode extends Node {
+export class EnumerationNode extends PositionalNode {
     name: string;
     values: string[];
 

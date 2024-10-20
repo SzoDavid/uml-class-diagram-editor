@@ -1,8 +1,8 @@
-import {Node} from './Node.ts';
 import {InvalidNodeParameterCause} from './types.ts';
 import {Validator} from '../Validator.ts';
+import {PositionalNode} from './PositionalNode.ts';
 
-export class PrimitiveTypeNode extends Node {
+export class PrimitiveTypeNode extends PositionalNode {
     name: string;
 
     constructor(name: string, x: number, y: number) {

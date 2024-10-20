@@ -2,7 +2,7 @@ import {Node} from './nodes/Node.ts';
 import {AddConfig, EditorConfig} from '../services/UmlEditorService.ts';
 
 export interface NodeData<T extends Node> {
-    type: 'classifier'|'primitive'|'enumeration'|'comment'
+    type: 'classifier'|'primitive'|'enumeration'|'comment'|'connection'
     instance: T;
 }
 

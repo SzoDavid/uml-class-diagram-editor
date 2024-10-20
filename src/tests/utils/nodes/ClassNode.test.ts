@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, test} from 'vitest';
-import {ClassNode, ClassStereotype} from '../../../utils/nodes/ClassNode.ts';
+import {ClassNode, ClassStereotype} from '../../../utils/nodes/classifier/ClassNode.ts';
 import {MockOperation} from './features/mocks/MockOperation.ts';
 import {MockProperty} from './features/mocks/MockProperty.ts';
 import {validateStringKeys} from '../../helpers.ts';
@@ -11,8 +11,8 @@ describe('UCDE-ClassNode', () => {
         classNode = new ClassNode('MyClass', 10, 20);
     });
 
-    describe('UCDE-CN-0100-Constructor', () => {
-        test('UCDE-CN-0101 GIVEN valid inputs WHEN creating ClassNode THEN properties should be set correctly', () => {
+    describe('UCDE-CLN-0100-Constructor', () => {
+        test('UCDE-CLN-0101 GIVEN valid inputs WHEN creating ClassNode THEN properties should be set correctly', () => {
             expect(classNode.name).toBe('MyClass');
             expect(classNode.x).toBe(10);
             expect(classNode.y).toBe(20);
@@ -25,35 +25,35 @@ describe('UCDE-ClassNode', () => {
         });
     });
 
-    describe('UCDE-CN-0200-isAbstract', () => {
-        test('UCDE-CN-0201 GIVEN hasAbstractFlag is true WHEN checking isAbstract THEN return true', () => {
+    describe('UCDE-CLN-0200-isAbstract', () => {
+        test('UCDE-CLN-0201 GIVEN hasAbstractFlag is true WHEN checking isAbstract THEN return true', () => {
             classNode.hasAbstractFlag = true;
             expect(classNode.isAbstract).toBe(true);
         });
 
-        test('UCDE-CN-0202 GIVEN an operation with isAbstract true WHEN checking isAbstract THEN return true', () => {
+        test('UCDE-CLN-0202 GIVEN an operation with isAbstract true WHEN checking isAbstract THEN return true', () => {
             classNode.operations.push(new MockOperation('operation1', true));
             expect(classNode.isAbstract).toBe(true);
         });
 
-        test('UCDE-CN-0203 GIVEN no abstract flags set WHEN checking isAbstract THEN return false', () => {
+        test('UCDE-CLN-0203 GIVEN no abstract flags set WHEN checking isAbstract THEN return false', () => {
             expect(classNode.isAbstract).toBe(false);
         });
     });
 
-    describe('UCDE-CN-0300-validate', () => {
-        describe('UCDE-CN-0301 GIVEN an invalid name WHEN validate() THEN return valid error for name', () => {
+    describe('UCDE-CLN-0300-validate', () => {
+        describe('UCDE-CLN-0301 GIVEN an invalid name WHEN validate() THEN return valid error for name', () => {
             test.each([
                 { name: '', expectedError: [{ parameter: 'name', message: 'error.name.required' }] },
                 { name: 'invalid name!', expectedError: [{ parameter: 'name', message: 'error.name.alphanumeric' }] }
-            ])('UCDE-CN-0301 {name: $name}', ({name, expectedError}) => {
+            ])('UCDE-CLN-0301 {name: $name}', ({name, expectedError}) => {
                 expect(validateStringKeys(expectedError)).toBe(true);
                 classNode.name = name;
                 expect(classNode.validate()).toEqual(expectedError);
             });
         });
 
-        describe('UCDE-CN-0302 GIVEN an invalid property or operation WHEN validate() THEN validate both', () => {
+        describe('UCDE-CLN-0302 GIVEN an invalid property or operation WHEN validate() THEN validate both', () => {
             test.each([
                 { property: 'validProperty', operation: 'invalid', expectedErrors: [{
                     parameter: 'operations',
@@ -77,7 +77,7 @@ describe('UCDE-ClassNode', () => {
                         message: 'error.operation.invalid',
                         context: [{ parameter: 'name', message: 'Invalid operation name' }]},
                 ]},
-            ])('UCDE-CN-0302 {property: $property, operation: $operation}', ({property, operation, expectedErrors})=> {
+            ])('UCDE-CLN-0302 {property: $property, operation: $operation}', ({property, operation, expectedErrors})=> {
                 expect(validateStringKeys(expectedErrors)).toBe(true);
 
                 classNode.properties.push(new MockProperty(property));
@@ -87,8 +87,8 @@ describe('UCDE-ClassNode', () => {
         });
     });
 
-    describe('UCDE-CN-0400-clone', () => {
-        test('UCDE-CN-0401 GIVEN valid ClassNode WHEN clone() THEN return a new instance with same values', () => {
+    describe('UCDE-CLN-0400-clone', () => {
+        test('UCDE-CLN-0401 GIVEN valid ClassNode WHEN clone() THEN return a new instance with same values', () => {
             classNode.properties.push(new MockProperty('prop1'));
             classNode.operations.push(new MockOperation('op1'));
             classNode.stereotype = ClassStereotype.METACLASS;
@@ -103,8 +103,8 @@ describe('UCDE-ClassNode', () => {
         });
     });
 
-    describe('UCDE-CN-0500-copy', () => {
-        test('UCDE-CN-0501 GIVEN another ClassNode WHEN copy() THEN copy values correctly', () => {
+    describe('UCDE-CLN-0500-copy', () => {
+        test('UCDE-CLN-0501 GIVEN another ClassNode WHEN copy() THEN copy values correctly', () => {
             const anotherNode = new ClassNode('AnotherClass', 30, 40, [new MockProperty('prop2')], [new MockOperation('op2')]);
             classNode.copy(anotherNode);
             expect(classNode.name).toBe('AnotherClass');
@@ -115,8 +115,8 @@ describe('UCDE-ClassNode', () => {
         });
     });
 
-    describe ('UCDE-CN-0600-set stereotype', () => {
-        test('UCDE-CN-0601 GIVEN utility WHEN setting stereotype for class with non-static properties and operations THEN props and operations are set to static', () => {
+    describe ('UCDE-CLN-0600-set stereotype', () => {
+        test('UCDE-CLN-0601 GIVEN utility WHEN setting stereotype for class with non-static properties and operations THEN props and operations are set to static', () => {
             classNode.properties.push(new MockProperty('prop1'));
             classNode.operations.push(new MockOperation('op1'));
 

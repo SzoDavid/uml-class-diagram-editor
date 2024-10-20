@@ -1,6 +1,7 @@
 {
     "abstract": "abstract",
     "add": "add",
+    "add_breakpoint": "add breakpoint",
     "appearance": "appearance",
     "class_property": "property | properties",
     "class_stereotype": {
@@ -63,6 +64,7 @@
     "node_types": {
         "class": "class",
         "comment": "comment",
+        "connection": "connection",
         "datatype": "datatype",
         "enumeration": "enumeration",
         "primitive": "primitive type",
