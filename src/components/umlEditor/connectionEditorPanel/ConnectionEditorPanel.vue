@@ -17,7 +17,7 @@
   <template v-else-if="data.instance instanceof ConnectionPart">
     <fieldset>
       <legend class="capitalized">{{ t("detail", 2) }}</legend>
-      <button>Add break point</button><!-- TODO: i18n -->
+      <button @click="breakConnectionPart">Add break point</button><!-- TODO: i18n -->
     </fieldset>
   </template>
 </template>

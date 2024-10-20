@@ -126,7 +126,7 @@ export default {
                 } else if (selectedNode.value instanceof Connection && data.instance instanceof Connection) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof ConnectionPart && data.instance instanceof ConnectionPart) {
-                    selectedNode.value.copy(data.instance);
+                    selectedNode.value.parent.copy(data.instance.parent);
                 } else if (selectedNode.value instanceof ConnectionPoint && data.instance instanceof ConnectionPoint) {
                     selectedNode.value.copy(data.instance);
                 } else {

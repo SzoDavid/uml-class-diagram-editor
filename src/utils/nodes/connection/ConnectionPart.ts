@@ -56,9 +56,11 @@ export class ConnectionPart extends Node {
         const midPoint = new ConnectionPoint((this.startPoint.x + this.endPoint.x) / 2,
                                              (this.startPoint.y + this.endPoint.y) / 2);
 
-        const firstHalf = new ConnectionPart(this.parent, this.startPoint, midPoint);
-        const secondHalf = new ConnectionPart(this.parent, midPoint, this.endPoint);
+        const index = this.parent.parts.findIndex(part => part.startPoint === this.startPoint && part.endPoint === this.endPoint);
 
-        this.parent.parts.splice(this.parent.parts.indexOf(this), 1, firstHalf, secondHalf);
+        const secondHalf = new ConnectionPart(this.parent, midPoint, this.endPoint);
+        this.endPoint = midPoint;
+
+        this.parent.parts.splice(index, 1, this, secondHalf);
     }
 }

@@ -9,8 +9,8 @@ describe('UCDE-ConnectionPart', () => {
     beforeEach(() => {
         const connection = new Connection([
             new ConnectionPoint(0, 0),
-            new ConnectionPoint(0, 5),
-            new ConnectionPoint(5, 5)
+            new ConnectionPoint(0, 4),
+            new ConnectionPoint(4, 4)
         ]);
 
         connectionPart = connection.parts[0];
@@ -21,7 +21,7 @@ describe('UCDE-ConnectionPart', () => {
             expect(connectionPart.startPoint.x).toBe(0);
             expect(connectionPart.startPoint.y).toBe(0);
             expect(connectionPart.endPoint.x).toBe(0);
-            expect(connectionPart.endPoint.y).toBe(5);
+            expect(connectionPart.endPoint.y).toBe(4);
         });
     });
 
@@ -38,7 +38,7 @@ describe('UCDE-ConnectionPart', () => {
             expect(clone.startPoint.x).toBe(0);
             expect(clone.startPoint.y).toBe(0);
             expect(clone.endPoint.x).toBe(0);
-            expect(clone.endPoint.y).toBe(5);
+            expect(clone.endPoint.y).toBe(4);
         });
     });
 
@@ -61,6 +61,21 @@ describe('UCDE-ConnectionPart', () => {
         test('UCDE-CPA-0501 GIVEN valid ConnectionPart WHEN break() is called THEN parent is modified correctly', () => {
             connectionPart.break();
             expect(connectionPart.parent.parts).toHaveLength(3);
+
+            expect(connectionPart.parent.parts[0].startPoint.x).toBe(0);
+            expect(connectionPart.parent.parts[0].startPoint.y).toBe(0);
+            expect(connectionPart.parent.parts[0].endPoint.x).toBe(0);
+            expect(connectionPart.parent.parts[0].endPoint.y).toBe(2);
+
+            expect(connectionPart.parent.parts[1].startPoint.x).toBe(0);
+            expect(connectionPart.parent.parts[1].startPoint.y).toBe(2);
+            expect(connectionPart.parent.parts[1].endPoint.x).toBe(0);
+            expect(connectionPart.parent.parts[1].endPoint.y).toBe(4);
+
+            expect(connectionPart.parent.parts[2].startPoint.x).toBe(0);
+            expect(connectionPart.parent.parts[2].startPoint.y).toBe(4);
+            expect(connectionPart.parent.parts[2].endPoint.x).toBe(4);
+            expect(connectionPart.parent.parts[2].endPoint.y).toBe(4);
         });
     });
 });

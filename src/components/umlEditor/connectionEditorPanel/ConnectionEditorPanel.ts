@@ -55,6 +55,15 @@ export default defineComponent({
             { immediate: true, deep: true }
         );
 
+        const breakConnectionPart = () => {
+            if (data.value === null || !(data.value.instance instanceof ConnectionPart)) {
+                console.error('break connection part is called for invalid node', data.value);
+                return;
+            }
+
+            data.value.instance.break();
+        };
+
         const getError = (context: ErrorContext) => {
             if (data.value === null || data.value.type !== 'connection') return '';
 
@@ -65,7 +74,7 @@ export default defineComponent({
         };
 
         return {
-            t, data, onSave, getError
+            t, data, breakConnectionPart, onSave, getError
         };
     }
 });
