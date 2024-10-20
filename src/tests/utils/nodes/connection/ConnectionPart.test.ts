@@ -16,8 +16,8 @@ describe('UCDE-ConnectionPart', () => {
         connectionPart = connection.parts[0];
     });
 
-    describe('UCDE-C-0100-Constructor', () => {
-        test('UCDE-C-0101 GIVEN valid inputs WHEN creating ConnectionPart THEN properties should be set correctly', () => {
+    describe('UCDE-CPA-0100-Constructor', () => {
+        test('UCDE-CPA-0101 GIVEN valid inputs WHEN creating ConnectionPart THEN properties should be set correctly', () => {
             expect(connectionPart.startPoint.x).toBe(0);
             expect(connectionPart.startPoint.y).toBe(0);
             expect(connectionPart.endPoint.x).toBe(0);
@@ -25,14 +25,14 @@ describe('UCDE-ConnectionPart', () => {
         });
     });
 
-    describe('UCDE-CP-0200-Validate', () => {
-        test('UCDE-C-0201 GIVEN valid ConnectionPart WHEN validate() THEN return no validation errors', () => {
+    describe('UCDE-CPA-0200-Validate', () => {
+        test('UCDE-CPA-0201 GIVEN valid ConnectionPart WHEN validate() THEN return no validation errors', () => {
             expect(connectionPart.validate()).toHaveLength(0);
         });
     });
 
-    describe('UCDE-CP-0300-Clone', () => {
-        test('UCDE-C-0301 GIVEN valid ConnectionPart WHEN clone() THEN return a new instance with same values', () => {
+    describe('UCDE-CPA-0300-Clone', () => {
+        test('UCDE-CPA-0301 GIVEN valid ConnectionPart WHEN clone() THEN return a new instance with same values', () => {
             const clone = connectionPart.clone();
             expect(clone).not.toBe(connectionPart);
             expect(clone.startPoint.x).toBe(0);
@@ -42,8 +42,8 @@ describe('UCDE-ConnectionPart', () => {
         });
     });
 
-    describe('UCDE-C-0400-Copy', () => {
-        test('UCDE-C-0401 GIVEN another connection WHEN copy() THEN copy values correctly', () => {
+    describe('UCDE-CPA-0400-Copy', () => {
+        test('UCDE-CPA-0401 GIVEN another ConnectionPart WHEN copy() THEN copy values correctly', () => {
             const anotherConnection = new Connection([
                 new ConnectionPoint(1, 1),
                 new ConnectionPoint(1, 2)
@@ -54,6 +54,13 @@ describe('UCDE-ConnectionPart', () => {
             expect(connectionPart.startPoint.y).toBe(1);
             expect(connectionPart.endPoint.x).toBe(1);
             expect(connectionPart.endPoint.y).toBe(2);
+        });
+    });
+
+    describe('UCDE-CPA-0500-Break', () => {
+        test('UCDE-CPA-0501 GIVEN valid ConnectionPart WHEN break() is called THEN parent is modified correctly', () => {
+            connectionPart.break();
+            expect(connectionPart.parent.parts).toHaveLength(3);
         });
     });
 });
