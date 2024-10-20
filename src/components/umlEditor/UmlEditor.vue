@@ -49,7 +49,7 @@
           <CommentEditorPanel :commentData="data" @save="onSave" />
         </template>
         <template v-else-if="data.type==='connection'">
-          <ConnectionEditorPanel :connectionData="data" @save="onSave" />
+          <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
         </template>
         <template v-else-if="data.type==='editor'">
           <fieldset>

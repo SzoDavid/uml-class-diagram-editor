@@ -1,6 +1,7 @@
 {
     "abstract": "absztrakt",
     "add": "hozzáadás",
+    "add_breakpoint": "töréspont hozzáadása",
     "appearance": "megjelenés",
     "class_property": "attribútum | attribútumok",
     "class_stereotype": {

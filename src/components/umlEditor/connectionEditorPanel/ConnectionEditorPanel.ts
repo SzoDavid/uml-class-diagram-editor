@@ -13,6 +13,7 @@ interface ConnectionEditorPanelProperties {
 
 interface ConnectionEditorPanelEmits {
     (e: 'save', data: NodeData<Connection | ConnectionPart | ConnectionPoint>): void;
+    (e: 'render'): void;
 }
 
 export default defineComponent({
@@ -30,7 +31,7 @@ export default defineComponent({
             required: true
         }
     },
-    emits: ['save'],
+    emits: ['save', 'render'],
     setup(props: ConnectionEditorPanelProperties, { emit }: { emit: ConnectionEditorPanelEmits }) {
         const { t } = useI18n();
 
@@ -62,6 +63,7 @@ export default defineComponent({
             }
 
             data.value.instance.break();
+            emit('render');
         };
 
         const getError = (context: ErrorContext) => {

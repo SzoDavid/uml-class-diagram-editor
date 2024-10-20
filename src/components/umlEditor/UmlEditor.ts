@@ -126,7 +126,7 @@ export default {
                 } else if (selectedNode.value instanceof Connection && data.instance instanceof Connection) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof ConnectionPart && data.instance instanceof ConnectionPart) {
-                    selectedNode.value.parent.copy(data.instance.parent);
+                    selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof ConnectionPoint && data.instance instanceof ConnectionPoint) {
                     selectedNode.value.copy(data.instance);
                 } else {
@@ -240,6 +240,7 @@ export default {
             onToolSelected,
             onScaleSet,
             onScaleReset,
+            requestRender: () => {editor.render();},
             t
         };
     }
