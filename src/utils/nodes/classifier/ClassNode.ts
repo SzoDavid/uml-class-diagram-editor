@@ -1,5 +1,5 @@
-import {Property} from './features/Property.ts';
-import {Operation} from './features/Operation.ts';
+import {Property} from '../features/Property.ts';
+import {Operation} from '../features/Operation.ts';
 import {ClassifierNode} from './ClassifierNode.ts';
 
 export enum ClassStereotype {

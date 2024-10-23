@@ -15,7 +15,7 @@ export class Renderer {
         this._nodeRenderer = new NodeRenderer(this._ctx, this._rc);
     }
 
-    public render(nodes: Node[], scale: number, offsetX: number, offsetY: number): void {
+    public render(nodes: Node[], scale: number, offsetX: number, offsetY: number, connectionLine?: {start: {x: number, y: number}, end: {x: number, y: number} }): void {
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
         this._ctx.save();
@@ -25,6 +25,10 @@ export class Renderer {
         nodes.forEach(node => {
             this._nodeRenderer.render(node);
         });
+
+        if (connectionLine) {
+            this._nodeRenderer.renderGhostLine(connectionLine.start, connectionLine.end);
+        }
 
         this._ctx.restore();
     }

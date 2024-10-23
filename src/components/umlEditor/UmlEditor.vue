@@ -48,6 +48,9 @@
         <template v-else-if="data.type==='comment'">
           <CommentEditorPanel :commentData="data" @save="onSave" />
         </template>
+        <template v-else-if="data.type==='connection'">
+          <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
+        </template>
         <template v-else-if="data.type==='editor'">
           <fieldset>
             <legend class="capitalized">{{ t("option", 2) }}</legend>
@@ -73,6 +76,7 @@
                 <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
                 <option :value="NodeType.ENUMERATION">{{ t("node_types.enumeration") }}</option>
                 <option :value="NodeType.COMMENT">{{ t("node_types.comment") }}</option>
+                <option :value="NodeType.CONNECTION">{{ t("node_types.connection") }}</option>
               </select>
 
               <label for=keepAdding class="capitalized">{{ t("keep_adding") }}</label>

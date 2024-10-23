@@ -1,11 +1,13 @@
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {ClassifierNode} from '../nodes/ClassifierNode.ts';
+import {ClassifierNode} from '../nodes/classifier/ClassifierNode.ts';
 import {Node} from '../nodes/Node.ts';
 import {ClassifierNodeRenderer} from './ClassifierNodeRenderer.ts';
 import {PrimitiveTypeNode} from '../nodes/PrimitiveTypeNode.ts';
 import {EnumerationNode} from '../nodes/EnumerationNode.ts';
 import {CommentRenderer} from './CommentRenderer.ts';
 import {CommentNode} from '../nodes/CommentNode.ts';
+import {Connection} from '../nodes/connection/Connection.ts';
+import {ConnectionRenderer} from './ConnectionRenderer.ts';
 
 type TextWeight = 'normal' | 'bold';
 
@@ -27,6 +29,7 @@ interface TextProperties {
 export class NodeRenderer {
     private _classifierRenderer: ClassifierNodeRenderer;
     private _commentRenderer: CommentRenderer;
+    private _connectionRenderer: ConnectionRenderer;
     readonly ctx: CanvasRenderingContext2D;
     readonly rc: RenderConfiguration;
     
@@ -35,6 +38,7 @@ export class NodeRenderer {
         this.rc = renderConfig;
         this._classifierRenderer = new ClassifierNodeRenderer(this);
         this._commentRenderer = new CommentRenderer(this);
+        this._connectionRenderer = new ConnectionRenderer(this);
     }
 
     public render(node: Node) {
@@ -46,7 +50,18 @@ export class NodeRenderer {
             this.renderPrimitiveType(node);
         } else if (node instanceof EnumerationNode) {
             this.renderEnumeration(node);
+        } else if (node instanceof Connection) {
+            this._connectionRenderer.render(node);
         }
+    }
+
+    public renderGhostLine(start: {x: number, y: number}, end: {x: number, y: number}) {
+        this.ctx.lineWidth = this.rc.borderSize;
+        this.ctx.beginPath();
+        this.ctx.moveTo(start.x, start.y);
+        this.ctx.lineTo(end.x, end.y);
+        this.ctx.strokeStyle = this.rc.accentColorSelected;
+        this.ctx.stroke();
     }
 
     drawHeader(x: number, y: number, width: number, name: string, header: string, footer: string, isSelected: boolean, isInvalid: boolean, isItalic: boolean) {

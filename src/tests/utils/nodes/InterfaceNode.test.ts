@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, test} from 'vitest';
-import {InterfaceNode} from '../../../utils/nodes/InterfaceNode.ts';
+import {InterfaceNode} from '../../../utils/nodes/classifier/InterfaceNode.ts';
 import {MockProperty} from './features/mocks/MockProperty.ts';
 import {MockOperation} from './features/mocks/MockOperation.ts';
 

@@ -1,10 +1,10 @@
-import {Node} from './Node.ts';
-import {Property} from './features/Property.ts';
-import {Operation} from './features/Operation.ts';
-import {InvalidNodeParameterCause} from './types.ts';
-import {Validator} from '../Validator.ts';
+import {Property} from '../features/Property.ts';
+import {Operation} from '../features/Operation.ts';
+import {InvalidNodeParameterCause} from '../types.ts';
+import {Validator} from '../../Validator.ts';
+import {PositionalNode} from '../PositionalNode.ts';
 
-export abstract class ClassifierNode extends Node {
+export abstract class ClassifierNode extends PositionalNode {
     name: string;
     properties: Property[];
     operations: Operation[];
