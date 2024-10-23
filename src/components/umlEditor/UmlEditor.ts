@@ -240,7 +240,7 @@ export default {
             onToolSelected,
             onScaleSet,
             onScaleReset,
-            requestRender: () => {editor.render();},
+            requestRender: () => {editor.render(); setSelectedNode(null); },
             t
         };
     }

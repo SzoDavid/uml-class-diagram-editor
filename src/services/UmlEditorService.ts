@@ -161,36 +161,33 @@ export class UmlEditorService {
     private onMouseDown(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
-        if (this._tool === UmlEditorTool.ADD) {
-            this.handleAddNode(offsetX, offsetY);
-            return;
-        }
+        switch (this._tool) {
+            case UmlEditorTool.ADD:
+                this.handleAddNode(offsetX, offsetY);
+                break;
+            case UmlEditorTool.EDIT:
+                this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
+                this._emitter.emit('mouseDown', this._selectedNode);
+                break;
+            case UmlEditorTool.MOVE:
+                this._selectedNode = this.getNodeAtPositionForMoving(offsetX, offsetY);
 
-        this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
-
-        if (this._tool === UmlEditorTool.EDIT)
-            this._emitter.emit('mouseDown', this._selectedNode);
-
-        if (this._selectedNode) {
-            this.deselectAll();
-            this._selectedNode.isSelected = true;
-
-            switch (this._tool) {
-                case UmlEditorTool.MOVE:
+                if (this._selectedNode) {
+                    this.deselectAll();
+                    this._selectedNode.isSelected = true;
                     this.handleMoveNode(offsetX, offsetY);
-                    break;
-                case UmlEditorTool.REMOVE:
-                    this._nodes.splice(this._nodes.indexOf(this._selectedNode), 1);
-                    this._selectedNode = null;
-                    break;
-            }
-        } else {
-            this.deselectAll();
-            this._isPanning = true;
-            this._lastPanX = offsetX;
-            this._lastPanY = offsetY;
-            return;
+                }
+                else {
+                    this.handlePanning(offsetX, offsetY);
+                }
+                break;
+            case UmlEditorTool.REMOVE:
+                if (!this.handleRemove(offsetX, offsetY)) {
+                    this.handlePanning(offsetX, offsetY);
+                }
+                break;
         }
+
         this.render();
     }
 
@@ -448,6 +445,46 @@ export class UmlEditorService {
         }
     }
 
+    private handleRemove(x: number, y: number): boolean {
+        const transformedX = (x - this._panOffsetX) / this._scale;
+        const transformedY = (y - this._panOffsetY) / this._scale;
+
+        for (let i = this._nodes.length - 1; i >= 0; i--) {
+            const node = this._nodes[i];
+
+            if (!(node instanceof Connection)) {
+                if (node.containsDot(transformedX, transformedY)) {
+                    this._nodes.splice(this._nodes.indexOf(node), 1);
+                    return true;
+                }
+                continue;
+            }
+
+            for (const part of node.parts) {
+                // TODO: figure this out
+                // if (part.startPoint.containsDot(transformedX, transformedY)) {
+                //     return part.startPoint;
+                // }
+                //
+                // if (part.endPoint.containsDot(transformedX, transformedY)) {
+                //     return part.endPoint;
+                // }
+                //
+                // if (part.containsDot(transformedX, transformedY)) {
+                //     return part;
+                // }
+            }
+        }
+        return false;
+    }
+
+    private handlePanning(x: number, y: number): void {
+        this.deselectAll();
+        this._isPanning = true;
+        this._lastPanX = x;
+        this._lastPanY = y;
+    }
+
     /**
      * Retrieves the node or connection part at the specified canvas coordinates.
      *
@@ -467,7 +504,7 @@ export class UmlEditorService {
      *      - First, it checks if the start point or end point of the connection contains the
      *        given coordinates.
      *      - If no start or end point contains the coordinates, it checks the lines between these points.
-     *      - If the tool is not in MOVE mode and the start or end point or the line is already selected,
+     *      - If the start or end point or the line is already selected,
      *        the whole connection is returned.
      *
      * The method returns the first matching node or connection part it finds, or `null`
@@ -488,23 +525,53 @@ export class UmlEditorService {
                 if (node.containsDot(transformedX, transformedY)) {
                     return node;
                 }
-
                 continue;
             }
 
             for (const part of node.parts) {
                 if (part.startPoint.containsDot(transformedX, transformedY)) {
-                    if (this._tool !== UmlEditorTool.MOVE && part.startPoint.isSelected) return node;
+                    if (part.startPoint.isSelected) return node;
                     return part.startPoint;
                 }
 
                 if (part.endPoint.containsDot(transformedX, transformedY)) {
-                    if (this._tool !== UmlEditorTool.MOVE && part.endPoint.isSelected) return node;
+                    if (part.endPoint.isSelected) return node;
                     return part.endPoint;
                 }
 
                 if (part.containsDot(transformedX, transformedY)) {
-                    if (this._tool !== UmlEditorTool.MOVE && part.isSelected) return node;
+                    if (part.isSelected) return node;
+                    return part;
+                }
+            }
+        }
+        return null;
+    }
+
+    private getNodeAtPositionForMoving(x: number, y: number): Node | null {
+        const transformedX = (x - this._panOffsetX) / this._scale;
+        const transformedY = (y - this._panOffsetY) / this._scale;
+
+        for (let i = this._nodes.length - 1; i >= 0; i--) {
+            const node = this._nodes[i];
+
+            if (!(node instanceof Connection)) {
+                if (node.containsDot(transformedX, transformedY)) {
+                    return node;
+                }
+                continue;
+            }
+
+            for (const part of node.parts) {
+                if (part.startPoint.containsDot(transformedX, transformedY)) {
+                    return part.startPoint;
+                }
+
+                if (part.endPoint.containsDot(transformedX, transformedY)) {
+                    return part.endPoint;
+                }
+
+                if (part.containsDot(transformedX, transformedY)) {
                     return part;
                 }
             }
