@@ -460,21 +460,37 @@ export class UmlEditorService {
                 continue;
             }
 
-            for (const part of node.parts) {
-                // TODO: figure this out
-                // if (part.startPoint.containsDot(transformedX, transformedY)) {
-                //     return part.startPoint;
-                // }
-                //
-                // if (part.endPoint.containsDot(transformedX, transformedY)) {
-                //     return part.endPoint;
-                // }
-                //
-                // if (part.containsDot(transformedX, transformedY)) {
-                //     return part;
-                // }
+            for (const [index, part] of node.parts.entries()) {
+                // If selected node is the last point or part of a connection
+                if (index === node.parts.length - 1 && (part.endPoint.containsDot(transformedX, transformedY) || part.containsDot(transformedX, transformedY))) {
+                    if (node.parts.length === 1) this._nodes.splice(this._nodes.indexOf(node), 1);
+                    else node.parts.splice(index, 1);
+                    return true;
+                }
+
+                // If selected node is a point in the middle
+                if (part.endPoint.containsDot(transformedX, transformedY)) {
+                    part.endPoint = node.parts[index + 1].endPoint;
+                    node.parts.splice(index + 1, 1);
+                    return true;
+                }
+
+                // If selected node is the first point or part of a connection
+                if (index === 0 && (part.startPoint.containsDot(transformedX, transformedY) || part.containsDot(transformedX, transformedY))) {
+                    if (node.parts.length === 1) this._nodes.splice(this._nodes.indexOf(node), 1);
+                    else node.parts.splice(0, 1);
+                    return true;
+                }
+
+                // If selected node is a part in the middle
+                if (part.containsDot(transformedX, transformedY)) {
+                    node.parts[index - 1].endPoint = node.parts[index + 1].endPoint;
+                    node.parts.splice(index, 2);
+                    return true;
+                }
             }
         }
+
         return false;
     }
 
