@@ -7,7 +7,7 @@
       <legend class="capitalized">{{ t("detail", 2) }}</legend>
       <div class="grid-form">
         <span>Snapped to:</span>
-        <span>{{ data.instance['node']['name'] }}</span>
+        <span>{{ 'TODO' }}</span> <!-- TODO -->
       </div>
     </fieldset>
   </template>
