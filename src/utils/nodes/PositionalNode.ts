@@ -35,6 +35,4 @@ export abstract class PositionalNode extends Node {
         y >= this.y &&
         y <= this.y + this.height;
     }
-
-
 }

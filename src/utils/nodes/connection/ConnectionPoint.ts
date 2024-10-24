@@ -2,8 +2,9 @@ import {PositionalNode} from '../PositionalNode.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
 import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
+import {Point} from '../../types.ts';
 
-export class ConnectionPoint extends PositionalNode {
+export class ConnectionPoint extends PositionalNode implements Point {
 
     constructor(x: number, y: number) {
         super(x, y);

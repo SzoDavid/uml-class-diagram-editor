@@ -2,7 +2,16 @@
 <style scoped src="./ConnectionEditorPanel.css" />
 
 <template>
-  <template v-if="data.instance instanceof ConnectionPoint">
+  <template v-if="data.instance instanceof LooseConnectionPoint">
+    <fieldset>
+      <legend class="capitalized">{{ t("detail", 2) }}</legend>
+      <div class="grid-form">
+        <span>Snapped to:</span>
+        <span>{{ data.instance['node']['name'] }}</span>
+      </div>
+    </fieldset>
+  </template>
+  <template v-else-if="data.instance instanceof ConnectionPoint">
     <fieldset>
       <legend class="capitalized">{{ t("appearance") }}</legend>
       <div class="grid-form">

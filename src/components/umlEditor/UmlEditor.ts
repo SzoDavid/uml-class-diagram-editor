@@ -90,12 +90,6 @@ export default {
                                          [new Operation('operationA', [new Parameter('param', 'type')], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
             editor.addNode(new InterfaceNode('InterfaceB', 400, 200, [], [new Operation('operationB', [new Parameter('param', 'type')])]));
             editor.addNode(new EnumerationNode('EnumerationC', 70, 250, ['VALUE_A', 'VALUE_B']));
-
-            const a = new ConnectionPoint(5, 5);
-            const b = new ConnectionPoint(100, 100);
-            const c = new ConnectionPoint(150, 200);
-
-            editor.addNode(new Connection([a, b, c]));
         });
 
         const onSave = (data: DataContext<Node>) => {
