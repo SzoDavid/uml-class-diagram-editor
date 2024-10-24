@@ -16,6 +16,7 @@ import {Connection} from '../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
 import {ConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
 import {EditorConstants} from '../utils/constants.ts';
+import { LooseConnectionPoint } from '../utils/nodes/connection/LooseConnectionPoint.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -205,10 +206,13 @@ export class UmlEditorService {
 
             // Only add connection if its length is larger than the given constant
             if (Math.abs(Math.sqrt(Math.pow(this._secondaryDragOffsetX - this._dragOffsetX, 2) + Math.pow(this._secondaryDragOffsetY - this._dragOffsetY, 2))) > EditorConstants.minConnectionLength) {
-                this.addNode(new Connection([
-                    new ConnectionPoint(this._dragOffsetX, this._dragOffsetY),
-                    new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY)
-                ]));
+                const nodeAtStart = this.getNodeAtPosition(this._dragOffsetX, this._dragOffsetY);
+                const nodeAtEnd = this.getNodeAtPosition(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
+
+                const startPoint = nodeAtStart instanceof PositionalNode ? new LooseConnectionPoint(nodeAtStart) : new ConnectionPoint(this._dragOffsetX, this._dragOffsetY);
+                const endPoint = nodeAtEnd instanceof PositionalNode ? new LooseConnectionPoint(nodeAtEnd) : new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
+                
+                this.addNode(new Connection([startPoint, endPoint]));
 
                 if (!this.addConfig.keepAdding) {
                     this.tool = UmlEditorTool.EDIT;
