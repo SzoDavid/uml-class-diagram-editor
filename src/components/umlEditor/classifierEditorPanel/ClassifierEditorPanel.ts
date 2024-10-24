@@ -66,7 +66,7 @@ export default defineComponent({
         );
 
         const onSave = () => {
-            emit('save', data.value);
+            emit('save', data.value as NodeData<ClassifierNode>);
         };
 
         const onAddClicked = (context: ClickContext, parentIndex: string | number = '') => {

@@ -16,6 +16,7 @@ import {Connection} from '../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
 import {ConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
 import {EditorConstants} from '../utils/constants.ts';
+import { LooseConnectionPoint } from '../utils/nodes/connection/LooseConnectionPoint.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -167,6 +168,12 @@ export class UmlEditorService {
                 break;
             case UmlEditorTool.EDIT:
                 this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
+                this.deselectAll();
+
+                if (this._selectedNode) {
+                    this._selectedNode.isSelected = true;
+                }
+
                 this._emitter.emit('mouseDown', this._selectedNode);
                 break;
             case UmlEditorTool.MOVE:
@@ -194,27 +201,30 @@ export class UmlEditorService {
     private onMouseUp(): void {
         this._isPanning = false;
 
-        if (this._selectedNode) {
-            this._selectedNode.isDragging = false;
-            this.render();
-            return;
-        }
-
         if (this._isAddingConnection) {
             this._isAddingConnection = false;
 
             // Only add connection if its length is larger than the given constant
             if (Math.abs(Math.sqrt(Math.pow(this._secondaryDragOffsetX - this._dragOffsetX, 2) + Math.pow(this._secondaryDragOffsetY - this._dragOffsetY, 2))) > EditorConstants.minConnectionLength) {
-                this.addNode(new Connection([
-                    new ConnectionPoint(this._dragOffsetX, this._dragOffsetY),
-                    new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY)
-                ]));
+                const nodeAtStart = this.getNodeAtPosition(this._dragOffsetX, this._dragOffsetY);
+                const nodeAtEnd = this.getNodeAtPosition(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
+
+                const startPoint = nodeAtStart instanceof PositionalNode ? new LooseConnectionPoint(nodeAtStart) : new ConnectionPoint(this._dragOffsetX, this._dragOffsetY);
+                const endPoint = nodeAtEnd instanceof PositionalNode ? new LooseConnectionPoint(nodeAtEnd) : new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
+                
+                this.addNode(new Connection([startPoint, endPoint]));
 
                 if (!this.addConfig.keepAdding) {
                     this.tool = UmlEditorTool.EDIT;
                 }
             }
 
+            this.render();
+            return;
+        }
+
+        if (this._selectedNode) {
+            this._selectedNode.isDragging = false;
             this.render();
         }
     }
@@ -242,15 +252,19 @@ export class UmlEditorService {
     private onMouseMove(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
-        if (this._tool === UmlEditorTool.MOVE && this._selectedNode && this._selectedNode.isDragging) {
+        if (this._selectedNode && this._selectedNode.isDragging) {
             if (this._selectedNode instanceof PositionalNode) {
                 this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
                 this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
             } else if (this._selectedNode instanceof ConnectionPart) {
-                this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
-                this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
-                this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, this.editorConfig.gridSize);
-                this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, this.editorConfig.gridSize);
+                if (!(this._selectedNode.startPoint instanceof LooseConnectionPoint)) {
+                    this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
+                    this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
+                }
+                if (!(this._selectedNode.endPoint instanceof LooseConnectionPoint)) {
+                    this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, this.editorConfig.gridSize);
+                    this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, this.editorConfig.gridSize);
+                }
             }
             this.render();
             return;
@@ -386,7 +400,6 @@ export class UmlEditorService {
                 node = new CommentNode('...', transformedX, transformedY);
                 break;
             case NodeType.CONNECTION:
-                console.log('adding');
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;
@@ -454,7 +467,7 @@ export class UmlEditorService {
 
             if (!(node instanceof Connection)) {
                 if (node.containsDot(transformedX, transformedY)) {
-                    this._nodes.splice(this._nodes.indexOf(node), 1);
+                    this._nodes.splice(i, 1);
                     return true;
                 }
                 continue;
@@ -579,11 +592,13 @@ export class UmlEditorService {
             }
 
             for (const part of node.parts) {
-                if (part.startPoint.containsDot(transformedX, transformedY)) {
+                if (!(part.startPoint instanceof LooseConnectionPoint) &&
+                    part.startPoint.containsDot(transformedX, transformedY)) {
                     return part.startPoint;
                 }
 
-                if (part.endPoint.containsDot(transformedX, transformedY)) {
+                if (!(part.startPoint instanceof LooseConnectionPoint) &&
+                    part.endPoint.containsDot(transformedX, transformedY)) {
                     return part.endPoint;
                 }
 

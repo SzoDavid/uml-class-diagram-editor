@@ -51,7 +51,7 @@ export default defineComponent({
             return findError(errors, context);
         };
         const onSave = () => {
-            emit('save', data.value);
+            emit('save', data.value as NodeData<PrimitiveTypeNode>);
         };
 
         return {

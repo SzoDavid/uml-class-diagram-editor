@@ -6,6 +6,7 @@ import {findError} from '../../../utils/functions.ts';
 import {Connection} from '../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../../../utils/nodes/connection/ConnectionPart.ts';
 import {ConnectionPoint} from '../../../utils/nodes/connection/ConnectionPoint.ts';
+import {LooseConnectionPoint} from '../../../utils/nodes/connection/LooseConnectionPoint.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>
@@ -18,6 +19,9 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
+        LooseConnectionPoint() {
+            return LooseConnectionPoint;
+        },
         ConnectionPart() {
             return ConnectionPart;
         },
@@ -72,7 +76,7 @@ export default defineComponent({
             return findError(errors, context);
         };
         const onSave = () => {
-            emit('save', data.value);
+            emit('save', data.value as NodeData<Connection | ConnectionPart | ConnectionPoint>);
         };
 
         return {

@@ -56,13 +56,11 @@ export default defineComponent({
         const getError = (context: ErrorContext) => {
             if (data.value === null || data.value.type !== 'enumeration') return '';
 
-            console.log(context, errors);
-
             return findError(errors, context);
         };
 
         const onSave = () => {
-            emit('save', data.value);
+            emit('save', data.value as NodeData<EnumerationNode>);
         };
 
         return {

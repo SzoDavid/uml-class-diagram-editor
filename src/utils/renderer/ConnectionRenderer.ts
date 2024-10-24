@@ -1,5 +1,8 @@
 import {NodeRenderer} from './NodeRenderer.ts';
 import {Connection} from '../nodes/connection/Connection.ts';
+import {LooseConnectionPoint} from '../nodes/connection/LooseConnectionPoint.ts';
+import {Point} from '../types.ts';
+import {GeometryUtils} from '../GeometryUtils.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -13,8 +16,25 @@ export class ConnectionRenderer {
 
         node.parts.forEach(part => {
             this._nr.ctx.beginPath();
-            this._nr.ctx.moveTo(part.startPoint.x, part.startPoint.y);
-            this._nr.ctx.lineTo(part.endPoint.x, part.endPoint.y);
+
+            let startPoint: Point = part.startPoint;
+            if (part.startPoint instanceof LooseConnectionPoint) {
+                const intersection = GeometryUtils.findIntersectionPoint(part.endPoint, part.startPoint.node);
+                if (!intersection || (part.endPoint instanceof LooseConnectionPoint && part.startPoint.node.containsDot(part.endPoint.displayPoint.x, part.endPoint.displayPoint.y))) return;
+                part.startPoint.displayPoint = intersection;
+                startPoint = intersection;
+            }
+
+            let endPoint: Point = part.endPoint;
+            if (part.endPoint instanceof LooseConnectionPoint) {
+                const intersection = GeometryUtils.findIntersectionPoint(part.startPoint, part.endPoint.node);
+                if (!intersection || (part.startPoint instanceof LooseConnectionPoint && part.endPoint.node.containsDot(part.startPoint.displayPoint.x, part.startPoint.displayPoint.y))) return;
+                part.endPoint.displayPoint = intersection;
+                endPoint = intersection;
+            }
+
+            this._nr.ctx.moveTo(startPoint.x, startPoint.y);
+            this._nr.ctx.lineTo(endPoint.x, endPoint.y);
 
             this._nr.ctx.strokeStyle = node.isSelected || part.isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
             this._nr.ctx.stroke();
@@ -22,12 +42,14 @@ export class ConnectionRenderer {
 
         const startPoint = node.parts[0].startPoint;
         if (node.isSelected || startPoint.isSelected) {
-            this.renderPoint(startPoint.x, startPoint.y);
+            if (startPoint instanceof LooseConnectionPoint) this.renderPoint(startPoint.displayPoint.x, startPoint.displayPoint.y);
+            else this.renderPoint(startPoint.x, startPoint.y);
         }
 
         node.parts.forEach(part => {
             if (node.isSelected || part.endPoint.isSelected) {
-                this.renderPoint(part.endPoint.x, part.endPoint.y);
+                if (part.endPoint instanceof LooseConnectionPoint) this.renderPoint(part.endPoint.displayPoint.x, part.endPoint.displayPoint.y);
+                else this.renderPoint(part.endPoint.x, part.endPoint.y);
             }
         });
     }
