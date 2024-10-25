@@ -14,9 +14,10 @@ import {CommentNode} from '../utils/nodes/CommentNode.ts';
 import {PositionalNode} from '../utils/nodes/PositionalNode.ts';
 import {Connection} from '../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
-import {ConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
 import {EditorConstants} from '../utils/constants.ts';
-import { LooseConnectionPoint } from '../utils/nodes/connection/LooseConnectionPoint.ts';
+import {LooseConnectionPoint} from '../utils/nodes/connection/LooseConnectionPoint.ts';
+import {Point} from '../utils/types.ts';
+import {BasicConnectionPoint} from '../utils/nodes/connection/BasicConnectionPoint.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -198,7 +199,8 @@ export class UmlEditorService {
         this.render();
     }
 
-    private onMouseUp(): void {
+    private onMouseUp(event: MouseEvent): void {
+        const { offsetX, offsetY } = event;
         this._isPanning = false;
 
         if (this._isAddingConnection) {
@@ -209,8 +211,8 @@ export class UmlEditorService {
                 const nodeAtStart = this.getNodeAtPosition(this._dragOffsetX, this._dragOffsetY);
                 const nodeAtEnd = this.getNodeAtPosition(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
 
-                const startPoint = nodeAtStart instanceof PositionalNode ? new LooseConnectionPoint(nodeAtStart) : new ConnectionPoint(this._dragOffsetX, this._dragOffsetY);
-                const endPoint = nodeAtEnd instanceof PositionalNode ? new LooseConnectionPoint(nodeAtEnd) : new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
+                const startPoint: PositionalNode|Point = nodeAtStart instanceof PositionalNode ? nodeAtStart : {x: this._dragOffsetX, y: this._dragOffsetY};
+                const endPoint: PositionalNode|Point = nodeAtEnd instanceof PositionalNode ? nodeAtEnd : {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY};
                 
                 this.addNode(new Connection([startPoint, endPoint]));
 
@@ -225,6 +227,15 @@ export class UmlEditorService {
 
         if (this._selectedNode) {
             this._selectedNode.isDragging = false;
+
+            if (this._selectedNode instanceof BasicConnectionPoint) {
+                const nodeAtPosition = this.getNodeAtPosition(offsetX, offsetY, true);
+
+                if (nodeAtPosition instanceof PositionalNode) {
+                    this._selectedNode = this._selectedNode.convertToLooseConnectionPoint(nodeAtPosition);
+                }
+            }
+
             this.render();
         }
     }
@@ -541,9 +552,10 @@ export class UmlEditorService {
      *
      * @param x - The X-coordinate of the mouse event, relative to the canvas.
      * @param y - The Y-coordinate of the mouse event, relative to the canvas.
+     * @param ignoreConnections - If set to true, only returns non collection nodes.
      * @returns The node or connection part under the given coordinates, or `null` if none is found.
      */
-    private getNodeAtPosition(x: number, y: number): Node | null {
+    private getNodeAtPosition(x: number, y: number, ignoreConnections: boolean = false): Node | null {
         const transformedX = (x - this._panOffsetX) / this._scale;
         const transformedY = (y - this._panOffsetY) / this._scale;
 
@@ -556,6 +568,8 @@ export class UmlEditorService {
                 }
                 continue;
             }
+
+            if (ignoreConnections) continue;
 
             for (const part of node.parts) {
                 if (part.startPoint.containsDot(transformedX, transformedY)) {

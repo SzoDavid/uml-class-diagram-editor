@@ -3,24 +3,24 @@ import {InvalidNodeParameterCause} from '../types.ts';
 import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
 import {Point} from '../../types.ts';
+import {ConnectionPart} from './ConnectionPart.ts';
 
-export class ConnectionPoint extends PositionalNode implements Point {
+export abstract class ConnectionPoint extends PositionalNode implements Point {
+    protected _parent: ConnectionPart;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, parent: ConnectionPart) {
         super(x, y);
+        this._parent = parent;
     }
 
-    clone(): ConnectionPoint {
-        const clone = new ConnectionPoint(this.x, this.y);
-        clone.isSelected = this.isSelected;
-        clone.isDragging = this.isDragging;
-
-        return clone;
+    get parent(): ConnectionPart {
+        return this._parent;
     }
 
     copy(node: ConnectionPoint): void {
         this.x = node.x;
         this.y = node.y;
+        this._parent = node.parent;
     }
 
     validate(): InvalidNodeParameterCause[] {

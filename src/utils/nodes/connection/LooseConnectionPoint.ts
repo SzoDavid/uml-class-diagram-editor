@@ -3,14 +3,16 @@ import { ConnectionPoint } from './ConnectionPoint';
 import {GeometryUtils} from '../../GeometryUtils.ts';
 import {EditorConstants} from '../../constants.ts';
 import {Point} from '../../types.ts';
+import {ConnectionPart} from './ConnectionPart.ts';
+import {BasicConnectionPoint} from './BasicConnectionPoint.ts';
 
 export class LooseConnectionPoint extends ConnectionPoint implements Point {
     node: PositionalNode;
 
     private _displayPoint: Point;
     
-    constructor(node: PositionalNode) {
-        super(node.x + (node.width / 2), node.y + (node.height / 2));
+    constructor(node: PositionalNode, parent: ConnectionPart) {
+        super(node.x + (node.width / 2), node.y + (node.height / 2), parent);
 
         this._displayPoint = {
             x: node.x + (node.width / 2),
@@ -36,7 +38,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     }
 
     clone(): LooseConnectionPoint {
-        const clone = new LooseConnectionPoint(this.node);
+        const clone = new LooseConnectionPoint(this.node, this.parent);
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
 
@@ -44,10 +46,23 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     }
 
     copy(node: LooseConnectionPoint): void {
+        super.copy(node);
         this.node = node.node;
     }
 
     containsDot(x: number, y: number): boolean {
         return GeometryUtils.isPointWithinRadius(x, y, this._displayPoint.x, this._displayPoint.y, EditorConstants.maxClickDistance);
+    }
+
+    convertToBasicPoint(x: number, y: number): BasicConnectionPoint {
+        const newPoint = new BasicConnectionPoint(x, y, this.parent);
+
+        if (this._parent.startPoint === this) {
+            this._parent.startPoint = newPoint;
+        } else {
+            this._parent.endPoint = newPoint;
+        }
+
+        return newPoint;
     }
 }

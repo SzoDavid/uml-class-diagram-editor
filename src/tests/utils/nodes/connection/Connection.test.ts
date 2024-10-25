@@ -1,15 +1,14 @@
 import {beforeEach, describe, expect, test} from 'vitest';
 import {Connection} from '../../../../utils/nodes/connection/Connection.ts';
-import {ConnectionPoint} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
 
 describe('UCDE-Connection', () => {
     let connection: Connection;
     
     beforeEach(() => {
         connection = new Connection([
-            new ConnectionPoint(0, 0), 
-            new ConnectionPoint(0, 5), 
-            new ConnectionPoint(5, 5)
+            {x: 0, y: 0},
+            {x: 0, y: 5},
+            {x:5, y: 5}
         ]); 
     });
     
@@ -42,10 +41,10 @@ describe('UCDE-Connection', () => {
     describe('UCDE-C-0400-Copy', () => {
         test('UCDE-C-0401 GIVEN another connection WHEN copy() THEN copy values correctly', () => {
             const anotherConnection = new Connection([
-                new ConnectionPoint(1, 1),
-                new ConnectionPoint(1, 2),
-                new ConnectionPoint(2, 2),
-                new ConnectionPoint(3, 3)
+                {x: 1, y: 1},
+                {x: 1, y: 2},
+                {x: 2, y: 2},
+                {x: 3, y: 3}
             ]);
 
             connection.copy(anotherConnection);
