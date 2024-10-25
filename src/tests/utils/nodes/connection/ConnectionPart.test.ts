@@ -1,16 +1,15 @@
 import {describe, test, expect, beforeEach} from 'vitest';
 import {ConnectionPart} from '../../../../utils/nodes/connection/ConnectionPart.ts';
 import {Connection} from '../../../../utils/nodes/connection/Connection.ts';
-import {ConnectionPoint} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
 
 describe('UCDE-ConnectionPart', () => {
     let connectionPart: ConnectionPart;
 
     beforeEach(() => {
         const connection = new Connection([
-            new ConnectionPoint(0, 0),
-            new ConnectionPoint(0, 4),
-            new ConnectionPoint(4, 4)
+            {x: 0, y: 0},
+            {x: 0, y: 4},
+            {x: 4, y: 4}
         ]);
 
         connectionPart = connection.parts[0];
@@ -45,8 +44,8 @@ describe('UCDE-ConnectionPart', () => {
     describe('UCDE-CPA-0400-Copy', () => {
         test('UCDE-CPA-0401 GIVEN another ConnectionPart WHEN copy() THEN copy values correctly', () => {
             const anotherConnection = new Connection([
-                new ConnectionPoint(1, 1),
-                new ConnectionPoint(1, 2)
+                {x: 1, y: 1},
+                {x: 1, y: 2}
             ]);
 
             connectionPart.copy(anotherConnection.parts[0]);
