@@ -12,8 +12,13 @@ export class Connection extends Node {
         super();
         this.parts = [];
 
-        for (let i = 0; i < points.length - 1; i++) {
-            this.parts.push(new ConnectionPart(points[i], points[i+1], this));
+        let previousPart = new ConnectionPart(points[0], points[1], this);
+        this.parts.push(previousPart);
+
+        for (let i = 2; i < points.length; i++) {
+            const newPart = new ConnectionPart(previousPart.endPoint, points[i], this);
+            this.parts.push(newPart);
+            previousPart = newPart;
         }
     }
 
