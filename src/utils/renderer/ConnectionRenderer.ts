@@ -3,6 +3,7 @@ import {Connection} from '../nodes/connection/Connection.ts';
 import {LooseConnectionPoint} from '../nodes/connection/LooseConnectionPoint.ts';
 import {Point} from '../types.ts';
 import {GeometryUtils} from '../GeometryUtils.ts';
+import {ConnectionType} from '../nodes/types.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -14,6 +15,7 @@ export class ConnectionRenderer {
     public render(node: Connection): void {
         this._nr.ctx.lineWidth = this._nr.rc.borderSize;
 
+        // TODO: separate this logic for the connectionPoint
         let startPoint: Point = node.parts[0].startPoint;
         if (startPoint instanceof LooseConnectionPoint) {
             const intersection = GeometryUtils.findIntersectionPoint(node.parts[0].endPoint, startPoint.node);
@@ -45,7 +47,7 @@ export class ConnectionRenderer {
         this._nr.ctx.beginPath();
         this._nr.ctx.moveTo(startPoint.x, startPoint.y);
 
-        for (let i = 1; i < node.parts.length - 1; i++) {
+        for (let i = 0; i < node.parts.length - 1; i++) {
             const part = node.parts[i];
             
             this._nr.ctx.lineTo(part.endPoint.x, part.endPoint.y);
@@ -61,6 +63,30 @@ export class ConnectionRenderer {
 
         this._nr.ctx.strokeStyle = node.isSelected || node.parts[node.parts.length - 1].isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.stroke();
+
+        if (node.parts[0].startPoint instanceof LooseConnectionPoint) {
+            switch (node.parts[0].startPoint.type) {
+                case ConnectionType.ASSOCIATION:
+                    this.renderTriangle(
+                        startPoint,
+                        GeometryUtils.calculateAngleBetweenPoints(startPoint, node.parts[0].endPoint),
+                        node.isSelected || node.parts[0].startPoint.isSelected
+                    );
+                    break;
+            }
+        }
+
+        if (node.parts[node.parts.length - 1].endPoint instanceof LooseConnectionPoint) {
+            switch (node.parts[node.parts.length - 1].endPoint.type) {
+                case ConnectionType.ASSOCIATION:
+                    this.renderTriangle(
+                        endPoint,
+                        GeometryUtils.calculateAngleBetweenPoints(endPoint, node.parts[node.parts.length - 1].startPoint),
+                        node.isSelected || node.parts[node.parts.length - 1].endPoint.isSelected
+                    );
+                    break;
+            }
+        }
 
         if (node.isSelected || node.parts[0].startPoint.isSelected) {
             this.renderPoint(startPoint.x, startPoint.y);
@@ -81,12 +107,16 @@ export class ConnectionRenderer {
         this._nr.ctx.fill();
     }
 
-    private renderTriangle(x: number, y: number, angle: number, isSelected: boolean = false): void {
+    private renderTriangle(point: Point, angle: number, isSelected: boolean = false): void {
         this._nr.ctx.beginPath();
-        this._nr.ctx.moveTo(x, y);
-        this._nr.ctx.lineTo(x + 10, y + 5);
-        this._nr.ctx.lineTo(x + 10, y - 5);
-        this._nr.ctx.lineTo(x, y);
+        this._nr.ctx.moveTo(point.x, point.y);
+        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle + (Math.PI / 8)), point.y + 20 * Math.sin(angle + (Math.PI / 8)));
+        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle - (Math.PI / 8)), point.y + 20 * Math.sin(angle - (Math.PI / 8)));
+        this._nr.ctx.lineTo(point.x, point.y);
+
+        this._nr.ctx.fillStyle = isSelected ?  this._nr.rc.fillColorSelected : this._nr.rc.fillColor;
+        this._nr.ctx.fill();
+
         this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.stroke();
     }

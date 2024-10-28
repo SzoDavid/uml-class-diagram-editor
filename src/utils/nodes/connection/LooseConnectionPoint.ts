@@ -21,7 +21,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
             y: node.y + (node.height / 2)};
 
         this.node = node;
-        this.type = ConnectionType.NONE;
+        this.type = ConnectionType.ASSOCIATION;
     }
 
     get x(): number {

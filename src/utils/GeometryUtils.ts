@@ -93,4 +93,9 @@ export class GeometryUtils {
 
         return closestPoint;
     }
+
+    static calculateAngleBetweenPoints(origin: Point, secondary: Point): number {
+        // translate secondary to be relative to `origin` and get theta by converting to polar coordinate
+        return Math.atan2(secondary.y - origin.y, secondary.x - origin.x);
+    }
 }
