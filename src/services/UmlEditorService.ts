@@ -427,7 +427,7 @@ export class UmlEditorService {
     }
 
     /**
-     * Handles the movement of the currently selected node in the UML diagram.
+     * Handles starting the movement of the currently selected node in the UML diagram.
      *
      * This method calculates the transformed coordinates based on the provided x and y
      * values and updates the dragging state and offsets for the selected node, allowing it
@@ -441,7 +441,9 @@ export class UmlEditorService {
      *    - The method transforms the provided x and y coordinates from screen space to world
      *      coordinates using the current scale. This ensures the movement calculations are
      *      accurate relative to the diagram's coordinate system.
-     *
+     * 3. **Converting `LooseConnectionPoint` if necessary**:
+     *    - When moving a `LooseConnectionPoint`, it first needs to be converted into a
+     *      `BasicConnectionPoint`, to stop it from snapping to a `PositionalNode`.
      * 2. **Dragging State Management**:
      *    - If the currently selected node is an instance of `PositionalNode`, it sets the
      *      `isDragging` property to `true` and calculates the offsets required to adjust the
@@ -455,6 +457,10 @@ export class UmlEditorService {
     private handleMoveNode(x: number, y: number): void {
         const transformedX = x / this._scale;
         const transformedY = y / this._scale;
+
+        if (this._selectedNode instanceof LooseConnectionPoint) {
+            this._selectedNode = this._selectedNode.convertToBasicPoint(this._selectedNode.displayPoint.x, this._selectedNode.displayPoint.y);
+        }
 
         if (this._selectedNode instanceof PositionalNode) {
             this._selectedNode.isDragging = true;
@@ -606,13 +612,11 @@ export class UmlEditorService {
             }
 
             for (const part of node.parts) {
-                if (!(part.startPoint instanceof LooseConnectionPoint) &&
-                    part.startPoint.containsDot(transformedX, transformedY)) {
+                if (part.startPoint.containsDot(transformedX, transformedY)) {
                     return part.startPoint;
                 }
 
-                if (!(part.startPoint instanceof LooseConnectionPoint) &&
-                    part.endPoint.containsDot(transformedX, transformedY)) {
+                if (part.endPoint.containsDot(transformedX, transformedY)) {
                     return part.endPoint;
                 }
 
