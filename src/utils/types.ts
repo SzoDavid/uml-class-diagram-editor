@@ -24,3 +24,8 @@ export interface ErrorContext {
     index?: number|string,
     child?: ErrorContext
 }
+
+export interface Point {
+    x: number;
+    y: number;
+}

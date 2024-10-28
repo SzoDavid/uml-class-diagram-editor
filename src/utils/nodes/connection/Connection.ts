@@ -2,16 +2,23 @@ import {Node} from '../Node.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
 import {ConnectionPart} from './ConnectionPart.ts';
 import {ConnectionPoint} from './ConnectionPoint.ts';
+import {PositionalNode} from '../PositionalNode.ts';
+import {Point} from '../../types.ts';
 
 export class Connection extends Node {
     parts: ConnectionPart[];
 
-    constructor(points: ConnectionPoint[]) {
+    constructor(points: (Point|PositionalNode)[]) {
         super();
         this.parts = [];
 
-        for (let i = 0; i < points.length - 1; i++) {
-            this.parts.push(new ConnectionPart(this, points[i], points[i+1]));
+        let previousPart = new ConnectionPart(points[0], points[1], this);
+        this.parts.push(previousPart);
+
+        for (let i = 2; i < points.length; i++) {
+            const newPart = new ConnectionPart(previousPart.endPoint, points[i], this);
+            this.parts.push(newPart);
+            previousPart = newPart;
         }
     }
 

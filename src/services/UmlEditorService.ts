@@ -14,8 +14,10 @@ import {CommentNode} from '../utils/nodes/CommentNode.ts';
 import {PositionalNode} from '../utils/nodes/PositionalNode.ts';
 import {Connection} from '../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
-import {ConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
 import {EditorConstants} from '../utils/constants.ts';
+import {LooseConnectionPoint} from '../utils/nodes/connection/LooseConnectionPoint.ts';
+import {Point} from '../utils/types.ts';
+import {BasicConnectionPoint} from '../utils/nodes/connection/BasicConnectionPoint.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -167,6 +169,12 @@ export class UmlEditorService {
                 break;
             case UmlEditorTool.EDIT:
                 this._selectedNode = this.getNodeAtPosition(offsetX, offsetY);
+                this.deselectAll();
+
+                if (this._selectedNode) {
+                    this._selectedNode.isSelected = true;
+                }
+
                 this._emitter.emit('mouseDown', this._selectedNode);
                 break;
             case UmlEditorTool.MOVE:
@@ -191,27 +199,40 @@ export class UmlEditorService {
         this.render();
     }
 
-    private onMouseUp(): void {
+    private onMouseUp(event: MouseEvent): void {
+        const { offsetX, offsetY } = event;
         this._isPanning = false;
-
-        if (this._selectedNode) {
-            this._selectedNode.isDragging = false;
-            this.render();
-            return;
-        }
 
         if (this._isAddingConnection) {
             this._isAddingConnection = false;
 
             // Only add connection if its length is larger than the given constant
             if (Math.abs(Math.sqrt(Math.pow(this._secondaryDragOffsetX - this._dragOffsetX, 2) + Math.pow(this._secondaryDragOffsetY - this._dragOffsetY, 2))) > EditorConstants.minConnectionLength) {
-                this.addNode(new Connection([
-                    new ConnectionPoint(this._dragOffsetX, this._dragOffsetY),
-                    new ConnectionPoint(this._secondaryDragOffsetX, this._secondaryDragOffsetY)
-                ]));
+                const nodeAtStart = this.getNodeAtPosition(this._dragOffsetX, this._dragOffsetY);
+                const nodeAtEnd = this.getNodeAtPosition(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
+
+                const startPoint: PositionalNode|Point = nodeAtStart instanceof PositionalNode ? nodeAtStart : {x: this._dragOffsetX, y: this._dragOffsetY};
+                const endPoint: PositionalNode|Point = nodeAtEnd instanceof PositionalNode ? nodeAtEnd : {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY};
+                
+                this.addNode(new Connection([startPoint, endPoint]));
 
                 if (!this.addConfig.keepAdding) {
                     this.tool = UmlEditorTool.EDIT;
+                }
+            }
+
+            this.render();
+            return;
+        }
+
+        if (this._selectedNode) {
+            this._selectedNode.isDragging = false;
+
+            if (this._selectedNode instanceof BasicConnectionPoint) {
+                const nodeAtPosition = this.getNodeAtPosition(offsetX, offsetY, true);
+
+                if (nodeAtPosition instanceof PositionalNode) {
+                    this._selectedNode = this._selectedNode.convertToLooseConnectionPoint(nodeAtPosition);
                 }
             }
 
@@ -242,15 +263,19 @@ export class UmlEditorService {
     private onMouseMove(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
-        if (this._tool === UmlEditorTool.MOVE && this._selectedNode && this._selectedNode.isDragging) {
+        if (this._selectedNode && this._selectedNode.isDragging) {
             if (this._selectedNode instanceof PositionalNode) {
                 this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
                 this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
             } else if (this._selectedNode instanceof ConnectionPart) {
-                this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
-                this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
-                this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, this.editorConfig.gridSize);
-                this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, this.editorConfig.gridSize);
+                if (!(this._selectedNode.startPoint instanceof LooseConnectionPoint)) {
+                    this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
+                    this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
+                }
+                if (!(this._selectedNode.endPoint instanceof LooseConnectionPoint)) {
+                    this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, this.editorConfig.gridSize);
+                    this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, this.editorConfig.gridSize);
+                }
             }
             this.render();
             return;
@@ -386,7 +411,6 @@ export class UmlEditorService {
                 node = new CommentNode('...', transformedX, transformedY);
                 break;
             case NodeType.CONNECTION:
-                console.log('adding');
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;
@@ -403,7 +427,7 @@ export class UmlEditorService {
     }
 
     /**
-     * Handles the movement of the currently selected node in the UML diagram.
+     * Handles starting the movement of the currently selected node in the UML diagram.
      *
      * This method calculates the transformed coordinates based on the provided x and y
      * values and updates the dragging state and offsets for the selected node, allowing it
@@ -417,7 +441,9 @@ export class UmlEditorService {
      *    - The method transforms the provided x and y coordinates from screen space to world
      *      coordinates using the current scale. This ensures the movement calculations are
      *      accurate relative to the diagram's coordinate system.
-     *
+     * 3. **Converting `LooseConnectionPoint` if necessary**:
+     *    - When moving a `LooseConnectionPoint`, it first needs to be converted into a
+     *      `BasicConnectionPoint`, to stop it from snapping to a `PositionalNode`.
      * 2. **Dragging State Management**:
      *    - If the currently selected node is an instance of `PositionalNode`, it sets the
      *      `isDragging` property to `true` and calculates the offsets required to adjust the
@@ -431,6 +457,10 @@ export class UmlEditorService {
     private handleMoveNode(x: number, y: number): void {
         const transformedX = x / this._scale;
         const transformedY = y / this._scale;
+
+        if (this._selectedNode instanceof LooseConnectionPoint) {
+            this._selectedNode = this._selectedNode.convertToBasicPoint(this._selectedNode.displayPoint.x, this._selectedNode.displayPoint.y);
+        }
 
         if (this._selectedNode instanceof PositionalNode) {
             this._selectedNode.isDragging = true;
@@ -454,7 +484,7 @@ export class UmlEditorService {
 
             if (!(node instanceof Connection)) {
                 if (node.containsDot(transformedX, transformedY)) {
-                    this._nodes.splice(this._nodes.indexOf(node), 1);
+                    this._nodes.splice(i, 1);
                     return true;
                 }
                 continue;
@@ -528,9 +558,10 @@ export class UmlEditorService {
      *
      * @param x - The X-coordinate of the mouse event, relative to the canvas.
      * @param y - The Y-coordinate of the mouse event, relative to the canvas.
+     * @param ignoreConnections - If set to true, only returns non collection nodes.
      * @returns The node or connection part under the given coordinates, or `null` if none is found.
      */
-    private getNodeAtPosition(x: number, y: number): Node | null {
+    private getNodeAtPosition(x: number, y: number, ignoreConnections: boolean = false): Node | null {
         const transformedX = (x - this._panOffsetX) / this._scale;
         const transformedY = (y - this._panOffsetY) / this._scale;
 
@@ -543,6 +574,8 @@ export class UmlEditorService {
                 }
                 continue;
             }
+
+            if (ignoreConnections) continue;
 
             for (const part of node.parts) {
                 if (part.startPoint.containsDot(transformedX, transformedY)) {

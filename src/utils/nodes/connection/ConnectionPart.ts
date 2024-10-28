@@ -4,17 +4,21 @@ import {InvalidNodeParameterCause} from '../types.ts';
 import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
 import {Connection} from './Connection.ts';
+import {BasicConnectionPoint} from './BasicConnectionPoint.ts';
+import {Point} from '../../types.ts';
+import {PositionalNode} from '../PositionalNode.ts';
+import {LooseConnectionPoint} from './LooseConnectionPoint.ts';
 
 export class ConnectionPart extends Node {
     parent: Connection;
     startPoint: ConnectionPoint;
     endPoint: ConnectionPoint;
 
-    constructor(parent: Connection, startPoint: ConnectionPoint, endPoint: ConnectionPoint) {
+    constructor(startPoint: Point|PositionalNode, endPoint: Point|PositionalNode, parent: Connection) {
         super();
         this.parent = parent;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
+        this.startPoint = this.parsePoint(startPoint);
+        this.endPoint = this.parsePoint(endPoint);
     }
 
     validate(): InvalidNodeParameterCause[] {
@@ -22,7 +26,7 @@ export class ConnectionPart extends Node {
     }
 
     clone(): ConnectionPart {
-        const clone = new ConnectionPart(this.parent, this.startPoint, this.endPoint);
+        const clone = new ConnectionPart(this.startPoint, this.endPoint, this.parent);
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
 
@@ -53,14 +57,24 @@ export class ConnectionPart extends Node {
     }
 
     break() {
-        const midPoint = new ConnectionPoint((this.startPoint.x + this.endPoint.x) / 2,
-                                             (this.startPoint.y + this.endPoint.y) / 2);
+        const midPoint = new BasicConnectionPoint((this.startPoint.x + this.endPoint.x) / 2,
+                                                  (this.startPoint.y + this.endPoint.y) / 2, this);
 
         const index = this.parent.parts.findIndex(part => part.startPoint === this.startPoint && part.endPoint === this.endPoint);
 
-        const secondHalf = new ConnectionPart(this.parent, midPoint, this.endPoint);
+        const secondHalf = new ConnectionPart(midPoint, this.endPoint, this.parent);
         this.endPoint = midPoint;
 
         this.parent.parts.splice(index, 1, this, secondHalf);
+    }
+
+    private parsePoint(point: Point|PositionalNode): ConnectionPoint {
+        if (point instanceof ConnectionPoint) {
+            return point;
+        }
+        if (point instanceof PositionalNode) {
+            return new LooseConnectionPoint(point, this);
+        }
+        return new BasicConnectionPoint(point.x, point.y, this);
     }
 }
