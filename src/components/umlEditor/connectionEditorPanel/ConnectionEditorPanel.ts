@@ -1,7 +1,7 @@
 import {defineComponent, ref, watch} from 'vue';
 import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
+import {ConnectionType, InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
 import {findError} from '../../../utils/functions.ts';
 import {Connection} from '../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../../../utils/nodes/connection/ConnectionPart.ts';
@@ -27,6 +27,9 @@ export default defineComponent({
         },
         ConnectionPoint() {
             return ConnectionPoint;
+        },
+        ConnectionType() {
+            return ConnectionType;
         }
     },
     props: {

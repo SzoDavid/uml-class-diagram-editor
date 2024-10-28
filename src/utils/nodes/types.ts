@@ -26,3 +26,8 @@ export enum NodeType {
     COMMENT,
     CONNECTION
 }
+
+export enum ConnectionType {
+    NONE,
+    ASSOCIATION
+}

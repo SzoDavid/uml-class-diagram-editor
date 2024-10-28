@@ -14,6 +14,10 @@
         "type": "type",
         "utility": "utility"
     },
+    "connection_types": {
+        "none": "nincs",
+        "association": "asszociáció"
+    },
     "default_value": "alapértelmezett érték",
     "derived": "derivált",
     "detail": "részlet | részletek",

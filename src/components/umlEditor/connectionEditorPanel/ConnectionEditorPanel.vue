@@ -6,8 +6,11 @@
     <fieldset>
       <legend class="capitalized">{{ t("detail", 2) }}</legend>
       <div class="grid-form">
-        <span>Snapped to:</span>
-        <span>{{ 'TODO' }}</span> <!-- TODO -->
+        <label for="type" class="capitalized">{{ t("type") }}</label>
+        <select id="type" v-model="data.instance.type">
+          <option :value="ConnectionType.NONE" selected>{{ t("connection_types.none") }}</option>
+          <option :value="ConnectionType.ASSOCIATION">{{ t("connection_types.association") }}</option>
+        </select>
       </div>
     </fieldset>
   </template>

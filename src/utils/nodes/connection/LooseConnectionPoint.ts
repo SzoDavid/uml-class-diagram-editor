@@ -5,9 +5,11 @@ import {EditorConstants} from '../../constants.ts';
 import {Point} from '../../types.ts';
 import {ConnectionPart} from './ConnectionPart.ts';
 import {BasicConnectionPoint} from './BasicConnectionPoint.ts';
+import { ConnectionType } from '../types.ts';
 
 export class LooseConnectionPoint extends ConnectionPoint implements Point {
     node: PositionalNode;
+    type: ConnectionType;
 
     private _displayPoint: Point;
     
@@ -19,6 +21,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
             y: node.y + (node.height / 2)};
 
         this.node = node;
+        this.type = ConnectionType.NONE;
     }
 
     get x(): number {

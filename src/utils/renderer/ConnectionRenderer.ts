@@ -14,36 +14,56 @@ export class ConnectionRenderer {
     public render(node: Connection): void {
         this._nr.ctx.lineWidth = this._nr.rc.borderSize;
 
-        node.parts.forEach(part => {
-            this._nr.ctx.beginPath();
+        let startPoint: Point = node.parts[0].startPoint;
+        if (startPoint instanceof LooseConnectionPoint) {
+            const intersection = GeometryUtils.findIntersectionPoint(node.parts[0].endPoint, startPoint.node);
+            if (!intersection || 
+                (
+                    node.parts[0].endPoint instanceof LooseConnectionPoint && 
+                    startPoint.node.containsDot(node.parts[0].endPoint.displayPoint.x, 
+                                                node.parts[0].endPoint.displayPoint.y)
+                )) return;
+            startPoint.displayPoint = intersection;
+            startPoint = intersection;
+        }
 
-            let startPoint: Point = part.startPoint;
-            if (part.startPoint instanceof LooseConnectionPoint) {
-                const intersection = GeometryUtils.findIntersectionPoint(part.endPoint, part.startPoint.node);
-                if (!intersection || (part.endPoint instanceof LooseConnectionPoint && part.startPoint.node.containsDot(part.endPoint.displayPoint.x, part.endPoint.displayPoint.y))) return;
-                part.startPoint.displayPoint = intersection;
-                startPoint = intersection;
-            }
+        let endPoint: Point = node.parts[node.parts.length - 1].endPoint;
+        if (endPoint instanceof LooseConnectionPoint) {
+            const intersection = GeometryUtils.findIntersectionPoint(node.parts[node.parts.length - 1].startPoint, 
+                                                                     endPoint.node);
+            const lastStartPoint = node.parts[node.parts.length - 1].startPoint;
+            if (!intersection || 
+                (
+                    lastStartPoint instanceof LooseConnectionPoint && 
+                    endPoint.node.containsDot(lastStartPoint.displayPoint.x,
+                                              lastStartPoint.displayPoint.y)
+                )) return;
+            endPoint.displayPoint = intersection;
+            endPoint = intersection;
+        }
 
-            let endPoint: Point = part.endPoint;
-            if (part.endPoint instanceof LooseConnectionPoint) {
-                const intersection = GeometryUtils.findIntersectionPoint(part.startPoint, part.endPoint.node);
-                if (!intersection || (part.startPoint instanceof LooseConnectionPoint && part.endPoint.node.containsDot(part.startPoint.displayPoint.x, part.startPoint.displayPoint.y))) return;
-                part.endPoint.displayPoint = intersection;
-                endPoint = intersection;
-            }
+        this._nr.ctx.beginPath();
+        this._nr.ctx.moveTo(startPoint.x, startPoint.y);
 
-            this._nr.ctx.moveTo(startPoint.x, startPoint.y);
-            this._nr.ctx.lineTo(endPoint.x, endPoint.y);
+        for (let i = 1; i < node.parts.length - 1; i++) {
+            const part = node.parts[i];
+            
+            this._nr.ctx.lineTo(part.endPoint.x, part.endPoint.y);
 
             this._nr.ctx.strokeStyle = node.isSelected || part.isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
             this._nr.ctx.stroke();
-        });
 
-        const startPoint = node.parts[0].startPoint;
-        if (node.isSelected || startPoint.isSelected) {
-            if (startPoint instanceof LooseConnectionPoint) this.renderPoint(startPoint.displayPoint.x, startPoint.displayPoint.y);
-            else this.renderPoint(startPoint.x, startPoint.y);
+            this._nr.ctx.beginPath();
+            this._nr.ctx.moveTo(node.parts[i + 1].startPoint.x, node.parts[i + 1].startPoint.y);
+        }
+
+        this._nr.ctx.lineTo(endPoint.x, endPoint.y);
+
+        this._nr.ctx.strokeStyle = node.isSelected || node.parts[node.parts.length - 1].isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
+        this._nr.ctx.stroke();
+
+        if (node.isSelected || node.parts[0].startPoint.isSelected) {
+            this.renderPoint(startPoint.x, startPoint.y);
         }
 
         node.parts.forEach(part => {
@@ -59,5 +79,15 @@ export class ConnectionRenderer {
         this._nr.ctx.arc(x, y, this._nr.rc.dotSize, 0, 2 * Math.PI);
         this._nr.ctx.fillStyle = this._nr.rc.accentColorSelected;
         this._nr.ctx.fill();
+    }
+
+    private renderTriangle(x: number, y: number, angle: number, isSelected: boolean = false): void {
+        this._nr.ctx.beginPath();
+        this._nr.ctx.moveTo(x, y);
+        this._nr.ctx.lineTo(x + 10, y + 5);
+        this._nr.ctx.lineTo(x + 10, y - 5);
+        this._nr.ctx.lineTo(x, y);
+        this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
+        this._nr.ctx.stroke();
     }
 }
