@@ -1,5 +1,6 @@
 import {Point} from './types.ts';
 import {PositionalNode} from './nodes/PositionalNode.ts';
+import {LooseConnectionPoint} from './nodes/connection/ConnectionPoint.ts';
 
 export class GeometryUtils {
     static isPointWithinRadius(x: number, y: number, centerX: number, centerY: number, radius: number): boolean {
@@ -35,10 +36,13 @@ export class GeometryUtils {
     }
 
     static findIntersectionPoint(point: Point, node: PositionalNode): Point | null {
-        if (point.x >= node.x &&
-            point.x <= node.x + node.width &&
-            point.y >= node.y &&
-            point.y <= node.y + node.height) {
+        const pointX = (point instanceof LooseConnectionPoint) ? point.snappingPoint.x : point.x;
+        const pointY = (point instanceof LooseConnectionPoint) ? point.snappingPoint.y : point.y;
+
+        if (pointX >= node.x &&
+            pointX <= node.x + node.width &&
+            pointY >= node.y &&
+            pointY <= node.y + node.height) {
             return null;
         }
 
@@ -46,35 +50,35 @@ export class GeometryUtils {
         const centerY = node.y + node.height / 2;
 
         // Parametric line equation: p + t*(center - p)
-        const dx = centerX - point.x;
-        const dy = centerY - point.y;
+        const dx = centerX - pointX;
+        const dy = centerY - pointY;
 
         const intersectionPoints: Point[] = [];
 
         // Left edge (x = box.x)
-        const tLeft = (node.x - point.x) / dx;
-        const yLeft = point.y + tLeft * dy;
+        const tLeft = (node.x - pointX) / dx;
+        const yLeft = pointY + tLeft * dy;
         if (yLeft >= node.y && yLeft <= node.y + node.height) {
             intersectionPoints.push({ x: node.x, y: yLeft });
         }
 
         // Right edge (x = box.x + box.width)
-        const tRight = (node.x + node.width - point.x) / dx;
-        const yRight = point.y + tRight * dy;
+        const tRight = (node.x + node.width - pointX) / dx;
+        const yRight = pointY + tRight * dy;
         if (yRight >= node.y && yRight <= node.y + node.height) {
             intersectionPoints.push({ x: node.x + node.width, y: yRight });
         }
 
         // Top edge (y = box.y)
-        const tTop = (node.y - point.y) / dy;
-        const xTop = point.x + tTop * dx;
+        const tTop = (node.y - pointY) / dy;
+        const xTop = pointX + tTop * dx;
         if (xTop >= node.x && xTop <= node.x + node.width) {
             intersectionPoints.push({ x: xTop, y: node.y });
         }
 
         // Bottom edge (y = box.y + box.height)
-        const tBottom = (node.y + node.height - point.y) / dy;
-        const xBottom = point.x + tBottom * dx;
+        const tBottom = (node.y + node.height - pointY) / dy;
+        const xBottom = pointX + tBottom * dx;
         if (xBottom >= node.x && xBottom <= node.x + node.width) {
             intersectionPoints.push({ x: xBottom, y: node.y + node.height });
         }
@@ -84,7 +88,7 @@ export class GeometryUtils {
         let minDistance = Infinity;
 
         intersectionPoints.forEach(intersection => {
-            const distance = Math.sqrt((intersection.x - point.x) ** 2 + (intersection.y - point.y) ** 2);
+            const distance = Math.sqrt((intersection.x - pointX) ** 2 + (intersection.y - pointY) ** 2);
             if (distance < minDistance) {
                 minDistance = distance;
                 closestPoint = intersection;

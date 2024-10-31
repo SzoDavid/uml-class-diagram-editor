@@ -5,8 +5,7 @@ import {ConnectionType, InvalidNodeParameterCause} from '../../../utils/nodes/ty
 import {findError} from '../../../utils/functions.ts';
 import {Connection} from '../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../../../utils/nodes/connection/ConnectionPart.ts';
-import {ConnectionPoint} from '../../../utils/nodes/connection/ConnectionPoint.ts';
-import {LooseConnectionPoint} from '../../../utils/nodes/connection/LooseConnectionPoint.ts';
+import {ConnectionPoint, LooseConnectionPoint} from '../../../utils/nodes/connection/ConnectionPoint.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>
@@ -69,7 +68,12 @@ export default defineComponent({
                 return;
             }
 
-            data.value.instance.break();
+            try {
+                data.value.instance.break();
+            } catch (e) {
+                console.error(e);
+            }
+
             emit('render');
         };
 

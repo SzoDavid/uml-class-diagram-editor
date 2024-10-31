@@ -1,24 +1,23 @@
 import {Node} from '../Node.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
 import {ConnectionPart} from './ConnectionPart.ts';
-import {ConnectionPoint} from './ConnectionPoint.ts';
+import {BasicConnectionPoint, ConnectionPoint, LooseConnectionPoint} from './ConnectionPoint.ts';
 import {PositionalNode} from '../PositionalNode.ts';
 import {Point} from '../../types.ts';
 
 export class Connection extends Node {
-    parts: ConnectionPart[];
+    parts: ConnectionPart[] = [];
+    points: ConnectionPoint[] = [];
 
     constructor(points: (Point|PositionalNode)[]) {
         super();
-        this.parts = [];
 
-        let previousPart = new ConnectionPart(points[0], points[1], this);
-        this.parts.push(previousPart);
+        for (const point of points) {
+            this.points.push(this.parsePoint(point));
+        }
 
-        for (let i = 2; i < points.length; i++) {
-            const newPart = new ConnectionPart(previousPart.endPoint, points[i], this);
-            this.parts.push(newPart);
-            previousPart = newPart;
+        for (let i = 0; i < this.points.length - 1; i++) {
+            this.parts.push(new ConnectionPart(i, i + 1, this));
         }
     }
 
@@ -42,7 +41,7 @@ export class Connection extends Node {
         return clone;
     }
 
-    copy(node: Connection) {
+    copy(node: Connection): void {
         this.parts = [...node.parts];
     }
 
@@ -55,5 +54,16 @@ export class Connection extends Node {
     deselect(): void {
         super.deselect();
         this.parts.forEach(part => part.deselect());
+    }
+
+
+    private parsePoint(point: Point|PositionalNode): ConnectionPoint {
+        if (point instanceof ConnectionPoint) {
+            return point;
+        }
+        if (point instanceof PositionalNode) {
+            return new LooseConnectionPoint(point, this);
+        }
+        return new BasicConnectionPoint(point.x, point.y, this);
     }
 }
