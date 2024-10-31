@@ -10,6 +10,7 @@
         <select id="type" v-model="data.instance.type">
           <option :value="ConnectionType.NONE" selected>{{ t("connection_types.none") }}</option>
           <option :value="ConnectionType.ASSOCIATION">{{ t("connection_types.association") }}</option>
+          <option :value="ConnectionType.GENERALIZATION">{{ t("connection_types.generalization") }}</option>
         </select>
       </div>
     </fieldset>

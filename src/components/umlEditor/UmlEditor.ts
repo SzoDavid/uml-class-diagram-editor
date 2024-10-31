@@ -8,7 +8,7 @@ import PrimitiveEditorPanel from './primitiveEditorPanel/PrimitiveEditorPanel.vu
 import {useSettingsService} from '../../services/SettingsService.ts';
 import {EmitType, UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
 import {DataContext} from '../../utils/types.ts';
-import {Renderer} from '../../utils/renderer/Renderer.ts';
+import {Renderer} from '../../services/renderer/Renderer.ts';
 import {Node} from '../../utils/nodes/Node.ts';
 import {ClassNode} from '../../utils/nodes/classifier/ClassNode.ts';
 import {Property} from '../../utils/nodes/features/Property.ts';

@@ -3,7 +3,7 @@
  */
 import mitt, {Emitter} from 'mitt';
 import {Node} from '../utils/nodes/Node.ts';
-import {Renderer} from '../utils/renderer/Renderer.ts';
+import {Renderer} from './renderer/Renderer.ts';
 import {ClassNode} from '../utils/nodes/classifier/ClassNode.ts';
 import {InterfaceNode} from '../utils/nodes/classifier/InterfaceNode.ts';
 import {DataTypeNode} from '../utils/nodes/classifier/DataTypeNode.ts';

@@ -1,4 +1,4 @@
-import {ClassAbstractionDisplayMode, RenderConfiguration} from '../utils/renderer/RenderConfiguration.ts';
+import {ClassAbstractionDisplayMode, RenderConfiguration} from './renderer/RenderConfiguration.ts';
 import {reactive} from 'vue';
 
 const defaultRenderConfiguration: RenderConfiguration = {

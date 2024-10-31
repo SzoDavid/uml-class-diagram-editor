@@ -16,7 +16,8 @@
     },
     "connection_types": {
         "none": "nincs",
-        "association": "asszociáció"
+        "association": "asszociáció",
+        "generalization": "öröklődés"
     },
     "default_value": "alapértelmezett érték",
     "derived": "derivált",

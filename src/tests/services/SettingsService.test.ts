@@ -1,5 +1,5 @@
 import {describe, expect, test} from 'vitest';
-import {ClassAbstractionDisplayMode, RenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
+import {ClassAbstractionDisplayMode, RenderConfiguration} from '../../services/renderer/RenderConfiguration.ts';
 import {useSettingsService} from '../../services/SettingsService.ts';
 
 describe('UCDE-SettingsService', () => {

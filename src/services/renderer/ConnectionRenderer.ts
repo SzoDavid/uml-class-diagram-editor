@@ -1,8 +1,8 @@
 import {NodeRenderer} from './NodeRenderer.ts';
-import {Connection} from '../nodes/connection/Connection.ts';
-import {Point} from '../types.ts';
-import {ConnectionType} from '../nodes/types.ts';
-import {LooseConnectionPoint} from '../nodes/connection/ConnectionPoint.ts';
+import {Connection} from '../../utils/nodes/connection/Connection.ts';
+import {Point} from '../../utils/types.ts';
+import {ConnectionType} from '../../utils/nodes/types.ts';
+import {LooseConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -61,7 +61,7 @@ export class ConnectionRenderer {
 
     private renderDecoratedPoint(point: LooseConnectionPoint, connection: Connection, angle: number): void {
         switch (point.type) {
-            case ConnectionType.ASSOCIATION:
+            case ConnectionType.GENERALIZATION:
                 this.renderTriangle(
                     point,
                     angle,

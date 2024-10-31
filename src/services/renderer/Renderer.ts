@@ -1,5 +1,5 @@
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {Node} from '../nodes/Node.ts';
+import {Node} from '../../utils/nodes/Node.ts';
 import {NodeRenderer} from './NodeRenderer.ts';
 
 export class Renderer {

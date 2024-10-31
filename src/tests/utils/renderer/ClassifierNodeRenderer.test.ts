@@ -1,11 +1,11 @@
 import {describe, beforeEach, afterAll, vi, test, expect} from 'vitest';
-import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
+import {RenderConfiguration} from '../../../services/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/classifier/ClassNode.ts';
 import {MockProperty} from '../nodes/features/mocks/MockProperty.ts';
 import {MockOperation} from '../nodes/features/mocks/MockOperation.ts';
 import {Parameter} from '../../../utils/nodes/features/Parameter.ts';
-import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
-import {ClassifierNodeRenderer} from '../../../utils/renderer/ClassifierNodeRenderer.ts';
+import {NodeRenderer} from '../../../services/renderer/NodeRenderer.ts';
+import {ClassifierNodeRenderer} from '../../../services/renderer/ClassifierNodeRenderer.ts';
 import {useSettingsService} from '../../../services/SettingsService.ts';
 
 describe('UCDE-ClassifierNodeRenderer', () => {

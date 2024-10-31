@@ -1,8 +1,8 @@
 import {beforeEach, describe, vi, test, expect} from 'vitest';
-import {Renderer} from '../../../utils/renderer/Renderer.ts';
-import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
+import {Renderer} from '../../../services/renderer/Renderer.ts';
+import {RenderConfiguration} from '../../../services/renderer/RenderConfiguration.ts';
 import {ClassNode} from '../../../utils/nodes/classifier/ClassNode.ts';
-import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
+import {NodeRenderer} from '../../../services/renderer/NodeRenderer.ts';
 import {useSettingsService} from '../../../services/SettingsService.ts';
 import {PositionalNode} from '../../../utils/nodes/PositionalNode.ts';
 

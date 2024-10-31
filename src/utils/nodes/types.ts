@@ -29,5 +29,6 @@ export enum NodeType {
 
 export enum ConnectionType {
     NONE,
-    ASSOCIATION
+    ASSOCIATION,
+    GENERALIZATION
 }
