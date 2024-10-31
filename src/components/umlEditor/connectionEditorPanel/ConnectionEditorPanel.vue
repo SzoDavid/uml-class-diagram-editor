@@ -32,4 +32,8 @@
       <button @click="breakConnectionPart" class="capitalized">{{ t("add_breakpoint") }}</button>
     </fieldset>
   </template>
+
+  <template v-if="!(data.instance instanceof ConnectionPart)">
+    <button @click="onSave" class="capitalized">{{ t("save") }}</button>
+  </template>
 </template>

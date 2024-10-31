@@ -15,8 +15,6 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
     }
 
     copy(node: ConnectionPoint): void {
-        this.x = node.x;
-        this.y = node.y;
         this.parent = node.parent;
     }
 
@@ -84,6 +82,12 @@ export class BasicConnectionPoint extends ConnectionPoint {
         return clone;
     }
 
+    copy(node: ConnectionPoint) {
+        super.copy(node);
+        this.x = node.x;
+        this.y = node.y;
+    }
+
     convertToLoosePoint(node: PositionalNode): LooseConnectionPoint {
         const index = this.parent.points.indexOf(this);
         if (index < 0) throw new Error('Parent doesnt have given point');
@@ -99,7 +103,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     constructor(
         public node: PositionalNode,
         parent: Connection,
-        public type: ConnectionType = ConnectionType.ASSOCIATION
+        public type: ConnectionType = ConnectionType.NONE
     ) {
         super(node.x + (node.width / 2), node.y + (node.height / 2), parent);
     }
@@ -129,6 +133,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
 
     clone(): LooseConnectionPoint {
         const clone = new LooseConnectionPoint(this.node, this.parent);
+        clone.type = this.type;
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
 
@@ -138,6 +143,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     copy(node: LooseConnectionPoint): void {
         super.copy(node);
         this.node = node.node;
+        this.type = node.type;
     }
 
     containsDot(x: number, y: number): boolean {
