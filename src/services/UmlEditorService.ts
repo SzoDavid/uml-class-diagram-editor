@@ -18,6 +18,7 @@ import {EditorConstants} from '../utils/constants.ts';
 import {Point} from '../utils/types.ts';
 import {BasicConnectionPoint, LooseConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
 import {Generalization} from '../utils/nodes/connection/Generalization.ts';
+import {Association} from '../utils/nodes/connection/Association.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -206,7 +207,7 @@ export class UmlEditorService {
         const { offsetX, offsetY } = event;
         this._isPanning = false;
 
-        if (this._isAddingConnection && this.addConfig.type === NodeType.GENERALIZATION) {
+        if (this._isAddingConnection) {
             this._isAddingConnection = false;
 
             // Only add connection if its length is larger than the given constant
@@ -217,18 +218,22 @@ export class UmlEditorService {
                 const startPoint: PositionalNode|Point = nodeAtStart instanceof PositionalNode ? nodeAtStart : {x: this._dragOffsetX, y: this._dragOffsetY};
                 const endPoint: PositionalNode|Point = nodeAtEnd instanceof PositionalNode ? nodeAtEnd : {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY};
 
-                this.addNode(new Generalization([startPoint, endPoint]));
+                switch (this.addConfig.type) {
+                    case NodeType.ASSOCIATION:
+                        this.addNode(new Association([startPoint, endPoint]));
+                        break;
+                    case NodeType.GENERALIZATION:
+                        this.addNode(new Generalization([startPoint, endPoint]));
+                        break;
+                    default:
+                        console.error('trying to add a connection but type selected is not one');
+                }
 
                 if (!this.addConfig.keepAdding) {
                     this.tool = UmlEditorTool.EDIT;
                 }
             }
-
-            this.render();
-            return;
-        }
-
-        if (this._selectedNode) {
+        } else if (this._selectedNode) {
             this._selectedNode.isDragging = false;
 
             if (
@@ -241,9 +246,9 @@ export class UmlEditorService {
                     this._selectedNode = this._selectedNode.convertToLoosePoint(nodeAtPosition);
                 }
             }
-
-            this.render();
         }
+
+        this.render();
     }
 
     /**
@@ -417,6 +422,7 @@ export class UmlEditorService {
                 node = new CommentNode('...', transformedX, transformedY);
                 break;
             case NodeType.GENERALIZATION:
+            case NodeType.ASSOCIATION:
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;

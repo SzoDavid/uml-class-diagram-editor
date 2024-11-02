@@ -1,7 +1,6 @@
 import {NodeRenderer} from './NodeRenderer.ts';
 import {Connection} from '../../utils/nodes/connection/Connection.ts';
 import {Point} from '../../utils/types.ts';
-import {ConnectionType} from '../../utils/nodes/types.ts';
 import {ConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
 import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 
@@ -40,9 +39,9 @@ export class ConnectionRenderer {
 
         if (node instanceof Generalization) {
             if (node.reversed) {
-                this.renderDecoratedPoint(ConnectionType.GENERALIZATION, startPart.startPoint, node, startPart.angle);
+                this.renderDecoratedPoint('gen', startPart.startPoint, node, startPart.angle);
             } else {
-                this.renderDecoratedPoint(ConnectionType.GENERALIZATION, endPart.endPoint, node, endPart.angle + Math.PI);
+                this.renderDecoratedPoint('gen', endPart.endPoint, node, endPart.angle + Math.PI);
             }
         }
 
@@ -60,9 +59,9 @@ export class ConnectionRenderer {
         this._nr.ctx.fill();
     }
 
-    private renderDecoratedPoint(type: ConnectionType, point: ConnectionPoint, connection: Connection, angle: number): void {
+    private renderDecoratedPoint(type: 'ass'|'gen', point: ConnectionPoint, connection: Connection, angle: number): void {
         switch (type) {
-            case ConnectionType.GENERALIZATION:
+            case 'gen':
                 this.renderTriangle(
                     point,
                     angle,

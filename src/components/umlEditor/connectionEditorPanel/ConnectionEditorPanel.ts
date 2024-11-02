@@ -10,6 +10,7 @@ import {
     ConnectionPoint
 } from '../../../utils/nodes/connection/ConnectionPoint.ts';
 import {Generalization} from '../../../utils/nodes/connection/Generalization.ts';
+import {Association} from '../../../utils/nodes/connection/Association.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>
@@ -22,6 +23,9 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
+        Association() {
+            return Association;
+        },
         Generalization() {
             return Generalization;
         },

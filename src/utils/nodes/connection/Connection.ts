@@ -59,4 +59,11 @@ export abstract class Connection extends Node {
         }
         return new BasicConnectionPoint(point.x, point.y, this);
     }
+
+    protected basicClone(clone: Connection): void {
+        clone.points = [...this.points];
+        clone.parts = [...this.parts];
+        clone.isSelected = this.isSelected;
+        clone.isDragging = this.isDragging;
+    }
 }

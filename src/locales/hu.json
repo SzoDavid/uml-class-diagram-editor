@@ -121,6 +121,7 @@
             "warning": "Csak akkor változtass értékeket, ha tudod mit csinálsz!"
         }
     },
+    "show_ownership": "birtoklás mutatása",
     "subsets": "részhalmaza",
     "static_type": "statikus",
     "type": "típus",

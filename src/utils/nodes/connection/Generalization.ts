@@ -11,11 +11,7 @@ export class Generalization extends Connection {
 
     clone(): Generalization {
         const clone = new Generalization([]);
-        clone.points = [...this.points];
-        clone.parts = [...this.parts];
-
-        clone.isSelected = this.isSelected;
-        clone.isDragging = this.isDragging;
+        this.basicClone(clone);
         clone.reversed = this.reversed;
 
         return clone;

@@ -76,6 +76,7 @@
                 <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
                 <option :value="NodeType.ENUMERATION">{{ t("node_types.enumeration") }}</option>
                 <option :value="NodeType.COMMENT">{{ t("node_types.comment") }}</option>
+                <option :value="NodeType.ASSOCIATION">{{ t("node_types.connection.association") }}</option>
                 <option :value="NodeType.GENERALIZATION">{{ t("node_types.connection.generalization") }}</option>
               </select>
               <label for=keepAdding class="capitalized">{{ t("keep_adding") }}</label>

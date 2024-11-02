@@ -121,6 +121,7 @@
             "warning": "Change values only if you know what you are doing!"
         }
     },
+    "show_ownership": "show ownership",
     "subsets": "subsets",
     "static_type": "static",
     "type": "type",
