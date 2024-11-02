@@ -1,7 +1,7 @@
 import {defineComponent, ref, watch} from 'vue';
 import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
+import {AssociationNavigability, InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
 import {findError} from '../../../utils/functions.ts';
 import {Connection} from '../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../../../utils/nodes/connection/ConnectionPart.ts';
@@ -23,6 +23,9 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
+        AssociationNavigability() {
+            return AssociationNavigability;
+        },
         Association() {
             return Association;
         },

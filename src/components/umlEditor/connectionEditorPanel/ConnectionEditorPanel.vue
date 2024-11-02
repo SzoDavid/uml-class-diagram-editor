@@ -36,6 +36,58 @@
         <label for="reversedOwnership" class="capitalized">{{ t("reversed") }}</label>
         <input id="reversedOwnership" type="checkbox" v-model="data.instance.reversedOwnership">
       </div>
+      <fieldset>
+        <legend class="capitalized">{{ t("start_point") }}</legend>
+
+        <div class="grid-form">
+          <label for="startName" class="capitalized">{{ t("name") }}</label>
+          <input id="startName" type="text" v-model="data.instance.startName">
+
+          <label for="startNavigability" class="capitalized">{{ t("navigability.title") }}</label>
+          <select id="startNavigability" v-model="data.instance.startNavigability">
+            <option :value="AssociationNavigability.UNSPECIFIED">{{ t("navigability.unspecified") }}</option>
+            <option :value="AssociationNavigability.NAVIGABLE">{{ t("navigability.navigable") }}</option>
+            <option :value="AssociationNavigability.UNNAVIGABLE">{{ t("navigability.unnavigable") }}</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend class="capitalized">{{ t("multiplicity") }}</legend>
+          <div class="grid-form">
+            <label for="startMultiUpper" class="capitalized">{{ t("multiplicity_upper") }}</label>
+            <input id="startMultiUpper" type="text" v-model="data.instance.startMultiplicity.upper">
+
+            <label for="startMultiLower" class="capitalized">{{ t("multiplicity_lower") }}</label>
+            <input id="startMultiLower" type="number" v-model="data.instance.startMultiplicity.lower">
+          </div>
+        </fieldset>
+      </fieldset>
+      <fieldset>
+        <legend class="capitalized">{{ t("end_point") }}</legend>
+
+        <div class="grid-form">
+          <label for="endName" class="capitalized">{{ t("name") }}</label>
+          <input id="endName" type="text" v-model="data.instance.endName">
+
+          <label for="endNavigability" class="capitalized">{{ t("navigability.title") }}</label>
+          <select id="endNavigability" v-model="data.instance.endNavigability">
+            <option :value="AssociationNavigability.UNSPECIFIED">{{ t("navigability.unspecified") }}</option>
+            <option :value="AssociationNavigability.NAVIGABLE">{{ t("navigability.navigable") }}</option>
+            <option :value="AssociationNavigability.UNNAVIGABLE">{{ t("navigability.unnavigable") }}</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend class="capitalized">{{ t("multiplicity") }}</legend>
+          <div class="grid-form">
+            <label for="endMultiUpper" class="capitalized">{{ t("multiplicity_upper") }}</label>
+            <input id="endMultiUpper" type="text" v-model="data.instance.endMultiplicity.upper">
+
+            <label for="endMultiLower" class="capitalized">{{ t("multiplicity_lower") }}</label>
+            <input id="endMultiLower" type="number" v-model="data.instance.endMultiplicity.lower">
+          </div>
+        </fieldset>
+      </fieldset>
     </template>
   </fieldset>
   <button @click="onSave" class="capitalized">{{ t("save") }}</button>

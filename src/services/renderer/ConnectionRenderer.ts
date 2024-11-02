@@ -1,8 +1,10 @@
 import {NodeRenderer} from './NodeRenderer.ts';
 import {Connection} from '../../utils/nodes/connection/Connection.ts';
 import {Point} from '../../utils/types.ts';
-import {ConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
 import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
+import {Association} from '../../utils/nodes/connection/Association.ts';
+import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
+import {AssociationNavigability} from '../../utils/nodes/types.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -37,41 +39,84 @@ export class ConnectionRenderer {
         this._nr.ctx.strokeStyle = node.isSelected || node.parts[node.parts.length - 1].isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.stroke();
 
-        if (node instanceof Generalization) {
-            if (node.reversed) {
-                this.renderDecoratedPoint('gen', startPart.startPoint, node, startPart.angle);
-            } else {
-                this.renderDecoratedPoint('gen', endPart.endPoint, node, endPart.angle + Math.PI);
-            }
-        }
+        this.renderEndDecorations(node, startPart, endPart);
 
         for (const point of node.points) {
             if (node.isSelected || point.isSelected) {
-                this.renderPoint(point.x, point.y);
+                this.renderPoint(point, true);
             }
         }
     }
 
-    private renderPoint(x: number, y: number): void {
+    private renderPoint(point: Point, isSelected: boolean): void {
         this._nr.ctx.beginPath();
-        this._nr.ctx.arc(x, y, this._nr.rc.dotSize, 0, 2 * Math.PI);
-        this._nr.ctx.fillStyle = this._nr.rc.accentColorSelected;
+        this._nr.ctx.arc(point.x, point.y, this._nr.rc.dotSize, 0, 2 * Math.PI);
+        this._nr.ctx.fillStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.fill();
     }
 
-    private renderDecoratedPoint(type: 'ass'|'gen', point: ConnectionPoint, connection: Connection, angle: number): void {
-        switch (type) {
-            case 'gen':
-                this.renderTriangle(
-                    point,
-                    angle,
-                    connection.isSelected || point.isSelected
+    private renderEndDecorations(connection: Connection, startPart: ConnectionPart, endPart: ConnectionPart): void {
+        if (connection instanceof Generalization) {
+            if (connection.reversed) {
+                this.renderFilledTriangle(
+                    startPart.startPoint,
+                    startPart.angle,
+                    connection.isSelected || startPart.startPoint.isSelected
                 );
-                break;
+            } else {
+                this.renderFilledTriangle(
+                    endPart.endPoint,
+                    endPart.angle + Math.PI,
+                    connection.isSelected || endPart.endPoint.isSelected
+                );
+            }
+        } else if (connection instanceof Association) {
+            if (connection.showOwnership) {
+                if (connection.reversedOwnership) {
+                    this.renderPoint(startPart.startPoint, false);
+                } else {
+                    this.renderPoint(endPart.endPoint, false);
+                }
+            }
+            switch (connection.startNavigability) {
+                case AssociationNavigability.NAVIGABLE:
+                    this.renderTriangle(
+                        startPart.startPoint,
+                        startPart.angle,
+                        connection.isSelected || startPart.startPoint.isSelected
+                    );
+                    break;
+                case AssociationNavigability.UNNAVIGABLE:
+                    this.renderCross(
+                        startPart.startPoint,
+                        startPart.angle,
+                        connection.isSelected || startPart.startPoint.isSelected
+                    );
+                    break;
+            }
+            switch (connection.endNavigability) {
+                case AssociationNavigability.NAVIGABLE:
+                    this.renderTriangle(
+                        endPart.endPoint,
+                        endPart.angle + Math.PI,
+                        connection.isSelected || endPart.endPoint.isSelected
+                    );
+                    break;
+                case AssociationNavigability.UNNAVIGABLE:
+                    this.renderCross(
+                        endPart.endPoint,
+                        endPart.angle + Math.PI,
+                        connection.isSelected || endPart.endPoint.isSelected
+                    );
+                    break;
+            }
+
+            // TODO: render texts
         }
     }
 
-    private renderTriangle(point: Point, angle: number, isSelected: boolean = false): void {
+    // TODO: move constants to settings
+    private renderFilledTriangle(point: Point, angle: number, isSelected: boolean = false): void {
         this._nr.ctx.beginPath();
         this._nr.ctx.moveTo(point.x, point.y);
         this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle + (Math.PI / 8)), point.y + 20 * Math.sin(angle + (Math.PI / 8)));
@@ -80,6 +125,32 @@ export class ConnectionRenderer {
 
         this._nr.ctx.fillStyle = isSelected ?  this._nr.rc.fillColorSelected : this._nr.rc.fillColor;
         this._nr.ctx.fill();
+
+        this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
+        this._nr.ctx.stroke();
+    }
+
+    private renderTriangle(point: Point, angle: number, isSelected: boolean = false): void {
+        this._nr.ctx.beginPath();
+        this._nr.ctx.moveTo(point.x, point.y);
+        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle + (Math.PI / 8)), point.y + 20 * Math.sin(angle + (Math.PI / 8)));
+        this._nr.ctx.moveTo(point.x, point.y);
+        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle - (Math.PI / 8)), point.y + 20 * Math.sin(angle - (Math.PI / 8)));
+
+        this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
+        this._nr.ctx.stroke();
+    }
+
+    private renderCross(point: Point, angle: number, isSelected: boolean = false): void {
+        const startX = point.x + 20 * Math.cos(angle);
+        const startY = point.y + 20 * Math.sin(angle);
+
+        this._nr.ctx.beginPath();
+        this._nr.ctx.moveTo(startX + 10 * Math.cos(angle + (Math.PI / 4)), startY + 10 * Math.sin(angle + (Math.PI / 4)));
+        this._nr.ctx.lineTo(startX - 10 * Math.cos(angle + (Math.PI / 4)), startY - 10 * Math.sin(angle + (Math.PI / 4)));
+
+        this._nr.ctx.moveTo(startX + 10 * Math.cos(angle - (Math.PI / 4)), startY + 10 * Math.sin(angle - (Math.PI / 4)));
+        this._nr.ctx.lineTo(startX - 10 * Math.cos(angle - (Math.PI / 4)), startY - 10 * Math.sin(angle - (Math.PI / 4)));
 
         this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.stroke();

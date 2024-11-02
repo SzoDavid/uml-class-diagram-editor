@@ -20,6 +20,7 @@
     "direction": "direction",
     "edit": "edit",
     "editor": "editor",
+    "end_point": "end point",
     "error": {
         "comment_empty": "comment cannot be empty",
         "default_value_alphanumeric": "default value must be alphanumeric",
@@ -60,6 +61,12 @@
     "multiplicity_lower": "lower",
     "multiplicity_upper": "upper",
     "name": "name",
+    "navigability": {
+        "title": "navigability",
+        "unspecified": "unspecified",
+        "navigable": "navigable",
+        "unnavigable": "unnavigable"
+    },
     "navigation": "navigation",
     "node_types": {
         "class": "class",
@@ -123,6 +130,7 @@
     },
     "show_ownership": "show ownership",
     "subsets": "subsets",
+    "start_point": "start point",
     "static_type": "static",
     "type": "type",
     "value": "value | values",
