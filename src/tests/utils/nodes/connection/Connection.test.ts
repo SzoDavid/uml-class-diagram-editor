@@ -1,6 +1,8 @@
 import {beforeEach, describe, expect, test} from 'vitest';
 import {Connection} from '../../../../utils/nodes/connection/Connection.ts';
 import {Generalization} from '../../../../utils/nodes/connection/Generalization.ts';
+import {BasicConnectionPoint, LooseConnectionPoint} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
+import {MockPositionalNode} from '../mocks/MockPositionalNode.ts';
 
 describe('UCDE-Connection', () => {
     let connection: Connection;
@@ -87,6 +89,32 @@ describe('UCDE-Connection', () => {
             expect(connection.endPoint).toBe(connection.parts[connection.parts.length - 1].endPoint);
             expect(connection.endPoint.x).toBe(5);
             expect(connection.endPoint.y).toBe(5);
+        });
+    });
+
+    describe('UCDE-C-0800-ParsePoint', () => {
+        test('UCDE-C-0801 GIVEN ConnectionPoint WHEN parsePoint is called THEN return the same ConnectionPoint', () => {
+            const point = new BasicConnectionPoint(1, 2, connection);
+            const parsedPoint = connection['parsePoint'](point);
+
+            expect(parsedPoint).toBe(point);
+        });
+
+        test('UCDE-C-0802 GIVEN PositionalNode WHEN parsePoint is called THEN return LooseConnectionPoint associated with the PositionalNode', () => {
+            const positionalNode = new MockPositionalNode(3, 4, 10, 20);
+            const parsedPoint = connection['parsePoint'](positionalNode);
+
+            expect(parsedPoint).toBeInstanceOf(LooseConnectionPoint);
+            expect((parsedPoint as LooseConnectionPoint).node).toBe(positionalNode);
+        });
+
+        test('UCDE-C-0803 GIVEN Point WHEN parsePoint is called THEN return BasicConnectionPoint with Point coordinates', () => {
+            const point = {x: 6, y: 7};
+            const parsedPoint = connection['parsePoint'](point);
+
+            expect(parsedPoint).toBeInstanceOf(BasicConnectionPoint);
+            expect(parsedPoint.x).toBe(point.x);
+            expect(parsedPoint.y).toBe(point.y);
         });
     });
 });

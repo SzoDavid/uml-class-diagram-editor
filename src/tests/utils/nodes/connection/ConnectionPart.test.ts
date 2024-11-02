@@ -77,4 +77,10 @@ describe('UCDE-ConnectionPart', () => {
             expect(connectionPart.parent.parts[2].endPoint.y).toBe(4);
         });
     });
+
+    describe('UCDE-CPA-0600-Angle', () => {
+        test('UCDE-CPA-0601 GIVEN points on the positive Y-axis WHEN get angle is called THEN return Pi/2 radians', () => {
+            expect(connectionPart.angle).toBeCloseTo(Math.PI / 2, 5);
+        });
+    });
 });
