@@ -17,6 +17,7 @@ import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
 import {EditorConstants} from '../utils/constants.ts';
 import {Point} from '../utils/types.ts';
 import {BasicConnectionPoint, LooseConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
+import {Generalization} from '../utils/nodes/connection/Generalization.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -205,7 +206,7 @@ export class UmlEditorService {
         const { offsetX, offsetY } = event;
         this._isPanning = false;
 
-        if (this._isAddingConnection) {
+        if (this._isAddingConnection && this.addConfig.type === NodeType.GENERALIZATION) {
             this._isAddingConnection = false;
 
             // Only add connection if its length is larger than the given constant
@@ -215,8 +216,8 @@ export class UmlEditorService {
 
                 const startPoint: PositionalNode|Point = nodeAtStart instanceof PositionalNode ? nodeAtStart : {x: this._dragOffsetX, y: this._dragOffsetY};
                 const endPoint: PositionalNode|Point = nodeAtEnd instanceof PositionalNode ? nodeAtEnd : {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY};
-                
-                this.addNode(new Connection([startPoint, endPoint]));
+
+                this.addNode(new Generalization([startPoint, endPoint]));
 
                 if (!this.addConfig.keepAdding) {
                     this.tool = UmlEditorTool.EDIT;
@@ -415,7 +416,7 @@ export class UmlEditorService {
             case NodeType.COMMENT:
                 node = new CommentNode('...', transformedX, transformedY);
                 break;
-            case NodeType.CONNECTION:
+            case NodeType.GENERALIZATION:
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;

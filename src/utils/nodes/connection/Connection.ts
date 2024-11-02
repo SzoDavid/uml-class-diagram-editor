@@ -5,11 +5,11 @@ import {BasicConnectionPoint, ConnectionPoint, LooseConnectionPoint} from './Con
 import {PositionalNode} from '../PositionalNode.ts';
 import {Point} from '../../types.ts';
 
-export class Connection extends Node {
+export abstract class Connection extends Node {
     parts: ConnectionPart[] = [];
     points: ConnectionPoint[] = [];
 
-    constructor(points: (Point|PositionalNode)[]) {
+    protected constructor(points: (Point|PositionalNode)[]) {
         super();
 
         for (const point of points) {
@@ -21,28 +21,21 @@ export class Connection extends Node {
         }
     }
 
+    get startPoint(): ConnectionPoint {
+        return this.parts[0].startPoint;
+    }
+
+    get endPoint(): ConnectionPoint {
+        return this.parts[this.parts.length - 1].endPoint;
+    }
+
     validate(): InvalidNodeParameterCause[] {
         return [];
     }
 
-    clone(): Connection {
-        const points: ConnectionPoint[] = [];
-
-        points.push(this.parts[0].startPoint);
-
-        for (const part of this.parts) {
-            points.push(part.endPoint);
-        }
-
-        const clone = new Connection(points);
-        clone.isSelected = this.isSelected;
-        clone.isDragging = this.isDragging;
-
-        return clone;
-    }
-
     copy(node: Connection): void {
         this.parts = [...node.parts];
+        this.points = [...node.points];
     }
 
     containsDot(x: number, y: number): boolean {

@@ -1,11 +1,15 @@
 import {defineComponent, ref, watch} from 'vue';
 import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
-import {ConnectionType, InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
+import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
 import {findError} from '../../../utils/functions.ts';
 import {Connection} from '../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../../../utils/nodes/connection/ConnectionPart.ts';
-import {ConnectionPoint, LooseConnectionPoint} from '../../../utils/nodes/connection/ConnectionPoint.ts';
+import {
+    BasicConnectionPoint,
+    ConnectionPoint
+} from '../../../utils/nodes/connection/ConnectionPoint.ts';
+import {Generalization} from '../../../utils/nodes/connection/Generalization.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>
@@ -18,17 +22,17 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
-        LooseConnectionPoint() {
-            return LooseConnectionPoint;
+        Generalization() {
+            return Generalization;
+        },
+        BasicConnectionPoint() {
+            return BasicConnectionPoint;
         },
         ConnectionPart() {
             return ConnectionPart;
         },
         ConnectionPoint() {
             return ConnectionPoint;
-        },
-        ConnectionType() {
-            return ConnectionType;
         }
     },
     props: {

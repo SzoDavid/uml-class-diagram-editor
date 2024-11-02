@@ -24,7 +24,7 @@ export enum NodeType {
     PRIMITIVE,
     ENUMERATION,
     COMMENT,
-    CONNECTION
+    GENERALIZATION
 }
 
 export enum ConnectionType {

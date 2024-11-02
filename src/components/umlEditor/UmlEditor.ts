@@ -25,6 +25,7 @@ import {CommentNode} from '../../utils/nodes/CommentNode.ts';
 import {Connection} from '../../utils/nodes/connection/Connection.ts';
 import {ConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
 import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
+import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 
 
 export default {
@@ -117,7 +118,7 @@ export default {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof CommentNode && data.instance instanceof CommentNode) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof Connection && data.instance instanceof Connection) {
+                } else if (selectedNode.value instanceof Generalization && data.instance instanceof Generalization) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof ConnectionPart && data.instance instanceof ConnectionPart) {
                     selectedNode.value.copy(data.instance);

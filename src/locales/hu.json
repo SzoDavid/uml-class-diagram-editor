@@ -14,11 +14,6 @@
         "type": "type",
         "utility": "utility"
     },
-    "connection_types": {
-        "none": "nincs",
-        "association": "asszociáció",
-        "generalization": "öröklődés"
-    },
     "default_value": "alapértelmezett érték",
     "derived": "derivált",
     "detail": "részlet | részletek",
@@ -69,7 +64,10 @@
     "node_types": {
         "class": "osztály",
         "comment": "megjegyzés",
-        "connection": "összekötés",
+        "connection": {
+            "association": "asszociáció",
+            "generalization": "öröklődés"
+        },
         "datatype": "adattípus",
         "enumeration": "enumeration",
         "primitive": "primitív típus",
@@ -86,6 +84,7 @@
     "return_multiplicity": "visszatérési multiplicitás",
     "return_type": "visszatérési típus",
     "reset": "visszaállítás",
+    "reversed": "fordított",
     "save": "mentés",
     "scale": "méretarány",
     "set": "beállítás",

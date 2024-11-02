@@ -14,11 +14,6 @@
         "type": "type",
         "utility": "utility"
     },
-    "connection_types": {
-        "none": "none",
-        "association": "association",
-        "generalization": "generalization"
-    },
     "default_value": "default value",
     "derived": "derived",
     "detail": "detail | details",
@@ -69,7 +64,10 @@
     "node_types": {
         "class": "class",
         "comment": "comment",
-        "connection": "connection",
+        "connection": {
+            "association": "association",
+            "generalization": "generalization"
+        },
         "datatype": "datatype",
         "enumeration": "enumeration",
         "primitive": "primitive type",
@@ -86,6 +84,7 @@
     "return_multiplicity": "return multiplicity",
     "return_type": "return type",
     "reset": "reset",
+    "reversed": "reversed",
     "save": "save",
     "scale": "scale",
     "set": "set",

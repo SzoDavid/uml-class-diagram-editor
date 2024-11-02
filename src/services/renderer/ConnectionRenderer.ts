@@ -2,7 +2,8 @@ import {NodeRenderer} from './NodeRenderer.ts';
 import {Connection} from '../../utils/nodes/connection/Connection.ts';
 import {Point} from '../../utils/types.ts';
 import {ConnectionType} from '../../utils/nodes/types.ts';
-import {LooseConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
+import {ConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
+import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -37,12 +38,12 @@ export class ConnectionRenderer {
         this._nr.ctx.strokeStyle = node.isSelected || node.parts[node.parts.length - 1].isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.stroke();
 
-        if (startPart.startPoint instanceof LooseConnectionPoint) {
-            this.renderDecoratedPoint(startPart.startPoint, node, startPart.angle);
-        }
-
-        if (endPart.endPoint instanceof LooseConnectionPoint) {
-            this.renderDecoratedPoint(endPart.endPoint, node, endPart.angle + Math.PI);
+        if (node instanceof Generalization) {
+            if (node.reversed) {
+                this.renderDecoratedPoint(ConnectionType.GENERALIZATION, startPart.startPoint, node, startPart.angle);
+            } else {
+                this.renderDecoratedPoint(ConnectionType.GENERALIZATION, endPart.endPoint, node, endPart.angle + Math.PI);
+            }
         }
 
         for (const point of node.points) {
@@ -59,8 +60,8 @@ export class ConnectionRenderer {
         this._nr.ctx.fill();
     }
 
-    private renderDecoratedPoint(point: LooseConnectionPoint, connection: Connection, angle: number): void {
-        switch (point.type) {
+    private renderDecoratedPoint(type: ConnectionType, point: ConnectionPoint, connection: Connection, angle: number): void {
+        switch (type) {
             case ConnectionType.GENERALIZATION:
                 this.renderTriangle(
                     point,

@@ -1,5 +1,5 @@
 import {PositionalNode} from '../PositionalNode.ts';
-import {ConnectionType, InvalidNodeParameterCause} from '../types.ts';
+import {InvalidNodeParameterCause} from '../types.ts';
 import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
 import {Point} from '../../types.ts';
@@ -27,11 +27,11 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
     }
 
     isStartPoint(): boolean {
-        return this.parent.parts[0].startPoint === this;
+        return this.parent.startPoint === this;
     }
 
     isEndpoint(): boolean {
-        return this.parent.parts[this.parent.parts.length - 1].endPoint === this;
+        return this.parent.endPoint === this;
     }
 
     remove(): void {
@@ -102,8 +102,7 @@ export class BasicConnectionPoint extends ConnectionPoint {
 export class LooseConnectionPoint extends ConnectionPoint implements Point {
     constructor(
         public node: PositionalNode,
-        parent: Connection,
-        public type: ConnectionType = ConnectionType.NONE
+        parent: Connection
     ) {
         super(node.x + (node.width / 2), node.y + (node.height / 2), parent);
     }
@@ -133,7 +132,6 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
 
     clone(): LooseConnectionPoint {
         const clone = new LooseConnectionPoint(this.node, this.parent);
-        clone.type = this.type;
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
 
@@ -143,7 +141,6 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     copy(node: LooseConnectionPoint): void {
         super.copy(node);
         this.node = node.node;
-        this.type = node.type;
     }
 
     containsDot(x: number, y: number): boolean {
