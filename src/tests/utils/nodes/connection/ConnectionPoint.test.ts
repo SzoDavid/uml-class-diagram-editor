@@ -1,14 +1,14 @@
 import {beforeEach, describe, expect, test, vi} from 'vitest';
 import {GeometryUtils} from '../../../../utils/GeometryUtils.ts';
 import {EditorConstants} from '../../../../utils/constants.ts';
-import {Connection} from '../../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPoint} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
+import {Generalization} from '../../../../utils/nodes/connection/Generalization.ts';
 
 describe('UCDE-ConnectionPoint', () => {
     let connectionPoint: ConnectionPoint;
 
     beforeEach(() => {
-        const connection = new Connection([
+        const connection = new Generalization([
             {x: 0, y: 0},
             {x: 5, y:5}
         ]);

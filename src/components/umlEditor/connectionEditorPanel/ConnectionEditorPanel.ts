@@ -30,9 +30,6 @@ export default defineComponent({
         },
         ConnectionPart() {
             return ConnectionPart;
-        },
-        ConnectionPoint() {
-            return ConnectionPoint;
         }
     },
     props: {

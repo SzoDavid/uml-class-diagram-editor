@@ -9,7 +9,7 @@ export class Generalization extends Connection {
         super(points);
     }
 
-    clone(): Connection {
+    clone(): Generalization {
         const clone = new Generalization([]);
         clone.points = [...this.points];
         clone.parts = [...this.parts];
