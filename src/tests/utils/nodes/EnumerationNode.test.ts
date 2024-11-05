@@ -50,7 +50,7 @@ describe('UCDE-EnumerationNode', () => {
             test.each([
                 { name: '', expectedErrors: [{parameter: 'name', message: 'error.name.required' }]},
                 { name: 'Invalid name!', expectedErrors: [{parameter: 'name', message: 'error.name.alphanumeric' }]}
-            ])('UCDE-PTN-0402 {name: $name}', ({ name, expectedErrors }) => {
+            ])('UCDE-EN-0402 {name: $name}', ({ name, expectedErrors }) => {
                 expect(validateStringKeys(expectedErrors)).toBe(true);
 
                 enumNode.name = name;

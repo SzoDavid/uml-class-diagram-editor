@@ -15,8 +15,8 @@ describe('UCDE-Connection', () => {
         ]); 
     });
     
-    describe('UCDE-G-0100-Constructor', () => {
-        test('UCDE-G-0101 GIVEN valid inputs WHEN creating Connection THEN properties should be set correctly', () => {
+    describe('UCDE-C-0100-Constructor', () => {
+        test('UCDE-C-0101 GIVEN valid inputs WHEN creating Connection THEN properties should be set correctly', () => {
             expect(connection.parts).toHaveLength(2);
             expect(connection.parts[0].startPoint.x).toBe(0);
             expect(connection.parts[0].startPoint.y).toBe(0);
