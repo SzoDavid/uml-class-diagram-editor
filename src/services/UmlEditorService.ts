@@ -20,6 +20,7 @@ import {BasicConnectionPoint, LooseConnectionPoint} from '../utils/nodes/connect
 import {Generalization} from '../utils/nodes/connection/Generalization.ts';
 import {Association} from '../utils/nodes/connection/Association.ts';
 import {Aggregation} from '../utils/nodes/connection/Aggregation.ts';
+import {Composition} from '../utils/nodes/connection/Composition.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -226,6 +227,9 @@ export class UmlEditorService {
                     case NodeType.ASSOCIATION:
                         this.addNode(new Association([startPoint, endPoint]));
                         break;
+                    case NodeType.COMPOSITION:
+                        this.addNode(new Composition([startPoint, endPoint]));
+                        break;
                     case NodeType.GENERALIZATION:
                         this.addNode(new Generalization([startPoint, endPoint]));
                         break;
@@ -425,9 +429,10 @@ export class UmlEditorService {
             case NodeType.COMMENT:
                 node = new CommentNode('...', transformedX, transformedY);
                 break;
-            case NodeType.GENERALIZATION:
             case NodeType.AGGREGATION:
             case NodeType.ASSOCIATION:
+            case NodeType.COMPOSITION:
+            case NodeType.GENERALIZATION:
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;

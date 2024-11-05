@@ -78,6 +78,7 @@
                 <option :value="NodeType.COMMENT">{{ t("node_types.comment") }}</option>
                 <option :value="NodeType.AGGREGATION">{{ t("node_types.connection.aggregation") }}</option>
                 <option :value="NodeType.ASSOCIATION">{{ t("node_types.connection.association") }}</option>
+                <option :value="NodeType.COMPOSITION">{{ t("node_types.connection.composition") }}</option>
                 <option :value="NodeType.GENERALIZATION">{{ t("node_types.connection.generalization") }}</option>
               </select>
               <label for=keepAdding class="capitalized">{{ t("keep_adding") }}</label>

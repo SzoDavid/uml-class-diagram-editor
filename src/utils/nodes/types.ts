@@ -26,6 +26,7 @@ export enum NodeType {
     COMMENT,
     AGGREGATION,
     ASSOCIATION,
+    COMPOSITION,
     GENERALIZATION
 }
 

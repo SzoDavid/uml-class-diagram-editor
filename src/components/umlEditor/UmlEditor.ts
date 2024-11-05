@@ -28,6 +28,7 @@ import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
 import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 import {Association} from '../../utils/nodes/connection/Association.ts';
 import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
+import {Composition} from '../../utils/nodes/connection/Composition.ts';
 
 
 export default {
@@ -123,6 +124,8 @@ export default {
                 } else if (selectedNode.value instanceof Aggregation && data.instance instanceof Aggregation) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof Association && data.instance instanceof Association) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof Composition && data.instance instanceof Composition) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof Generalization && data.instance instanceof Generalization) {
                     selectedNode.value.copy(data.instance);

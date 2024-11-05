@@ -6,6 +6,7 @@ import {Association} from '../../utils/nodes/connection/Association.ts';
 import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
 import {AssociationNavigability} from '../../utils/nodes/types.ts';
 import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
+import {Composition} from '../../utils/nodes/connection/Composition.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -57,71 +58,101 @@ export class ConnectionRenderer {
     }
 
     private renderEndDecorations(connection: Connection, startPart: ConnectionPart, endPart: ConnectionPart): void {
-        if (connection instanceof Generalization) {
-            this.handleGeneralization(connection, startPart, endPart);
-        } else if (connection instanceof Association) {
-            if (connection.showOwnership) {
-                if (connection.reversedOwnership) {
-                    this.renderPoint(startPart.startPoint, false);
-                } else {
-                    this.renderPoint(endPart.endPoint, false);
-                }
-            }
-            switch (connection.startNavigability) {
-                case AssociationNavigability.NAVIGABLE:
-                    this.renderTriangle(
-                        startPart.startPoint,
-                        startPart.angle,
-                        connection.isSelected || startPart.startPoint.isSelected
-                    );
-                    break;
-                case AssociationNavigability.UNNAVIGABLE:
-                    this.renderCross(
-                        startPart.startPoint,
-                        startPart.angle,
-                        connection.isSelected || startPart.startPoint.isSelected
-                    );
-                    break;
-            }
-            switch (connection.endNavigability) {
-                case AssociationNavigability.NAVIGABLE:
-                    this.renderTriangle(
-                        endPart.endPoint,
-                        endPart.angle + Math.PI,
-                        connection.isSelected || endPart.endPoint.isSelected
-                    );
-                    break;
-                case AssociationNavigability.UNNAVIGABLE:
-                    this.renderCross(
-                        endPart.endPoint,
-                        endPart.angle + Math.PI,
-                        connection.isSelected || endPart.endPoint.isSelected
-                    );
-                    break;
-            }
-
-            // TODO: render texts
+        if (connection instanceof Association) {
+            this.handleAssociation(connection, startPart, endPart);
         } else if (connection instanceof Aggregation) {
-            if (connection.isStartShared) {
-                this.renderDiamond(
+            this.handleAggregation(connection, startPart, endPart);
+        } else if (connection instanceof Composition) {
+            this.handleComposition(connection, startPart, endPart);
+        } else if (connection instanceof Generalization) {
+            this.handleGeneralization(connection, startPart, endPart);
+        }
+    }
+
+    private handleAggregation(connection: Aggregation, startPart: ConnectionPart, endPart: ConnectionPart): void {
+        if (connection.isStartShared) {
+            this.renderDiamond(
+                startPart.startPoint,
+                startPart.angle,
+                connection.isSelected || startPart.startPoint.isSelected
+            );
+        }
+        if (connection.isEndShared) {
+            this.renderDiamond(
+                endPart.endPoint,
+                endPart.angle + Math.PI,
+                connection.isSelected || endPart.endPoint.isSelected
+            );
+        }
+
+        // TODO: render texts
+    }
+
+    private handleAssociation(connection: Association, startPart: ConnectionPart, endPart: ConnectionPart): void {
+        if (connection.showOwnership) {
+            if (connection.reversedOwnership) {
+                this.renderPoint(startPart.startPoint, false);
+            } else {
+                this.renderPoint(endPart.endPoint, false);
+            }
+        }
+        switch (connection.startNavigability) {
+            case AssociationNavigability.NAVIGABLE:
+                this.renderTriangle(
                     startPart.startPoint,
                     startPart.angle,
                     connection.isSelected || startPart.startPoint.isSelected
                 );
-            }
-            if (connection.isEndShared) {
-                this.renderDiamond(
+                break;
+            case AssociationNavigability.UNNAVIGABLE:
+                this.renderCross(
+                    startPart.startPoint,
+                    startPart.angle,
+                    connection.isSelected || startPart.startPoint.isSelected
+                );
+                break;
+        }
+        switch (connection.endNavigability) {
+            case AssociationNavigability.NAVIGABLE:
+                this.renderTriangle(
                     endPart.endPoint,
                     endPart.angle + Math.PI,
                     connection.isSelected || endPart.endPoint.isSelected
                 );
-            }
-
-            // TODO: render texts
+                break;
+            case AssociationNavigability.UNNAVIGABLE:
+                this.renderCross(
+                    endPart.endPoint,
+                    endPart.angle + Math.PI,
+                    connection.isSelected || endPart.endPoint.isSelected
+                );
+                break;
         }
+
+        // TODO: render texts
     }
 
-    private handleGeneralization(connection: Generalization, startPart: ConnectionPart, endPart: ConnectionPart) {
+    private handleComposition(connection: Composition, startPart: ConnectionPart, endPart: ConnectionPart): void {
+        if (connection.reversed) {
+            this.renderDiamond(
+                startPart.startPoint,
+                startPart.angle,
+                connection.isSelected || startPart.startPoint.isSelected,
+                true
+            );
+        } else {
+            this.renderDiamond(
+                endPart.endPoint,
+                endPart.angle + Math.PI,
+                connection.isSelected || endPart.endPoint.isSelected,
+                true
+            );
+        }
+
+        // TODO: render texts
+    }
+
+    private handleGeneralization(connection: Generalization, startPart: ConnectionPart, endPart: ConnectionPart): void {
         if (connection.reversed) {
             this.renderFilledTriangle(
                 startPart.startPoint,
@@ -181,10 +212,10 @@ export class ConnectionRenderer {
     private renderDiamond(point: Point, angle: number, isSelected: boolean = false, isFilled: boolean = false): void {
         this._nr.ctx.beginPath();
         this._nr.ctx.moveTo(point.x, point.y);
-        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle + (Math.PI / 8)), point.y + 20 * Math.sin(angle + (Math.PI / 8)));
-        // 36.955 = 2 * 20 * cos(pi/8)
-        this._nr.ctx.lineTo(point.x + 36.955 * Math.cos(angle), point.y + 36.995 * Math.sin(angle));
-        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle - (Math.PI / 8)), point.y + 20 * Math.sin(angle - (Math.PI / 8)));
+        this._nr.ctx.lineTo(point.x + 15 * Math.cos(angle + (Math.PI / 8)), point.y + 15 * Math.sin(angle + (Math.PI / 8)));
+        // 27.716 = 2 * 15 * cos(pi/8)
+        this._nr.ctx.lineTo(point.x + 27.716 * Math.cos(angle), point.y + 27.716 * Math.sin(angle));
+        this._nr.ctx.lineTo(point.x + 15 * Math.cos(angle - (Math.PI / 8)), point.y + 15 * Math.sin(angle - (Math.PI / 8)));
         this._nr.ctx.lineTo(point.x, point.y);
 
         this._nr.ctx.fillStyle = isFilled

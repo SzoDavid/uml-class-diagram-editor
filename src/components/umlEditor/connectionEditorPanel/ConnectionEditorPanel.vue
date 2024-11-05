@@ -19,24 +19,28 @@
     <template v-if="data.instance instanceof ConnectionPart">
       <button @click="breakConnectionPart" class="capitalized">{{ t("add_breakpoint") }}</button>
     </template>
-    <template v-else-if="data.instance instanceof Generalization">
-      <div class="grid-form">
-        <label for="reversed" class="capitalized">{{ t("reversed") }}</label>
-        <input id="reversed" type="checkbox" v-model="data.instance.reversed">
-      </div>
-    </template>
-    <template v-else-if="data.instance instanceof Association || data.instance instanceof Aggregation">
-      <div v-if="data.instance instanceof Association" class="grid-form">
-        <label for="assName" class="capitalized">{{ t("name") }}</label>
-        <input id="assName" type="text" v-model="data.instance.associationName">
+    <template v-else-if="data.instance instanceof Association
+      || data.instance instanceof Aggregation
+      || data.instance instanceof Generalization
+      || data.instance instanceof Composition">
 
-        <label for="showOwnership" class="capitalized">{{ t("show_ownership") }}</label>
-        <input id="showOwnership" type="checkbox" v-model="data.instance.showOwnership">
+      <div v-if="!(data.instance instanceof Aggregation)" class="grid-form">
+        <template v-if="data.instance instanceof Generalization || data.instance instanceof Composition">
+          <label for="reversed" class="capitalized">{{ t("reversed") }}</label>
+          <input id="reversed" type="checkbox" v-model="data.instance.reversed">
+        </template>
+        <template v-else>
+          <label for="assName" class="capitalized">{{ t("name") }}</label>
+          <input id="assName" type="text" v-model="data.instance.associationName">
 
-        <label for="reversedOwnership" class="capitalized">{{ t("reversed") }}</label>
-        <input id="reversedOwnership" type="checkbox" v-model="data.instance.reversedOwnership">
+          <label for="showOwnership" class="capitalized">{{ t("show_ownership") }}</label>
+          <input id="showOwnership" type="checkbox" v-model="data.instance.showOwnership">
+
+          <label for="reversedOwnership" class="capitalized">{{ t("reversed") }}</label>
+          <input id="reversedOwnership" type="checkbox" v-model="data.instance.reversedOwnership">
+        </template>
       </div>
-      <fieldset>
+      <fieldset v-if="!(data.instance instanceof Generalization)">
         <legend class="capitalized">{{ t("start_point") }}</legend>
 
         <div class="grid-form">
@@ -69,7 +73,7 @@
           </div>
         </fieldset>
       </fieldset>
-      <fieldset>
+      <fieldset v-if="!(data.instance instanceof Generalization)">
         <legend class="capitalized">{{ t("end_point") }}</legend>
 
         <div class="grid-form">

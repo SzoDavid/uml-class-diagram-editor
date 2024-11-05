@@ -74,6 +74,7 @@
         "connection": {
             "aggregation": "aggregation",
             "association": "association",
+            "composition": "composition",
             "generalization": "generalization"
         },
         "datatype": "datatype",

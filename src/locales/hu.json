@@ -74,6 +74,7 @@
         "connection": {
             "aggregation": "aggregáció",
             "association": "asszociáció",
+            "composition": "kompozíció",
             "generalization": "öröklődés"
         },
         "datatype": "adattípus",
