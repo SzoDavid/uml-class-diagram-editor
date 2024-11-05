@@ -24,5 +24,14 @@ export enum NodeType {
     PRIMITIVE,
     ENUMERATION,
     COMMENT,
-    CONNECTION
+    AGGREGATION,
+    ASSOCIATION,
+    COMPOSITION,
+    GENERALIZATION
+}
+
+export enum AssociationNavigability {
+    UNSPECIFIED,
+    NAVIGABLE,
+    UNNAVIGABLE
 }

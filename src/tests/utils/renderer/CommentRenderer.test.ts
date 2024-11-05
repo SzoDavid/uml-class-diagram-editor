@@ -1,8 +1,8 @@
 import {beforeEach, describe, vi, test, expect} from 'vitest';
-import {RenderConfiguration} from '../../../utils/renderer/RenderConfiguration.ts';
+import {RenderConfiguration} from '../../../services/renderer/RenderConfiguration.ts';
 import {useSettingsService} from '../../../services/SettingsService.ts';
-import {NodeRenderer} from '../../../utils/renderer/NodeRenderer.ts';
-import {CommentRenderer} from '../../../utils/renderer/CommentRenderer.ts';
+import {NodeRenderer} from '../../../services/renderer/NodeRenderer.ts';
+import {CommentRenderer} from '../../../services/renderer/CommentRenderer.ts';
 import {CommentNode} from '../../../utils/nodes/CommentNode.ts';
 
 describe('UCDE-CommentRenderer', () => {

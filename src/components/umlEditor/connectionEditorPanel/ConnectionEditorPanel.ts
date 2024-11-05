@@ -1,12 +1,18 @@
 import {defineComponent, ref, watch} from 'vue';
 import {ErrorContext, NodeData} from '../../../utils/types.ts';
 import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
+import {AssociationNavigability, InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
 import {findError} from '../../../utils/functions.ts';
 import {Connection} from '../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../../../utils/nodes/connection/ConnectionPart.ts';
-import {ConnectionPoint} from '../../../utils/nodes/connection/ConnectionPoint.ts';
-import {LooseConnectionPoint} from '../../../utils/nodes/connection/LooseConnectionPoint.ts';
+import {
+    BasicConnectionPoint,
+    ConnectionPoint
+} from '../../../utils/nodes/connection/ConnectionPoint.ts';
+import {Generalization} from '../../../utils/nodes/connection/Generalization.ts';
+import {Association} from '../../../utils/nodes/connection/Association.ts';
+import {Aggregation} from '../../../utils/nodes/connection/Aggregation.ts';
+import {Composition} from '../../../utils/nodes/connection/Composition.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>
@@ -19,14 +25,26 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
-        LooseConnectionPoint() {
-            return LooseConnectionPoint;
+        Composition() {
+            return Composition;
+        },
+        Aggregation() {
+            return Aggregation;
+        },
+        AssociationNavigability() {
+            return AssociationNavigability;
+        },
+        Association() {
+            return Association;
+        },
+        Generalization() {
+            return Generalization;
+        },
+        BasicConnectionPoint() {
+            return BasicConnectionPoint;
         },
         ConnectionPart() {
             return ConnectionPart;
-        },
-        ConnectionPoint() {
-            return ConnectionPoint;
         }
     },
     props: {
@@ -66,7 +84,12 @@ export default defineComponent({
                 return;
             }
 
-            data.value.instance.break();
+            try {
+                data.value.instance.break();
+            } catch (e) {
+                console.error(e);
+            }
+
             emit('render');
         };
 

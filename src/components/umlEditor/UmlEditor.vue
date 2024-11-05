@@ -76,9 +76,11 @@
                 <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
                 <option :value="NodeType.ENUMERATION">{{ t("node_types.enumeration") }}</option>
                 <option :value="NodeType.COMMENT">{{ t("node_types.comment") }}</option>
-                <option :value="NodeType.CONNECTION">{{ t("node_types.connection") }}</option>
+                <option :value="NodeType.AGGREGATION">{{ t("node_types.connection.aggregation") }}</option>
+                <option :value="NodeType.ASSOCIATION">{{ t("node_types.connection.association") }}</option>
+                <option :value="NodeType.COMPOSITION">{{ t("node_types.connection.composition") }}</option>
+                <option :value="NodeType.GENERALIZATION">{{ t("node_types.connection.generalization") }}</option>
               </select>
-
               <label for=keepAdding class="capitalized">{{ t("keep_adding") }}</label>
               <input id="keepAdding" type="checkbox" v-model="data.instance.keepAdding">
             </div>

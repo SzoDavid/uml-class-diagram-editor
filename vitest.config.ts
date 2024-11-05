@@ -8,7 +8,7 @@ export default defineConfig({
             provider: 'v8',
             enabled: true,
             reporter: ['html', 'text'],
-            include: ['**/src/components/**', '**/src/utils/**', '**/src/services/**'],
+            include: ['**/src/utils/**', '**/src/services/**'],
             exclude: ['**/tests'],
         }
     },

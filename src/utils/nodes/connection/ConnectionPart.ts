@@ -1,24 +1,29 @@
 import {Node} from '../Node.ts';
-import {ConnectionPoint} from './ConnectionPoint.ts';
+import {BasicConnectionPoint, ConnectionPoint} from './ConnectionPoint.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
 import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
 import {Connection} from './Connection.ts';
-import {BasicConnectionPoint} from './BasicConnectionPoint.ts';
-import {Point} from '../../types.ts';
-import {PositionalNode} from '../PositionalNode.ts';
-import {LooseConnectionPoint} from './LooseConnectionPoint.ts';
 
 export class ConnectionPart extends Node {
-    parent: Connection;
-    startPoint: ConnectionPoint;
-    endPoint: ConnectionPoint;
-
-    constructor(startPoint: Point|PositionalNode, endPoint: Point|PositionalNode, parent: Connection) {
+    constructor(
+        public startIndex: number,
+        public endIndex: number,
+        public parent: Connection
+    ) {
         super();
-        this.parent = parent;
-        this.startPoint = this.parsePoint(startPoint);
-        this.endPoint = this.parsePoint(endPoint);
+    }
+
+    get startPoint(): ConnectionPoint {
+        return this.parent.points[this.startIndex];
+    }
+
+    get endPoint(): ConnectionPoint {
+        return this.parent.points[this.endIndex];
+    }
+
+    get angle(): number {
+        return GeometryUtils.calculateAngleBetweenPoints(this.startPoint, this.endPoint);
     }
 
     validate(): InvalidNodeParameterCause[] {
@@ -26,14 +31,14 @@ export class ConnectionPart extends Node {
     }
 
     clone(): ConnectionPart {
-        const clone = new ConnectionPart(this.startPoint, this.endPoint, this.parent);
+        const clone = new ConnectionPart(this.startIndex, this.endIndex, this.parent);
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
 
         return clone;
     }
 
-    copy(node: ConnectionPart) {
+    copy(node: ConnectionPart): void {
         this.parent = node.parent;
         this.startPoint.copy(node.startPoint);
         this.endPoint.copy(node.endPoint);
@@ -50,31 +55,41 @@ export class ConnectionPart extends Node {
         );
     }
 
-    deselect() {
+    deselect(): void {
         super.deselect();
         this.startPoint.deselect();
         this.endPoint.deselect();
     }
 
-    break() {
+    break(): void {
+        const index = this.parent.parts.findIndex(part => part.startIndex === this.startIndex && part.endIndex === this.endIndex);
+        if (index < 0) throw new Error('Parent doesnt have given part');
+
         const midPoint = new BasicConnectionPoint((this.startPoint.x + this.endPoint.x) / 2,
-                                                  (this.startPoint.y + this.endPoint.y) / 2, this);
+                                                  (this.startPoint.y + this.endPoint.y) / 2, this.parent);
+        const pointIndex = this.parent.points.push(midPoint) - 1;
 
-        const index = this.parent.parts.findIndex(part => part.startPoint === this.startPoint && part.endPoint === this.endPoint);
-
-        const secondHalf = new ConnectionPart(midPoint, this.endPoint, this.parent);
-        this.endPoint = midPoint;
+        const secondHalf = new ConnectionPart(pointIndex, this.endIndex, this.parent);
+        this.endIndex = pointIndex;
 
         this.parent.parts.splice(index, 1, this, secondHalf);
     }
 
-    private parsePoint(point: Point|PositionalNode): ConnectionPoint {
-        if (point instanceof ConnectionPoint) {
-            return point;
+    remove(): void {
+        if (this.endPoint.isEndpoint()) {
+            this.endPoint.remove();
+            return;
         }
-        if (point instanceof PositionalNode) {
-            return new LooseConnectionPoint(point, this);
+
+        if (this.startPoint.isStartPoint()) {
+            this.startPoint.remove();
+            return;
         }
-        return new BasicConnectionPoint(point.x, point.y, this);
+
+        const startPoint = this.startPoint;
+        const endPoint = this.endPoint;
+
+        startPoint.remove();
+        endPoint.remove();
     }
 }

@@ -8,7 +8,7 @@ import PrimitiveEditorPanel from './primitiveEditorPanel/PrimitiveEditorPanel.vu
 import {useSettingsService} from '../../services/SettingsService.ts';
 import {EmitType, UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
 import {DataContext} from '../../utils/types.ts';
-import {Renderer} from '../../utils/renderer/Renderer.ts';
+import {Renderer} from '../../services/renderer/Renderer.ts';
 import {Node} from '../../utils/nodes/Node.ts';
 import {ClassNode} from '../../utils/nodes/classifier/ClassNode.ts';
 import {Property} from '../../utils/nodes/features/Property.ts';
@@ -25,6 +25,10 @@ import {CommentNode} from '../../utils/nodes/CommentNode.ts';
 import {Connection} from '../../utils/nodes/connection/Connection.ts';
 import {ConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
 import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
+import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
+import {Association} from '../../utils/nodes/connection/Association.ts';
+import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
+import {Composition} from '../../utils/nodes/connection/Composition.ts';
 
 
 export default {
@@ -117,7 +121,13 @@ export default {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof CommentNode && data.instance instanceof CommentNode) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof Connection && data.instance instanceof Connection) {
+                } else if (selectedNode.value instanceof Aggregation && data.instance instanceof Aggregation) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof Association && data.instance instanceof Association) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof Composition && data.instance instanceof Composition) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof Generalization && data.instance instanceof Generalization) {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof ConnectionPart && data.instance instanceof ConnectionPart) {
                     selectedNode.value.copy(data.instance);

@@ -1,12 +1,12 @@
 import {describe, test, expect, beforeEach} from 'vitest';
 import {ConnectionPart} from '../../../../utils/nodes/connection/ConnectionPart.ts';
-import {Connection} from '../../../../utils/nodes/connection/Connection.ts';
+import {Generalization} from '../../../../utils/nodes/connection/Generalization.ts';
 
 describe('UCDE-ConnectionPart', () => {
     let connectionPart: ConnectionPart;
 
     beforeEach(() => {
-        const connection = new Connection([
+        const connection = new Generalization([
             {x: 0, y: 0},
             {x: 0, y: 4},
             {x: 4, y: 4}
@@ -43,7 +43,7 @@ describe('UCDE-ConnectionPart', () => {
 
     describe('UCDE-CPA-0400-Copy', () => {
         test('UCDE-CPA-0401 GIVEN another ConnectionPart WHEN copy() THEN copy values correctly', () => {
-            const anotherConnection = new Connection([
+            const anotherConnection = new Generalization([
                 {x: 1, y: 1},
                 {x: 1, y: 2}
             ]);
@@ -75,6 +75,12 @@ describe('UCDE-ConnectionPart', () => {
             expect(connectionPart.parent.parts[2].startPoint.y).toBe(4);
             expect(connectionPart.parent.parts[2].endPoint.x).toBe(4);
             expect(connectionPart.parent.parts[2].endPoint.y).toBe(4);
+        });
+    });
+
+    describe('UCDE-CPA-0600-Angle', () => {
+        test('UCDE-CPA-0601 GIVEN points on the positive Y-axis WHEN get angle is called THEN return Pi/2 radians', () => {
+            expect(connectionPart.angle).toBeCloseTo(Math.PI / 2, 5);
         });
     });
 });

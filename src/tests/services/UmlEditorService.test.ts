@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, test, vi} from 'vitest';
-import {Renderer} from '../../utils/renderer/Renderer.ts';
+import {Renderer} from '../../services/renderer/Renderer.ts';
 import {UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
 import {ClassNode} from '../../utils/nodes/classifier/ClassNode.ts';
 import {NodeType} from '../../utils/nodes/types.ts';

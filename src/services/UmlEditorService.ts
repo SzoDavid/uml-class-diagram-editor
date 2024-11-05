@@ -3,7 +3,7 @@
  */
 import mitt, {Emitter} from 'mitt';
 import {Node} from '../utils/nodes/Node.ts';
-import {Renderer} from '../utils/renderer/Renderer.ts';
+import {Renderer} from './renderer/Renderer.ts';
 import {ClassNode} from '../utils/nodes/classifier/ClassNode.ts';
 import {InterfaceNode} from '../utils/nodes/classifier/InterfaceNode.ts';
 import {DataTypeNode} from '../utils/nodes/classifier/DataTypeNode.ts';
@@ -15,9 +15,12 @@ import {PositionalNode} from '../utils/nodes/PositionalNode.ts';
 import {Connection} from '../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
 import {EditorConstants} from '../utils/constants.ts';
-import {LooseConnectionPoint} from '../utils/nodes/connection/LooseConnectionPoint.ts';
 import {Point} from '../utils/types.ts';
-import {BasicConnectionPoint} from '../utils/nodes/connection/BasicConnectionPoint.ts';
+import {BasicConnectionPoint, LooseConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
+import {Generalization} from '../utils/nodes/connection/Generalization.ts';
+import {Association} from '../utils/nodes/connection/Association.ts';
+import {Aggregation} from '../utils/nodes/connection/Aggregation.ts';
+import {Composition} from '../utils/nodes/connection/Composition.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -190,7 +193,10 @@ export class UmlEditorService {
                 }
                 break;
             case UmlEditorTool.REMOVE:
-                if (!this.handleRemove(offsetX, offsetY)) {
+                if (this.handleRemove(offsetX, offsetY)) {
+                    this.deselectAll();
+                    this._selectedNode = null;
+                } else {
                     this.handlePanning(offsetX, offsetY);
                 }
                 break;
@@ -213,31 +219,44 @@ export class UmlEditorService {
 
                 const startPoint: PositionalNode|Point = nodeAtStart instanceof PositionalNode ? nodeAtStart : {x: this._dragOffsetX, y: this._dragOffsetY};
                 const endPoint: PositionalNode|Point = nodeAtEnd instanceof PositionalNode ? nodeAtEnd : {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY};
-                
-                this.addNode(new Connection([startPoint, endPoint]));
+
+                switch (this.addConfig.type) {
+                    case NodeType.AGGREGATION:
+                        this.addNode(new Aggregation([startPoint, endPoint]));
+                        break;
+                    case NodeType.ASSOCIATION:
+                        this.addNode(new Association([startPoint, endPoint]));
+                        break;
+                    case NodeType.COMPOSITION:
+                        this.addNode(new Composition([startPoint, endPoint]));
+                        break;
+                    case NodeType.GENERALIZATION:
+                        this.addNode(new Generalization([startPoint, endPoint]));
+                        break;
+                    default:
+                        console.error('trying to add a connection but type selected is not one');
+                }
 
                 if (!this.addConfig.keepAdding) {
                     this.tool = UmlEditorTool.EDIT;
                 }
             }
-
-            this.render();
-            return;
-        }
-
-        if (this._selectedNode) {
+        } else if (this._selectedNode) {
             this._selectedNode.isDragging = false;
 
-            if (this._selectedNode instanceof BasicConnectionPoint) {
+            if (
+                this._selectedNode instanceof BasicConnectionPoint
+                && (this._selectedNode.isStartPoint() || this._selectedNode.isEndpoint())
+            ) {
                 const nodeAtPosition = this.getNodeAtPosition(offsetX, offsetY, true);
 
                 if (nodeAtPosition instanceof PositionalNode) {
-                    this._selectedNode = this._selectedNode.convertToLooseConnectionPoint(nodeAtPosition);
+                    this._selectedNode = this._selectedNode.convertToLoosePoint(nodeAtPosition);
                 }
             }
-
-            this.render();
         }
+
+        this.render();
     }
 
     /**
@@ -410,7 +429,10 @@ export class UmlEditorService {
             case NodeType.COMMENT:
                 node = new CommentNode('...', transformedX, transformedY);
                 break;
-            case NodeType.CONNECTION:
+            case NodeType.AGGREGATION:
+            case NodeType.ASSOCIATION:
+            case NodeType.COMPOSITION:
+            case NodeType.GENERALIZATION:
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;
@@ -459,7 +481,7 @@ export class UmlEditorService {
         const transformedY = y / this._scale;
 
         if (this._selectedNode instanceof LooseConnectionPoint) {
-            this._selectedNode = this._selectedNode.convertToBasicPoint(this._selectedNode.displayPoint.x, this._selectedNode.displayPoint.y);
+            this._selectedNode = this._selectedNode.convertToBasicPoint(this._selectedNode.x, this._selectedNode.y);
         }
 
         if (this._selectedNode instanceof PositionalNode) {
@@ -490,32 +512,22 @@ export class UmlEditorService {
                 continue;
             }
 
-            for (const [index, part] of node.parts.entries()) {
-                // If selected node is the last point or part of a connection
-                if (index === node.parts.length - 1 && (part.endPoint.containsDot(transformedX, transformedY) || part.containsDot(transformedX, transformedY))) {
-                    if (node.parts.length === 1) this._nodes.splice(this._nodes.indexOf(node), 1);
-                    else node.parts.splice(index, 1);
+            for (const part of node.parts) {
+                if (part.startPoint.containsDot(transformedX, transformedY)) {
+                    part.startPoint.remove();
+                    if (node.parts.length === 0) this._nodes.splice(i, 1);
                     return true;
                 }
 
-                // If selected node is a point in the middle
                 if (part.endPoint.containsDot(transformedX, transformedY)) {
-                    part.endPoint = node.parts[index + 1].endPoint;
-                    node.parts.splice(index + 1, 1);
+                    part.endPoint.remove();
+                    if (node.parts.length === 0) this._nodes.splice(i, 1);
                     return true;
                 }
 
-                // If selected node is the first point or part of a connection
-                if (index === 0 && (part.startPoint.containsDot(transformedX, transformedY) || part.containsDot(transformedX, transformedY))) {
-                    if (node.parts.length === 1) this._nodes.splice(this._nodes.indexOf(node), 1);
-                    else node.parts.splice(0, 1);
-                    return true;
-                }
-
-                // If selected node is a part in the middle
                 if (part.containsDot(transformedX, transformedY)) {
-                    node.parts[index - 1].endPoint = node.parts[index + 1].endPoint;
-                    node.parts.splice(index, 2);
+                    part.remove();
+                    if (node.parts.length === 0) this._nodes.splice(i, 1);
                     return true;
                 }
             }

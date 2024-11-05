@@ -1,5 +1,5 @@
 import {NodeRenderer} from './NodeRenderer.ts';
-import {CommentNode} from '../nodes/CommentNode.ts';
+import {CommentNode} from '../../utils/nodes/CommentNode.ts';
 
 export class CommentRenderer {
     private _nr: NodeRenderer;

@@ -20,6 +20,7 @@
     "direction": "direction",
     "edit": "edit",
     "editor": "editor",
+    "end_point": "end point",
     "error": {
         "comment_empty": "comment cannot be empty",
         "default_value_alphanumeric": "default value must be alphanumeric",
@@ -60,11 +61,22 @@
     "multiplicity_lower": "lower",
     "multiplicity_upper": "upper",
     "name": "name",
+    "navigability": {
+        "title": "navigability",
+        "unspecified": "unspecified",
+        "navigable": "navigable",
+        "unnavigable": "unnavigable"
+    },
     "navigation": "navigation",
     "node_types": {
         "class": "class",
         "comment": "comment",
-        "connection": "connection",
+        "connection": {
+            "aggregation": "aggregation",
+            "association": "association",
+            "composition": "composition",
+            "generalization": "generalization"
+        },
         "datatype": "datatype",
         "enumeration": "enumeration",
         "primitive": "primitive type",
@@ -81,6 +93,7 @@
     "return_multiplicity": "return multiplicity",
     "return_type": "return type",
     "reset": "reset",
+    "reversed": "reversed",
     "save": "save",
     "scale": "scale",
     "set": "set",
@@ -117,7 +130,10 @@
             "warning": "Change values only if you know what you are doing!"
         }
     },
+    "shared": "shared",
+    "show_ownership": "show ownership",
     "subsets": "subsets",
+    "start_point": "start point",
     "static_type": "static",
     "type": "type",
     "value": "value | values",

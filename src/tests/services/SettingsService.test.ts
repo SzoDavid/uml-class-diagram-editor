@@ -1,5 +1,5 @@
 import {describe, expect, test} from 'vitest';
-import {ClassAbstractionDisplayMode, RenderConfiguration} from '../../utils/renderer/RenderConfiguration.ts';
+import {ClassAbstractionDisplayMode, RenderConfiguration} from '../../services/renderer/RenderConfiguration.ts';
 import {useSettingsService} from '../../services/SettingsService.ts';
 
 describe('UCDE-SettingsService', () => {
@@ -24,7 +24,7 @@ describe('UCDE-SettingsService', () => {
             accentColorInvalid: '#F00',
             accentColorInvalidSelected: '#F06',
             separateObjectParametersWidthLimit: 500,
-            dotSize: 5,
+            dotSize: 4,
             options: {
                 classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
             }

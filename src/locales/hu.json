@@ -20,6 +20,7 @@
     "direction": "irány",
     "edit": "szerkesztés",
     "editor": "szerkesztő",
+    "end_point": "végső pont",
     "error": {
         "comment_empty": "A megjegyzés nem lehet üres",
         "default_value_alphanumeric": "az alapértelmezett értéknek alfanumerikusnak kell lennie",
@@ -60,11 +61,22 @@
     "multiplicity_lower": "felső",
     "multiplicity_upper": "alsó",
     "name": "név",
+    "navigability": {
+        "title": "navigálhatóság",
+        "unspecified": "határozatlan",
+        "navigable": "navigálható",
+        "unnavigable": "navigálhatatlan"
+    },
     "navigation": "navigáció",
     "node_types": {
         "class": "osztály",
         "comment": "megjegyzés",
-        "connection": "összekötés",
+        "connection": {
+            "aggregation": "aggregáció",
+            "association": "asszociáció",
+            "composition": "kompozíció",
+            "generalization": "öröklődés"
+        },
         "datatype": "adattípus",
         "enumeration": "enumeration",
         "primitive": "primitív típus",
@@ -81,6 +93,7 @@
     "return_multiplicity": "visszatérési multiplicitás",
     "return_type": "visszatérési típus",
     "reset": "visszaállítás",
+    "reversed": "fordított",
     "save": "mentés",
     "scale": "méretarány",
     "set": "beállítás",
@@ -117,7 +130,10 @@
             "warning": "Csak akkor változtass értékeket, ha tudod mit csinálsz!"
         }
     },
+    "shared": "megosztott",
+    "show_ownership": "birtoklás mutatása",
     "subsets": "részhalmaza",
+    "start_point": "start pont",
     "static_type": "statikus",
     "type": "típus",
     "value": "érték | értékek",

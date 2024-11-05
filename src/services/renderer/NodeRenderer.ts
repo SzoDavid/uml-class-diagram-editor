@@ -1,12 +1,12 @@
 import {RenderConfiguration} from './RenderConfiguration.ts';
-import {ClassifierNode} from '../nodes/classifier/ClassifierNode.ts';
-import {Node} from '../nodes/Node.ts';
+import {ClassifierNode} from '../../utils/nodes/classifier/ClassifierNode.ts';
+import {Node} from '../../utils/nodes/Node.ts';
 import {ClassifierNodeRenderer} from './ClassifierNodeRenderer.ts';
-import {PrimitiveTypeNode} from '../nodes/PrimitiveTypeNode.ts';
-import {EnumerationNode} from '../nodes/EnumerationNode.ts';
+import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
+import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
 import {CommentRenderer} from './CommentRenderer.ts';
-import {CommentNode} from '../nodes/CommentNode.ts';
-import {Connection} from '../nodes/connection/Connection.ts';
+import {CommentNode} from '../../utils/nodes/CommentNode.ts';
+import {Connection} from '../../utils/nodes/connection/Connection.ts';
 import {ConnectionRenderer} from './ConnectionRenderer.ts';
 
 type TextWeight = 'normal' | 'bold';
