@@ -24,6 +24,7 @@ export enum NodeType {
     PRIMITIVE,
     ENUMERATION,
     COMMENT,
+    AGGREGATION,
     ASSOCIATION,
     GENERALIZATION
 }

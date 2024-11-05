@@ -72,6 +72,7 @@
         "class": "osztály",
         "comment": "megjegyzés",
         "connection": {
+            "aggregation": "aggregáció",
             "association": "asszociáció",
             "generalization": "öröklődés"
         },
@@ -128,6 +129,7 @@
             "warning": "Csak akkor változtass értékeket, ha tudod mit csinálsz!"
         }
     },
+    "shared": "megosztott",
     "show_ownership": "birtoklás mutatása",
     "subsets": "részhalmaza",
     "start_point": "start pont",

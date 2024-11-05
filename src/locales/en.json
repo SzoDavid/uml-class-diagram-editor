@@ -72,6 +72,7 @@
         "class": "class",
         "comment": "comment",
         "connection": {
+            "aggregation": "aggregation",
             "association": "association",
             "generalization": "generalization"
         },
@@ -128,6 +129,7 @@
             "warning": "Change values only if you know what you are doing!"
         }
     },
+    "shared": "shared",
     "show_ownership": "show ownership",
     "subsets": "subsets",
     "start_point": "start point",

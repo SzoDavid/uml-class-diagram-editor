@@ -5,6 +5,7 @@ import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 import {Association} from '../../utils/nodes/connection/Association.ts';
 import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
 import {AssociationNavigability} from '../../utils/nodes/types.ts';
+import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -57,19 +58,7 @@ export class ConnectionRenderer {
 
     private renderEndDecorations(connection: Connection, startPart: ConnectionPart, endPart: ConnectionPart): void {
         if (connection instanceof Generalization) {
-            if (connection.reversed) {
-                this.renderFilledTriangle(
-                    startPart.startPoint,
-                    startPart.angle,
-                    connection.isSelected || startPart.startPoint.isSelected
-                );
-            } else {
-                this.renderFilledTriangle(
-                    endPart.endPoint,
-                    endPart.angle + Math.PI,
-                    connection.isSelected || endPart.endPoint.isSelected
-                );
-            }
+            this.handleGeneralization(connection, startPart, endPart);
         } else if (connection instanceof Association) {
             if (connection.showOwnership) {
                 if (connection.reversedOwnership) {
@@ -112,6 +101,39 @@ export class ConnectionRenderer {
             }
 
             // TODO: render texts
+        } else if (connection instanceof Aggregation) {
+            if (connection.isStartShared) {
+                this.renderDiamond(
+                    startPart.startPoint,
+                    startPart.angle,
+                    connection.isSelected || startPart.startPoint.isSelected
+                );
+            }
+            if (connection.isEndShared) {
+                this.renderDiamond(
+                    endPart.endPoint,
+                    endPart.angle + Math.PI,
+                    connection.isSelected || endPart.endPoint.isSelected
+                );
+            }
+
+            // TODO: render texts
+        }
+    }
+
+    private handleGeneralization(connection: Generalization, startPart: ConnectionPart, endPart: ConnectionPart) {
+        if (connection.reversed) {
+            this.renderFilledTriangle(
+                startPart.startPoint,
+                startPart.angle,
+                connection.isSelected || startPart.startPoint.isSelected
+            );
+        } else {
+            this.renderFilledTriangle(
+                endPart.endPoint,
+                endPart.angle + Math.PI,
+                connection.isSelected || endPart.endPoint.isSelected
+            );
         }
     }
 
@@ -151,6 +173,24 @@ export class ConnectionRenderer {
 
         this._nr.ctx.moveTo(startX + 10 * Math.cos(angle - (Math.PI / 4)), startY + 10 * Math.sin(angle - (Math.PI / 4)));
         this._nr.ctx.lineTo(startX - 10 * Math.cos(angle - (Math.PI / 4)), startY - 10 * Math.sin(angle - (Math.PI / 4)));
+
+        this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
+        this._nr.ctx.stroke();
+    }
+
+    private renderDiamond(point: Point, angle: number, isSelected: boolean = false, isFilled: boolean = false): void {
+        this._nr.ctx.beginPath();
+        this._nr.ctx.moveTo(point.x, point.y);
+        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle + (Math.PI / 8)), point.y + 20 * Math.sin(angle + (Math.PI / 8)));
+        // 36.955 = 2 * 20 * cos(pi/8)
+        this._nr.ctx.lineTo(point.x + 36.955 * Math.cos(angle), point.y + 36.995 * Math.sin(angle));
+        this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle - (Math.PI / 8)), point.y + 20 * Math.sin(angle - (Math.PI / 8)));
+        this._nr.ctx.lineTo(point.x, point.y);
+
+        this._nr.ctx.fillStyle = isFilled
+            ? (isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor)
+            : (isSelected ?  this._nr.rc.fillColorSelected : this._nr.rc.fillColor);
+        this._nr.ctx.fill();
 
         this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.stroke();

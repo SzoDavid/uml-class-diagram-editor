@@ -11,6 +11,7 @@ import {
 } from '../../../utils/nodes/connection/ConnectionPoint.ts';
 import {Generalization} from '../../../utils/nodes/connection/Generalization.ts';
 import {Association} from '../../../utils/nodes/connection/Association.ts';
+import {Aggregation} from '../../../utils/nodes/connection/Aggregation.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>
@@ -23,6 +24,9 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
+        Aggregation() {
+            return Aggregation;
+        },
         AssociationNavigability() {
             return AssociationNavigability;
         },
