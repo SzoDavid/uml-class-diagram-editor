@@ -107,6 +107,70 @@
         </fieldset>
       </fieldset>
     </template>
+    <template v-if="data.instance instanceof ConnectionPoint">
+      <template v-if="data.instance.isStartPoint() && !(data.instance.parent instanceof Generalization)">
+        <div class="grid-form">
+          <label for="startName" class="capitalized">{{ t("name") }}</label>
+          <input id="startName" type="text" v-model="data.instance.parent['startName']">
+
+          <template v-if="data.instance.parent instanceof Aggregation">
+            <label for="startShared" class="capitalized">{{ t("shared") }}</label>
+            <input id="startShared" type="checkbox" v-model="data.instance.parent.isStartShared">
+          </template>
+
+          <template v-if="data.instance.parent instanceof Association">
+            <label for="startNavigability" class="capitalized">{{ t("navigability.title") }}</label>
+            <select id="startNavigability" v-model="data.instance.parent.startNavigability">
+              <option :value="AssociationNavigability.UNSPECIFIED">{{ t("navigability.unspecified") }}</option>
+              <option :value="AssociationNavigability.NAVIGABLE">{{ t("navigability.navigable") }}</option>
+              <option :value="AssociationNavigability.UNNAVIGABLE">{{ t("navigability.unnavigable") }}</option>
+            </select>
+          </template>
+        </div>
+
+        <fieldset>
+          <legend class="capitalized">{{ t("multiplicity") }}</legend>
+          <div class="grid-form">
+            <label for="startMultiUpper" class="capitalized">{{ t("multiplicity_upper") }}</label>
+            <input id="startMultiUpper" type="text" v-model="data.instance.parent['startMultiplicity'].upper">
+
+            <label for="startMultiLower" class="capitalized">{{ t("multiplicity_lower") }}</label>
+            <input id="startMultiLower" type="number" v-model="data.instance.parent['startMultiplicity'].lower">
+          </div>
+        </fieldset>
+      </template>
+      <template v-else-if="data.instance.isEndpoint() && !(data.instance.parent instanceof Generalization)">
+        <div class="grid-form">
+          <label for="endName" class="capitalized">{{ t("name") }}</label>
+          <input id="endName" type="text" v-model="data.instance.parent['endName']">
+
+          <template v-if="data.instance.parent instanceof Aggregation">
+            <label for="endShared" class="capitalized">{{ t("shared") }}</label>
+            <input id="endShared" type="checkbox" v-model="data.instance.parent.isEndShared">
+          </template>
+
+          <template v-if="data.instance.parent instanceof Association">
+            <label for="endNavigability" class="capitalized">{{ t("navigability.title") }}</label>
+            <select id="endNavigability" v-model="data.instance.parent.endNavigability">
+              <option :value="AssociationNavigability.UNSPECIFIED">{{ t("navigability.unspecified") }}</option>
+              <option :value="AssociationNavigability.NAVIGABLE">{{ t("navigability.navigable") }}</option>
+              <option :value="AssociationNavigability.UNNAVIGABLE">{{ t("navigability.unnavigable") }}</option>
+            </select>
+          </template>
+        </div>
+
+        <fieldset>
+          <legend class="capitalized">{{ t("multiplicity") }}</legend>
+          <div class="grid-form">
+            <label for="endMultiUpper" class="capitalized">{{ t("multiplicity_upper") }}</label>
+            <input id="endMultiUpper" type="text" v-model="data.instance.parent['endMultiplicity'].upper">
+
+            <label for="endMultiLower" class="capitalized">{{ t("multiplicity_lower") }}</label>
+            <input id="endMultiLower" type="number" v-model="data.instance.parent['endMultiplicity'].lower">
+          </div>
+        </fieldset>
+      </template>
+    </template>
   </fieldset>
   <button @click="onSave" class="capitalized">{{ t("save") }}</button>
 </template>

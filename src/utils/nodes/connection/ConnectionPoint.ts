@@ -15,6 +15,8 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
     }
 
     copy(node: ConnectionPoint): void {
+        this.x = node.x;
+        this.y = node.y;
         this.parent = node.parent;
     }
 
@@ -27,11 +29,11 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
     }
 
     isStartPoint(): boolean {
-        return this.parent.startPoint === this;
+        return this.parent.startPoint.x === this.x && this.parent.startPoint.y === this.y;
     }
 
     isEndpoint(): boolean {
-        return this.parent.endPoint === this;
+        return this.parent.endPoint.x === this.x && this.parent.endPoint.y === this.y;
     }
 
     remove(): void {
