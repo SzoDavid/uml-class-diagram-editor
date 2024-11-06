@@ -131,19 +131,21 @@ export class NodeRenderer {
         let wDelta = 0;
         let uDelta = 0;
 
-        switch (textAlign) {
-            case 'center':
-                xDelta = (width / 2) + (isTabbed ? this.rc.tabSize : 0);
-                wDelta = -2 * this.rc.lineMargin;
-                uDelta = -1 * this.ctx.measureText(text).width / 2;
-                break;
-            case 'left':
-                xDelta = this.rc.lineMargin + (isTabbed ? this.rc.tabSize : 0);
-                wDelta = -2 * this.rc.lineMargin;
-                break;
+        if (width !== -1) {
+            switch (textAlign) {
+                case 'center':
+                    xDelta = (width / 2) + (isTabbed ? this.rc.tabSize : 0);
+                    wDelta = -2 * this.rc.lineMargin;
+                    uDelta = -1 * this.ctx.measureText(text).width / 2;
+                    break;
+                case 'left':
+                    xDelta = this.rc.lineMargin + (isTabbed ? this.rc.tabSize : 0);
+                    wDelta = -2 * this.rc.lineMargin;
+                    break;
+            }
         }
 
-        this.ctx.fillText(text, x + xDelta, y + (this.rc.lineHeight / 2),  width + wDelta);
+        this.ctx.fillText(text, x + xDelta, y + (this.rc.lineHeight / 2), width !== -1 ? (width + wDelta) : undefined);
 
         if (puc) {
             this.ctx.beginPath();

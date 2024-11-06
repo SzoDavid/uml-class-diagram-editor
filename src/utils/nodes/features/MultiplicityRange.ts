@@ -20,7 +20,7 @@ export class MultiplicityRange implements Feature {
 
     toString(): string {
         if (!this.upper) return '';
-        return `${this.lower ? this.lower + '..' : ''}${this.upper}`;
+        return `${this.lower !== null ? this.lower + '..' : ''}${this.upper}`;
     }
 
     validate(): InvalidNodeParameterCause[] {
