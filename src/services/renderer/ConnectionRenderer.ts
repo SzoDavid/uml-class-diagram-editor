@@ -7,7 +7,7 @@ import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
 import {AssociationNavigability} from '../../utils/nodes/types.ts';
 import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
 import {Composition} from '../../utils/nodes/connection/Composition.ts';
-import {ConnectionPoint, LooseConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
+import {LooseConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
 import {GeometryUtils} from '../../utils/GeometryUtils.ts';
 
 export class ConnectionRenderer {
@@ -133,7 +133,48 @@ export class ConnectionRenderer {
 
         this.renderEndTexts(connection, startPart, endPart);
 
-        // TODO: render name
+        if (!connection.associationName) return;
+
+        if (connection.parts.length % 2 === 1) {
+            const midPart = connection.parts[Math.floor(connection.parts.length / 2)];
+            const midPoint = {
+                x: (midPart.startPoint.x + midPart.endPoint.x) / 2,
+                y: (midPart.startPoint.y + midPart.endPoint.y) / 2,
+            };
+
+            const angle = GeometryUtils.normalizeRadians(midPart.angle);
+            const isSelected = connection.isSelected || midPart.isSelected;
+
+            if ((angle  > Math.PI / 4 && angle < 3 * Math.PI / 4) || (angle > 5 * Math.PI / 4 && angle < 7 * Math.PI / 4)) {
+                this._nr.drawText(
+                    connection.associationName,
+                    midPoint.x + 10,
+                    midPoint.y - (this._nr.rc.lineHeight / 2),
+                    -1,
+                    {isSelected: isSelected, textAlign: 'left'}
+                );
+            } else {
+                this._nr.drawText(
+                    connection.associationName,
+                    midPoint.x,
+                    midPoint.y - (this._nr.rc.lineHeight / 2) - 10,
+                    -1,
+                    {isSelected: isSelected, textAlign: 'center'}
+                );
+            }
+        } else {
+            const midPart = connection.parts[Math.floor(connection.parts.length / 2)];
+            const midPoint = midPart.startPoint;
+            const isSelected = connection.isSelected || midPoint.isSelected;
+
+            this._nr.drawText(
+                connection.associationName,
+                midPoint.x,
+                midPoint.y - (this._nr.rc.lineHeight / 2) - 10,
+                -1,
+                {isSelected: isSelected, textAlign: 'center'}
+            );
+        }
     }
 
     private handleComposition(connection: Composition, startPart: ConnectionPart, endPart: ConnectionPart): void {
@@ -248,7 +289,7 @@ export class ConnectionRenderer {
         );
     }
 
-    private renderEndText(point: ConnectionPoint, textA: string, textB: string, angle: number, isSelected: boolean = false): void {
+    private renderEndText(point: Point, textA: string, textB: string, angle: number, isSelected: boolean = false): void {
         const len = this._nr.rc.lineHeight * Math.sqrt(2);
 
         const coords = {
