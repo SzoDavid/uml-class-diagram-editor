@@ -25,6 +25,9 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
+        ConnectionPoint() {
+            return ConnectionPoint;
+        },
         Composition() {
             return Composition;
         },
