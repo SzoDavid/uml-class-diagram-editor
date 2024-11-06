@@ -108,7 +108,11 @@
       </fieldset>
     </template>
     <template v-if="data.instance instanceof ConnectionPoint">
-      <template v-if="data.instance.isStartPoint() && !(data.instance.parent instanceof Generalization)">
+      <template v-if="data.instance.isStartPoint() && (
+        data.instance.parent instanceof Aggregation ||
+        data.instance.parent instanceof Association ||
+        data.instance.parent instanceof Composition)">
+
         <div class="grid-form">
           <label for="startName" class="capitalized">{{ t("name") }}</label>
           <input id="startName" type="text" v-model="data.instance.parent['startName']">
@@ -139,7 +143,11 @@
           </div>
         </fieldset>
       </template>
-      <template v-else-if="data.instance.isEndpoint() && !(data.instance.parent instanceof Generalization)">
+      <template v-else-if="data.instance.isEndpoint() && (
+        data.instance.parent instanceof Aggregation ||
+        data.instance.parent instanceof Association ||
+        data.instance.parent instanceof Composition)">
+
         <div class="grid-form">
           <label for="endName" class="capitalized">{{ t("name") }}</label>
           <input id="endName" type="text" v-model="data.instance.parent['endName']">
