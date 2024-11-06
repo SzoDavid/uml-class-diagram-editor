@@ -7,6 +7,8 @@ import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
 import {AssociationNavigability} from '../../utils/nodes/types.ts';
 import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
 import {Composition} from '../../utils/nodes/connection/Composition.ts';
+import {ConnectionPoint, LooseConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
+import {GeometryUtils} from '../../utils/GeometryUtils.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -85,7 +87,7 @@ export class ConnectionRenderer {
             );
         }
 
-        // TODO: render texts
+        this.renderEndTexts(connection, startPart, endPart);
     }
 
     private handleAssociation(connection: Association, startPart: ConnectionPart, endPart: ConnectionPart): void {
@@ -129,7 +131,9 @@ export class ConnectionRenderer {
                 break;
         }
 
-        // TODO: render texts
+        this.renderEndTexts(connection, startPart, endPart);
+
+        // TODO: render name
     }
 
     private handleComposition(connection: Composition, startPart: ConnectionPart, endPart: ConnectionPart): void {
@@ -149,7 +153,7 @@ export class ConnectionRenderer {
             );
         }
 
-        // TODO: render texts
+        this.renderEndTexts(connection, startPart, endPart);
     }
 
     private handleGeneralization(connection: Generalization, startPart: ConnectionPart, endPart: ConnectionPart): void {
@@ -225,5 +229,58 @@ export class ConnectionRenderer {
 
         this._nr.ctx.strokeStyle = isSelected ? this._nr.rc.accentColorSelected : this._nr.rc.accentColor;
         this._nr.ctx.stroke();
+    }
+
+    private renderEndTexts(connection: Composition|Aggregation|Association, startPart: ConnectionPart, endPart: ConnectionPart): void {
+        this.renderEndText(
+            startPart.startPoint,
+            connection.startMultiplicity.toString(),
+            connection.startName,
+            startPart.angle,
+            connection.isSelected || startPart.startPoint.isSelected
+        );
+        this.renderEndText(
+            endPart.endPoint,
+            connection.endMultiplicity.toString(),
+            connection.endName,
+            endPart.angle + Math.PI,
+            connection.isSelected || endPart.endPoint.isSelected
+        );
+    }
+
+    private renderEndText(point: ConnectionPoint, textA: string, textB: string, angle: number, isSelected: boolean = false): void {
+        const len = this._nr.rc.lineHeight * Math.sqrt(2);
+
+        const coords = {
+            x: point.x + len * Math.cos(angle),
+            y: point.y + len * Math.sin(angle)
+        };
+
+        angle = GeometryUtils.normalizeRadians(angle);
+
+        if (point instanceof LooseConnectionPoint) {
+            if (point.x === point.node.x || point.x === point.node.x + point.node.width) {
+                this.renderEndTextVertically(coords, 40, textA, textB, isSelected, angle < Math.PI / 2 || angle > 3 * Math.PI / 2);
+            } else {
+                this.renderEndTextHorizontally(coords, 40, textA, textB, isSelected);
+            }
+            return;
+        }
+
+        if ((angle  > Math.PI / 4 && angle < 3 * Math.PI / 4) || (angle > 5 * Math.PI / 4 && angle < 7 * Math.PI / 4)) {
+            this.renderEndTextHorizontally(coords, 40, textA, textB, isSelected);
+        } else {
+            this.renderEndTextVertically(coords, 40, textA, textB, isSelected, angle < Math.PI / 2 || angle > 3 * Math.PI / 2);
+        }
+    }
+
+    private renderEndTextVertically(point: Point, distance: number, topText: string, bottomText: string, isSelected: boolean, alignLeft: boolean): void {
+        if (topText) this._nr.drawText(topText, point.x, point.y - (this._nr.rc.lineHeight / 2) + (distance / 2), -1, {isSelected: isSelected, textAlign: alignLeft ? 'left' : 'right'});
+        if (bottomText) this._nr.drawText(bottomText, point.x, point.y - (this._nr.rc.lineHeight / 2) - (distance / 2), -1, {isSelected: isSelected, textAlign: alignLeft ? 'left' : 'right'});
+    }
+
+    private renderEndTextHorizontally(point: Point, distance: number, rightText: string, leftText: string, isSelected: boolean = false): void {
+        if (leftText) this._nr.drawText(leftText, point.x - (distance / 2), point.y - (this._nr.rc.lineHeight / 2), -1, {isSelected: isSelected, textAlign: 'right'});
+        if (rightText) this._nr.drawText(rightText, point.x + (distance / 2), point.y - (this._nr.rc.lineHeight / 2), -1, {isSelected: isSelected, textAlign: 'left'});
     }
 }

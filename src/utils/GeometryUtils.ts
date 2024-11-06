@@ -102,4 +102,9 @@ export class GeometryUtils {
         // translate secondary to be relative to `origin` and get theta by converting to polar coordinate
         return Math.atan2(secondary.y - origin.y, secondary.x - origin.x);
     }
+
+    static normalizeRadians(radians: number): number {
+        const twoPi = 2 * Math.PI;
+        return ((radians % twoPi) + twoPi) % twoPi;
+    }
 }
