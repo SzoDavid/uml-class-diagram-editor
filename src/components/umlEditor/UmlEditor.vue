@@ -4,18 +4,49 @@
 <template>
   <div class="editor-container">
     <div id="tools">
-      <button @click="onToolSelected(UmlEditorTool.EDIT)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.EDIT}">{{ t("edit") }}</button>
-      <button @click="onToolSelected(UmlEditorTool.MOVE)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.MOVE}">{{ t("move") }}</button>
-      <button @click="onToolSelected(UmlEditorTool.ADD)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.ADD}">{{ t("add") }}</button>
-      <button @click="onToolSelected(UmlEditorTool.REMOVE)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.REMOVE}">{{ t("remove") }}</button>
+      <v-tooltip>
+        {{ t("edit") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.EDIT)"
+                 :class="{ active: tool === UmlEditorTool.EDIT}"
+                 v-bind="props"
+                 icon="mdi-pencil" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
+
+      <v-tooltip>
+        {{ t("move") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.MOVE)"
+                 :class="{ active: tool === UmlEditorTool.MOVE}"
+                 v-bind="props"
+                 icon="mdi-cursor-move" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
+
+      <v-tooltip>
+        {{ t("add") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.ADD)"
+                 :class="{ active: tool === UmlEditorTool.ADD}"
+                 v-bind="props"
+                 icon="mdi-plus" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
+
+      <v-tooltip>
+        {{ t("remove") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.REMOVE)"
+                 :class="{ active: tool === UmlEditorTool.REMOVE}"
+                 v-bind="props"
+                 icon="mdi-delete" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
     </div>
 
-    <div>
-      <canvas ref="umlCanvas" width="800" height="800"
+    <div id="canvas">
+      <canvas ref="umlCanvas"
               :class="{ 'cursor-pointer': tool === UmlEditorTool.EDIT,
                         'cursor-move': tool === UmlEditorTool.MOVE,
                         'cursor-crosshair': tool === UmlEditorTool.ADD || tool === UmlEditorTool.REMOVE}" />

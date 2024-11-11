@@ -16,14 +16,16 @@ function switchLocale(locale: string) {
 </script>
 
 <template>
-  <nav>
-    <button @click="switchLocale('en')">en</button>
-    <button @click="switchLocale('hu')">hu</button>
+  <v-app>
+    <nav>
+      <button @click="switchLocale('en')">en</button>
+      <button @click="switchLocale('hu')">hu</button>
 
-    <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }">{{ t('editor') }}</RouterLink>
-    <RouterLink :to="{ name: 'settings', params: { locale: route.params.locale ?? 'en' } }">{{ t('settings.title') }}</RouterLink>
-  </nav>
-  <RouterView />
+      <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }">{{ t('editor') }}</RouterLink>
+      <RouterLink :to="{ name: 'settings', params: { locale: route.params.locale ?? 'en' } }">{{ t('settings.title') }}</RouterLink>
+    </nav>
+    <RouterView />
+  </v-app>
 </template>
 
 <style scoped>

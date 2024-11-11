@@ -2,7 +2,7 @@ canvas {
     border: 1px solid black;
     width: 100%;
     height: auto;
-    display: block;
+    background-color: #ffffff;
 }
 
 .active {
@@ -29,7 +29,11 @@ canvas {
 .editor-container {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+#canvas {
     width: 100%;
     height: 100%;
 }

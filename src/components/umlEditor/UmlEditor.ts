@@ -72,6 +72,24 @@ export default {
             editor = new UmlEditorService(canvas, new Renderer(canvas, settings.renderer));
             tool.value = editor.tool;
 
+            const resizeCanvas = () => {
+                const { width, height } = canvas.getBoundingClientRect();
+                const scale = window.devicePixelRatio || 1;
+
+                if (canvas.width !== width * scale || canvas.height !== height * scale) {
+                    canvas.width = width * scale;
+                    canvas.height = height * scale;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx?.scale(scale, scale);
+
+                    editor.render();
+                }
+            };
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
             window.addEventListener('keydown', onKeyPress);
 
             editor.emitter.on('mouseDown', (node: EmitType) => {
