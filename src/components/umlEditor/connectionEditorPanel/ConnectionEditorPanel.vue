@@ -108,7 +108,7 @@
       </fieldset>
     </template>
     <template v-if="data.instance instanceof ConnectionPoint">
-      <template v-if="data.instance.isStartPoint() && (
+      <template v-if="data.instance.isStartPoint && (
         data.instance.parent instanceof Aggregation ||
         data.instance.parent instanceof Association ||
         data.instance.parent instanceof Composition)">
@@ -143,7 +143,7 @@
           </div>
         </fieldset>
       </template>
-      <template v-else-if="data.instance.isEndpoint() && (
+      <template v-else-if="data.instance.isEndpoint && (
         data.instance.parent instanceof Aggregation ||
         data.instance.parent instanceof Association ||
         data.instance.parent instanceof Composition)">

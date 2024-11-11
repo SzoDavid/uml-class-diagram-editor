@@ -23,7 +23,11 @@ import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
 import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
 import {CommentNode} from '../../utils/nodes/CommentNode.ts';
 import {Connection} from '../../utils/nodes/connection/Connection.ts';
-import {ConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
+import {
+    BasicConnectionPoint,
+    ConnectionPoint,
+    LooseConnectionPoint
+} from '../../utils/nodes/connection/ConnectionPoint.ts';
 import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
 import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 import {Association} from '../../utils/nodes/connection/Association.ts';
@@ -131,7 +135,9 @@ export default {
                     selectedNode.value.copy(data.instance);
                 } else if (selectedNode.value instanceof ConnectionPart && data.instance instanceof ConnectionPart) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof ConnectionPoint && data.instance instanceof ConnectionPoint) {
+                } else if (selectedNode.value instanceof LooseConnectionPoint && data.instance instanceof LooseConnectionPoint) {
+                    selectedNode.value.copy(data.instance);
+                } else if (selectedNode.value instanceof BasicConnectionPoint && data.instance instanceof BasicConnectionPoint) {
                     selectedNode.value.copy(data.instance);
                 } else {
                     console.error('Not matching node types');

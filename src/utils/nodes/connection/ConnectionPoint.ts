@@ -14,6 +14,14 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
         super(x, y);
     }
 
+    get isStartPoint(): boolean {
+        return this.parent.startPoint.x === this.x && this.parent.startPoint.y === this.y;
+    }
+
+    get isEndpoint(): boolean {
+        return this.parent.endPoint.x === this.x && this.parent.endPoint.y === this.y;
+    }
+
     copy(node: ConnectionPoint): void {
         this.x = node.x;
         this.y = node.y;
@@ -28,27 +36,19 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
         return GeometryUtils.isPointWithinRadius(x, y, this.x, this.y, EditorConstants.maxClickDistance);
     }
 
-    isStartPoint(): boolean {
-        return this.parent.startPoint.x === this.x && this.parent.startPoint.y === this.y;
-    }
-
-    isEndpoint(): boolean {
-        return this.parent.endPoint.x === this.x && this.parent.endPoint.y === this.y;
-    }
-
     remove(): void {
         const index = this.parent.points.indexOf(this);
         if (index < 0) throw new Error('Parent doesnt have given point');
 
         let found = false;
 
-        if (this.isEndpoint()) {
+        if (this.isEndpoint) {
             this.parent.parts.splice(this.parent.parts.length - 1, 1);
             if (this.parent.parts.length === 0) return;
             found = true;
         }
 
-        if (this.isStartPoint()) {
+        if (this.isStartPoint) {
             this.parent.parts.splice(0, 1);
             found = true;
         }
@@ -110,7 +110,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     }
 
     get x(): number {
-        const otherPoint = this.isStartPoint()
+        const otherPoint = this.isStartPoint
             ? this.parent.parts[0].endPoint
             : this.parent.parts[this.parent.parts.length - 1].startPoint;
 
@@ -118,7 +118,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     }
 
     get y(): number {
-        const otherPoint = this.isStartPoint()
+        const otherPoint = this.isStartPoint
             ? this.parent.parts[0].endPoint
             : this.parent.parts[this.parent.parts.length - 1].startPoint;
 
@@ -132,6 +132,18 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
         };
     }
 
+    get isStartPoint(): boolean {
+        return this.parent.startPoint instanceof LooseConnectionPoint
+            && this.parent.startPoint.snappingPoint.x === this.snappingPoint.x
+            && this.parent.startPoint.snappingPoint.y === this.snappingPoint.y;
+    }
+
+    get isEndpoint(): boolean {
+        return this.parent.endPoint instanceof LooseConnectionPoint
+            && this.parent.endPoint.snappingPoint.x === this.snappingPoint.x
+            && this.parent.endPoint.snappingPoint.y === this.snappingPoint.y;
+    }
+
     clone(): LooseConnectionPoint {
         const clone = new LooseConnectionPoint(this.node, this.parent);
         clone.isSelected = this.isSelected;
@@ -141,7 +153,7 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     }
 
     copy(node: LooseConnectionPoint): void {
-        super.copy(node);
+        this.parent = node.parent;
         this.node = node.node;
     }
 

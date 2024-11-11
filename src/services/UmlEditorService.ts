@@ -246,7 +246,7 @@ export class UmlEditorService {
 
             if (
                 this._selectedNode instanceof BasicConnectionPoint
-                && (this._selectedNode.isStartPoint() || this._selectedNode.isEndpoint())
+                && (this._selectedNode.isStartPoint || this._selectedNode.isEndpoint)
             ) {
                 const nodeAtPosition = this.getNodeAtPosition(offsetX, offsetY, true);
 
