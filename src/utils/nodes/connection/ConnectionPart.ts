@@ -76,12 +76,12 @@ export class ConnectionPart extends Node {
     }
 
     remove(): void {
-        if (this.endPoint.isEndpoint()) {
+        if (this.endPoint.isEndpoint) {
             this.endPoint.remove();
             return;
         }
 
-        if (this.startPoint.isStartPoint()) {
+        if (this.startPoint.isStartPoint) {
             this.startPoint.remove();
             return;
         }
