@@ -2,25 +2,18 @@
 <style scoped src="./CommentEditorPanel.css"/>
 
 <template>
-  <fieldset>
-    <legend class="capitalized">{{ t("appearance") }}</legend>
-    <div class="grid-form">
-      <label for="x">x</label>
-      <input id="x" type="number" v-model="data.instance.x">
-
-      <label for="y">y</label>
-      <input id="y" type="number" v-model="data.instance.y">
-
-      <label for="width" class="capitalized">{{ t("width") }}</label>
-      <input id="width" type="number" v-model="data.instance.width">
-    </div>
-  </fieldset>
-  <fieldset>
-    <legend class="capitalized">{{ t("detail", 2) }}</legend>
-    <label for="text" class="capitalized">{{ t("node_types.comment") }}</label>
-    <textarea id="text" type="text" v-model="data.instance.text"></textarea>
-    <span v-if="getError({parameter: 'text'})" class="error capitalized">{{ t(getError({parameter: 'text'})) }}</span>
-  </fieldset>
-
-  <button @click="onSave" class="capitalized">{{ t("save") }}</button>
+  <v-expansion-panel :title="t('appearance')">
+    <v-expansion-panel-text>
+      <v-text-field label="x" v-model="data.instance.x" type="number"></v-text-field>
+      <v-text-field label="y" v-model="data.instance.y" type="number"></v-text-field>
+      <v-text-field :label="t('width')" v-model="data.instance.width" type="number"></v-text-field>
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-expansion-panel :title="t('detail', 2)">
+    <v-expansion-panel-text>
+      <v-textarea :label="t('node_types.comment')" v-model="data.instance.text"></v-textarea>
+      <span v-if="getError({parameter: 'text'})" class="error capitalized">{{ t(getError({parameter: 'text'})) }}</span>
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-btn @click="onSave">{{ t("save") }}</v-btn>
 </template>

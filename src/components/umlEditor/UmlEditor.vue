@@ -53,71 +53,65 @@
     </div>
 
     <div id="editor">
-      <fieldset>
-        <legend class="capitalized">{{ t("navigation") }}</legend>
+      <v-expansion-panels variant="accordion">
+        <v-expansion-panel :title="t('navigation')">
+          <v-expansion-panel-text>
+            <v-text-field
+              :label="t('scale')"
+              v-model="scale"
+              type="number"></v-text-field>
 
-        <div class="grid-form" style="margin-bottom: 5px">
-          <label for="scale" class="capitalized">{{ t("scale") }}</label>
-          <input id="scale" type="number" v-model="scale">
-        </div>
-        <div class="half-half-grid">
-          <button @click="onScaleSet" class="capitalized">{{ t("set") }}</button>
-          <button @click="onScaleReset" class="capitalized">{{ t("reset") }}</button>
-        </div>
-      </fieldset>
+            <div class="half-half-grid">
+              <v-btn @click="onScaleSet">{{ t('set') }}</v-btn>
+              <v-btn @click="onScaleReset">{{ t('reset') }}</v-btn>
+            </div>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
 
-      <template v-if="data !== null && 'instance' in data && 'type' in data">
-        <template v-if="data.type==='classifier'">
-          <ClassifierEditorPanel :classifierData="data" @save="onSave" />
+        <template v-if="data !== null && 'instance' in data && 'type' in data">
+          <template v-if="data.type==='classifier'">
+            <ClassifierEditorPanel :classifierData="data" @save="onSave" />
+          </template>
+          <template v-else-if="data.type==='primitive'">
+            <PrimitiveEditorPanel :primitiveData="data" @save="onSave" />
+          </template>
+          <template v-else-if="data.type==='enumeration'">
+            <EnumerationEditorPanel :enumerationData="data" @save="onSave" />
+          </template>
+          <template v-else-if="data.type==='comment'">
+            <CommentEditorPanel :commentData="data" @save="onSave" />
+          </template>
+          <template v-else-if="data.type==='connection'">
+            <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
+          </template>
+          <template v-else-if="data.type==='editor'">
+            <v-expansion-panel :title="t('option', 2)">
+              <v-expansion-panel-text>
+                <v-select :label="t('grid_size')" v-model="data.instance.gridSize" :items="[0, 25, 50]"></v-select>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </template>
+          <template v-else-if="data.type==='addOption'">
+            <v-expansion-panel :title="t('option', 2)">
+              <v-expansion-panel-text>
+                <v-select :label="t('type')" v-model="data.instance.type" :items="[
+                  {title: t('node_types.class'), value: NodeType.CLASS},
+                  {title: t('node_types.interface'), value: NodeType.INTERFACE},
+                  {title: t('node_types.datatype'), value: NodeType.DATATYPE},
+                  {title: t('node_types.primitive'), value: NodeType.PRIMITIVE},
+                  {title: t('node_types.enumeration'), value: NodeType.ENUMERATION},
+                  {title: t('node_types.comment'), value: NodeType.COMMENT},
+                  {title: t('node_types.connection.aggregation'), value: NodeType.AGGREGATION},
+                  {title: t('node_types.connection.association'), value: NodeType.ASSOCIATION},
+                  {title: t('node_types.connection.composition'), value: NodeType.COMPOSITION},
+                  {title: t('node_types.connection.generalization'), value: NodeType.GENERALIZATION},
+                ]"></v-select>
+                <v-checkbox :label="t('keep_adding')" v-model="data.instance.keepAdding"></v-checkbox>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </template>
         </template>
-        <template v-else-if="data.type==='primitive'">
-          <PrimitiveEditorPanel :primitiveData="data" @save="onSave" />
-        </template>
-        <template v-else-if="data.type==='enumeration'">
-          <EnumerationEditorPanel :enumerationData="data" @save="onSave" />
-        </template>
-        <template v-else-if="data.type==='comment'">
-          <CommentEditorPanel :commentData="data" @save="onSave" />
-        </template>
-        <template v-else-if="data.type==='connection'">
-          <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
-        </template>
-        <template v-else-if="data.type==='editor'">
-          <fieldset>
-            <legend class="capitalized">{{ t("option", 2) }}</legend>
-            <div class="grid-form">
-              <label for="gridSize" class="capitalized">{{ t("grid_size") }}</label>
-              <select id="gridSize" v-model="data.instance.gridSize">
-                <option :value="0">0</option>
-                <option :value="25">25</option>
-                <option :value="50">50</option>
-              </select>
-            </div>
-          </fieldset>
-        </template>
-        <template v-else-if="data.type==='addOption'">
-          <fieldset>
-            <legend class="capitalized">{{ t("option", 2) }}</legend>
-            <div class="grid-form">
-              <label for="addOption" class="capitalized">{{ t("type") }}</label>
-              <select id="addOption" v-model="data.instance.type">
-                <option :value="NodeType.CLASS" selected>{{ t("node_types.class") }}</option>
-                <option :value="NodeType.INTERFACE">{{ t("node_types.interface") }}</option>
-                <option :value="NodeType.DATATYPE">{{ t("node_types.datatype") }}</option>
-                <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
-                <option :value="NodeType.ENUMERATION">{{ t("node_types.enumeration") }}</option>
-                <option :value="NodeType.COMMENT">{{ t("node_types.comment") }}</option>
-                <option :value="NodeType.AGGREGATION">{{ t("node_types.connection.aggregation") }}</option>
-                <option :value="NodeType.ASSOCIATION">{{ t("node_types.connection.association") }}</option>
-                <option :value="NodeType.COMPOSITION">{{ t("node_types.connection.composition") }}</option>
-                <option :value="NodeType.GENERALIZATION">{{ t("node_types.connection.generalization") }}</option>
-              </select>
-              <label for=keepAdding class="capitalized">{{ t("keep_adding") }}</label>
-              <input id="keepAdding" type="checkbox" v-model="data.instance.keepAdding">
-            </div>
-          </fieldset>
-        </template>
-      </template>
+      </v-expansion-panels>
     </div>
   </div>
 </template>

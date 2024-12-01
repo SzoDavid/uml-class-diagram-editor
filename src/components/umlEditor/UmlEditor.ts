@@ -87,7 +87,7 @@ export default {
                 }
             };
 
-            window.addEventListener('resize', resizeCanvas);
+            canvas.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
             window.addEventListener('keydown', onKeyPress);
