@@ -60,6 +60,9 @@ export default {
         const data = ref<DataContext<Node>>(null);
         const tool = ref<UmlEditorTool|null>(null);
         const scale = ref<number>(100);
+        const canvasWidth = ref(1100);
+        const editorWidth = ref(100);
+        const isResizing = ref(false);
         let editor: UmlEditorService;
 
         onMounted(() => {
@@ -72,23 +75,15 @@ export default {
             editor = new UmlEditorService(canvas, new Renderer(canvas, settings.renderer));
             tool.value = editor.tool;
 
-            const resizeCanvas = () => {
-                const { width, height } = canvas.getBoundingClientRect();
-                const scale = window.devicePixelRatio || 1;
+            window.addEventListener('resize', () => {
+                const titleBar = document.querySelector('#nav-bar');
+                const titleBarHeight = titleBar?.clientHeight || 0;
 
-                if (canvas.width !== width * scale || canvas.height !== height * scale) {
-                    canvas.width = width * scale;
-                    canvas.height = height * scale;
+                document.documentElement.style.setProperty('--title-bar-height', `${titleBarHeight}px`);
 
-                    const ctx = canvas.getContext('2d');
-                    ctx?.scale(scale, scale);
-
-                    editor.render();
-                }
-            };
-
-            canvas.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
+                resizeCanvas(canvas);
+            });
+            resizeCanvas(canvas);
 
             window.addEventListener('keydown', onKeyPress);
 
@@ -117,6 +112,53 @@ export default {
             editor.addNode(new InterfaceNode('InterfaceB', 400, 200, [], [new Operation('operationB', [new Parameter('param', 'type')])]));
             editor.addNode(new EnumerationNode('EnumerationC', 70, 250, ['VALUE_A', 'VALUE_B']));
         });
+
+        const resizeCanvas = (canvas: HTMLCanvasElement) => {
+            const container = canvas.parentElement!;
+            const { width, height } = container.getBoundingClientRect();
+            const scale = window.devicePixelRatio || 1;
+
+            if (canvas.width !== width * scale || canvas.height !== height * scale) {
+                canvas.width = width * scale;
+                canvas.height = height * scale;
+
+                const ctx = canvas.getContext('2d');
+                ctx?.scale(scale, scale);
+
+                editor.render();
+            }
+        };
+
+        const startResize = (event: MouseEvent) => {
+            isResizing.value = true;
+            const startX = event.clientX;
+            const startCanvasWidth = canvasWidth.value;
+            const startEditorWidth = editorWidth.value;
+
+            const onMouseMove = (moveEvent: MouseEvent) => {
+                if (isResizing.value) {
+                    if (umlCanvas.value === null) {
+                        console.error('UmlEditorService can\'t be mounted');
+                        return;
+                    }
+
+                    const delta = moveEvent.clientX - startX;
+                    canvasWidth.value = Math.max(200, startCanvasWidth + delta);
+                    editorWidth.value = Math.max(200, startEditorWidth - delta);
+
+                    resizeCanvas(umlCanvas.value);
+                }
+            };
+
+            const onMouseUp = () => {
+                isResizing.value = false;
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+            };
+
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+        };
 
         const onSave = (data: DataContext<Node>) => {
             if (selectedNode.value === null || data === null) {
@@ -264,6 +306,9 @@ export default {
             data,
             scale,
             tool,
+            canvasWidth,
+            editorWidth,
+            startResize,
             onSave,
             onToolSelected,
             onScaleSet,

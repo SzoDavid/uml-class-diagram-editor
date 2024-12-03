@@ -17,23 +17,37 @@ function switchLocale(locale: string) {
 
 <template>
   <v-app>
-    <nav>
-      <button @click="switchLocale('en')">en</button>
-      <button @click="switchLocale('hu')">hu</button>
+    <nav id="nav-bar">
+      <v-toolbar density="compact">
+        <button @click="switchLocale('en')">en</button>
+        <button @click="switchLocale('hu')">hu</button>
 
-      <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }">{{ t('editor') }}</RouterLink>
-      <RouterLink :to="{ name: 'settings', params: { locale: route.params.locale ?? 'en' } }">{{ t('settings.title') }}</RouterLink>
+        <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }">{{ t('editor') }}</RouterLink>
+        <RouterLink :to="{ name: 'settings', params: { locale: route.params.locale ?? 'en' } }">{{ t('settings.title') }}</RouterLink>
+      </v-toolbar>
     </nav>
     <RouterView />
   </v-app>
 </template>
 
 <style scoped>
-nav {
-  margin-bottom: 15px;
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
-nav * {
-  margin-right: 10px;
+#nav-bar {
+  position: fixed; /* Make it stay on top of the content */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  z-index: 1000;
+  background-color: black; /* TODO */
+}
+
+#nav-bar * {
+  padding-left: 10px;
 }
 </style>

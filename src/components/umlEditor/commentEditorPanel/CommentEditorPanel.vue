@@ -16,5 +16,5 @@
                   :rules="[() => t(getError({parameter: 'text'})) ?? true]"/>
     </v-expansion-panel-text>
   </v-expansion-panel>
-  <v-btn @click="onSave">{{ t("save") }}</v-btn>
+  <v-btn block @click="onSave">{{ t("save") }}</v-btn>
 </template>

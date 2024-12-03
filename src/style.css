@@ -15,3 +15,7 @@ html, body {
 .capitalized:first-letter {
     text-transform: uppercase;
 }
+
+.v-btn {
+    text-transform:none !important;
+}

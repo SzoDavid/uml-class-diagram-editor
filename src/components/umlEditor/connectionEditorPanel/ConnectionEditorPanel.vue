@@ -40,7 +40,7 @@
           || data.instance instanceof Composition">
 
           <!-- Start point -->
-          <v-card :title="t('start_point')" variant="outlined">
+          <v-card :title="t('start_point')" variant="tonal">
             <v-card-text>
               <v-text-field :label="t('name')"
                             v-model="data.instance.startName"
@@ -58,22 +58,24 @@
                 ]" />
               </template>
 
-              <v-card :title="t('multiplicity')" variant="outlined">
-                <v-text-field :label="t('multiplicity_upper')"
-                              v-model="data.instance.startMultiplicity.upper"
-                              :rules="[() => t(getError({parameter: 'startMultiplicity', child: {parameter: 'upper'}})) ?? true]"
-                              type="text" />
+              <v-card :title="t('multiplicity')" variant="tonal">
+                <v-card-text>
+                  <v-text-field :label="t('multiplicity_upper')"
+                                v-model="data.instance.startMultiplicity.upper"
+                                :rules="[() => t(getError({parameter: 'startMultiplicity', child: {parameter: 'upper'}})) ?? true]"
+                                type="text" />
 
-                <v-text-field :label="t('multiplicity_lower')"
-                              v-model="data.instance.startMultiplicity.lower"
-                              :rules="[() => t(getError({parameter: 'startMultiplicity', child: {parameter: 'lower'}})) ?? true]"
-                              type="number" />
+                  <v-text-field :label="t('multiplicity_lower')"
+                                v-model="data.instance.startMultiplicity.lower"
+                                :rules="[() => t(getError({parameter: 'startMultiplicity', child: {parameter: 'lower'}})) ?? true]"
+                                type="number" />
+                </v-card-text>
               </v-card>
             </v-card-text>
           </v-card>
 
           <!-- End point -->
-          <v-card :title="t('end_point')" variant="outlined">
+          <v-card :title="t('end_point')" variant="tonal">
             <v-card-text>
               <v-text-field :label="t('name')"
                             v-model="data.instance.endName"
@@ -91,16 +93,18 @@
                 ]" />
               </template>
 
-              <v-card :title="t('multiplicity')" variant="outlined">
-                <v-text-field :label="t('multiplicity_upper')"
-                              v-model="data.instance.endMultiplicity.upper"
-                              :rules="[() => t(getError({parameter: 'endMultiplicity', child: {parameter: 'upper'}})) ?? true]"
-                              type="text" />
+              <v-card :title="t('multiplicity')" variant="tonal">
+                <v-card-text>
+                  <v-text-field :label="t('multiplicity_upper')"
+                                v-model="data.instance.endMultiplicity.upper"
+                                :rules="[() => t(getError({parameter: 'endMultiplicity', child: {parameter: 'upper'}})) ?? true]"
+                                type="text" />
 
-                <v-text-field :label="t('multiplicity_lower')"
-                              v-model="data.instance.endMultiplicity.lower"
-                              :rules="[() => t(getError({parameter: 'endMultiplicity', child: {parameter: 'lower'}})) ?? true]"
-                              type="number" />
+                  <v-text-field :label="t('multiplicity_lower')"
+                                v-model="data.instance.endMultiplicity.lower"
+                                :rules="[() => t(getError({parameter: 'endMultiplicity', child: {parameter: 'lower'}})) ?? true]"
+                                type="number" />
+                </v-card-text>
               </v-card>
             </v-card-text>
           </v-card>
@@ -175,5 +179,5 @@
       </template>
     </v-expansion-panel-text>
   </v-expansion-panel>
-  <v-btn @click="onSave">{{ t("save") }}</v-btn>
+  <v-btn block @click="onSave">{{ t("save") }}</v-btn>
 </template>

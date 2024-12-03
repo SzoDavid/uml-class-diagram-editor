@@ -20,8 +20,8 @@
                  icon="mdi-close" rounded="0" />
         </template>
       </div>
-      <v-btn @click="addValue" icon="mdi-plus" rounded="0"></v-btn>
+      <v-btn block @click="addValue" icon="mdi-plus" rounded="0"></v-btn>
     </v-expansion-panel-text>
   </v-expansion-panel>
-  <v-btn @click="onSave">{{ t("save") }}</v-btn>
+  <v-btn block @click="onSave">{{ t("save") }}</v-btn>
 </template>

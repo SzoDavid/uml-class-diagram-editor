@@ -1,3 +1,11 @@
 #editor input {
     width: 100%;
 }
+
+.v-card {
+    margin-bottom: 5px;
+}
+
+.v-btn {
+    margin: 5px;
+}
