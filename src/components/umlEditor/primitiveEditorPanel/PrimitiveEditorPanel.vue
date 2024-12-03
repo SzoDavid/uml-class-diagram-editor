@@ -2,25 +2,19 @@
 <style scoped src="./PrimitiveEditorPanel.css" />
 
 <template>
-  <fieldset>
-    <legend class="capitalized">{{ t("appearance") }}</legend>
-    <div class="grid-form">
-      <label for="x">x</label>
-      <input id="x" type="number" v-model="data.instance.x">
-
-      <label for="y">y</label>
-      <input id="y" type="number" v-model="data.instance.y">
-    </div>
-  </fieldset>
-  <fieldset>
-    <legend class="capitalized">{{ t("detail", 2) }}</legend>
-    <div class="grid-form">
-      <label for="className" class="capitalized">{{ t("name") }}</label>
-      <input id="className" type="text" v-model="data.instance.name">
-      <span v-if="getError({parameter: 'name'})" class="error capitalized" style="grid-column: span 2;">{{ t(getError({parameter: 'name'})) }}</span>
-    </div>
-  </fieldset>
-
-  <button @click="onSave" class="capitalized">{{ t("save") }}</button>
+  <v-expansion-panel :title="t('appearance')">
+    <v-expansion-panel-text>
+      <v-text-field label="x" v-model="data.instance.x" type="number" />
+      <v-text-field label="y" v-model="data.instance.y" type="number" />
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-expansion-panel :title="t('detail', 2)">
+    <v-expansion-panel-text>
+      <v-text-field :label="t('name')"
+                    v-model="data.instance.name"
+                    :rules="[() => t(getError({parameter: 'name'})) ?? true]"
+                    type="text" />
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-btn @click="onSave">{{ t("save") }}</v-btn>
 </template>
-

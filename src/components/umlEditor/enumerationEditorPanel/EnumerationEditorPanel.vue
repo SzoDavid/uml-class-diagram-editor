@@ -2,30 +2,26 @@
 <style scoped src="./EnumerationEditorPanel.css" />
 
 <template>
-  <fieldset>
-    <legend class="capitalized">{{ t("appearance") }}</legend>
-    <div class="grid-form">
-      <label for="x">x</label>
-      <input id="x" type="number" v-model="data.instance.x">
-
-      <label for="y">y</label>
-      <input id="y" type="number" v-model="data.instance.y">
-    </div>
-  </fieldset>
-  <fieldset>
-    <legend class="capitalized">{{ t("value", 2) }}</legend>
-    <div class="list-form">
-      <template v-for="(_, index) in data.instance.values" :key="index">
-        <input :id="`value${index}`" type="text" v-model="data.instance.values[index]">
-        <button @click="removeValue(index)">-</button>
-        <span v-if="getError({parameter: 'values', index: index})"
-              class="error capitalized" style="grid-column: span 2;">
-          {{ t(getError({parameter: 'values', index: index})) }}
-        </span>
-      </template>
-    </div>
-    <button @click="addValue" class="capitalized">{{ t("add") }}</button>
-  </fieldset>
-
-  <button @click="onSave" class="capitalized">{{ t("save") }}</button>
+  <v-expansion-panel :title="t('appearance')">
+    <v-expansion-panel-text>
+      <v-text-field label="x" v-model="data.instance.x" type="number" />
+      <v-text-field label="y" v-model="data.instance.y" type="number" />
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-expansion-panel :title="t('value', 2)">
+    <v-expansion-panel-text>
+      <div class="list-form">
+        <template v-for="(_, index) in data.instance.values" :key="index">
+          <v-text-field :label="`${t('value')} ${index + 1}`"
+                        v-model="data.instance.values[index]"
+                        :rules="[() => t(getError({parameter: 'values', index: index})) ?? true]"
+                        type="text" />
+          <v-btn @click="removeValue(index)"
+                 icon="mdi-close" rounded="0" />
+        </template>
+      </div>
+      <v-btn @click="addValue" icon="mdi-plus" rounded="0"></v-btn>
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-btn @click="onSave">{{ t("save") }}</v-btn>
 </template>

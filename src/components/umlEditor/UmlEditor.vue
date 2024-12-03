@@ -59,7 +59,7 @@
             <v-text-field
               :label="t('scale')"
               v-model="scale"
-              type="number"></v-text-field>
+              type="number" />
 
             <div class="half-half-grid">
               <v-btn @click="onScaleSet">{{ t('set') }}</v-btn>
@@ -87,7 +87,7 @@
           <template v-else-if="data.type==='editor'">
             <v-expansion-panel :title="t('option', 2)">
               <v-expansion-panel-text>
-                <v-select :label="t('grid_size')" v-model="data.instance.gridSize" :items="[0, 25, 50]"></v-select>
+                <v-select :label="t('grid_size')" v-model="data.instance.gridSize" :items="[0, 25, 50]" />
               </v-expansion-panel-text>
             </v-expansion-panel>
           </template>
@@ -95,18 +95,18 @@
             <v-expansion-panel :title="t('option', 2)">
               <v-expansion-panel-text>
                 <v-select :label="t('type')" v-model="data.instance.type" :items="[
-                  {title: t('node_types.class'), value: NodeType.CLASS},
-                  {title: t('node_types.interface'), value: NodeType.INTERFACE},
-                  {title: t('node_types.datatype'), value: NodeType.DATATYPE},
-                  {title: t('node_types.primitive'), value: NodeType.PRIMITIVE},
-                  {title: t('node_types.enumeration'), value: NodeType.ENUMERATION},
-                  {title: t('node_types.comment'), value: NodeType.COMMENT},
-                  {title: t('node_types.connection.aggregation'), value: NodeType.AGGREGATION},
-                  {title: t('node_types.connection.association'), value: NodeType.ASSOCIATION},
-                  {title: t('node_types.connection.composition'), value: NodeType.COMPOSITION},
-                  {title: t('node_types.connection.generalization'), value: NodeType.GENERALIZATION},
-                ]"></v-select>
-                <v-checkbox :label="t('keep_adding')" v-model="data.instance.keepAdding"></v-checkbox>
+                  { title: t('node_types.class'), value: NodeType.CLASS },
+                  { title: t('node_types.interface'), value: NodeType.INTERFACE },
+                  { title: t('node_types.datatype'), value: NodeType.DATATYPE },
+                  { title: t('node_types.primitive'), value: NodeType.PRIMITIVE },
+                  { title: t('node_types.enumeration'), value: NodeType.ENUMERATION },
+                  { title: t('node_types.comment'), value: NodeType.COMMENT },
+                  { title: t('node_types.connection.aggregation'), value: NodeType.AGGREGATION },
+                  { title: t('node_types.connection.association'), value: NodeType.ASSOCIATION },
+                  { title: t('node_types.connection.composition'), value: NodeType.COMPOSITION },
+                  { title: t('node_types.connection.generalization'), value: NodeType.GENERALIZATION },
+                ]" />
+                <v-checkbox :label="t('keep_adding')" v-model="data.instance.keepAdding" />
               </v-expansion-panel-text>
             </v-expansion-panel>
           </template>

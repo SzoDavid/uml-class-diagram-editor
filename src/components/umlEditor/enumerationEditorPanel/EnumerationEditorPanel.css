@@ -1,29 +1,10 @@
-.grid-form {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 5px 5px;
-    align-items: center;
-}
-
 .list-form {
     display: grid;
     grid-template-columns: 9fr 1fr;
     gap: 5px 5px;
-    align-items: center;
-}
-
-.sep {
-    border-bottom: 1px solid gray;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
+    align-items: stretch;
 }
 
 #editor input {
     width: 100%;
-}
-
-.error {
-    margin-left: 10px;
-    margin-bottom: 2px;
-    color: red;
 }
