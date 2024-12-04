@@ -26,3 +26,7 @@ p {
 .underlined {
     text-decoration: underline;
 }
+
+.v-expansion-panels {
+    margin-bottom: 5px;
+}

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import {useRoute, useRouter} from 'vue-router';
-import {useI18n} from 'vue-i18n';
-
-const { t } = useI18n();
+import { version } from '../package.json';
 
 // Get the current locale from the route
 const route = useRoute();
 const router = useRouter();
+
 
 function switchLocale(locale: string) {
     if (route.params.locale) {
@@ -19,7 +18,7 @@ function switchLocale(locale: string) {
   <v-app>
     <nav id="nav-bar">
       <v-toolbar density="compact">
-        <v-toolbar-title>UCDE</v-toolbar-title>
+        <v-toolbar-title><strong>UCDE</strong> v{{ version }}</v-toolbar-title>
 
         <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }" custom>
           <template #default="{ navigate }">
