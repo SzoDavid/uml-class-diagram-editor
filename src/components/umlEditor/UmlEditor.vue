@@ -4,89 +4,119 @@
 <template>
   <div class="editor-container">
     <div id="tools">
-      <button @click="onToolSelected(UmlEditorTool.EDIT)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.EDIT}">{{ t("edit") }}</button>
-      <button @click="onToolSelected(UmlEditorTool.MOVE)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.MOVE}">{{ t("move") }}</button>
-      <button @click="onToolSelected(UmlEditorTool.ADD)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.ADD}">{{ t("add") }}</button>
-      <button @click="onToolSelected(UmlEditorTool.REMOVE)" class="capitalized"
-              :class="{ active: tool === UmlEditorTool.REMOVE}">{{ t("remove") }}</button>
+      <v-tooltip>
+        {{ t("edit") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.EDIT)"
+                 :class="{ active: tool === UmlEditorTool.EDIT}"
+                 v-bind="props"
+                 icon="mdi-pencil" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
+
+      <v-tooltip>
+        {{ t("move") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.MOVE)"
+                 :class="{ active: tool === UmlEditorTool.MOVE}"
+                 v-bind="props"
+                 icon="mdi-cursor-move" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
+
+      <v-tooltip>
+        {{ t("add") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.ADD)"
+                 :class="{ active: tool === UmlEditorTool.ADD}"
+                 v-bind="props"
+                 icon="mdi-plus" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
+
+      <v-tooltip>
+        {{ t("remove") }}
+        <template v-slot:activator="{ props }">
+          <v-btn @click="onToolSelected(UmlEditorTool.REMOVE)"
+                 :class="{ active: tool === UmlEditorTool.REMOVE}"
+                 v-bind="props"
+                 icon="mdi-delete" density="comfortable" rounded="0" />
+        </template>
+      </v-tooltip>
     </div>
 
-    <div>
-      <canvas ref="umlCanvas" width="800" height="800"
-              :class="{ 'cursor-pointer': tool === UmlEditorTool.EDIT,
-                        'cursor-move': tool === UmlEditorTool.MOVE,
-                        'cursor-crosshair': tool === UmlEditorTool.ADD || tool === UmlEditorTool.REMOVE}" />
-    </div>
+    <div id="main-container">
+      <div id="canvas" :style="{ flex: canvasWidth + 'px' }">
+        <canvas ref="umlCanvas"
+                :class="{ 'cursor-pointer': tool === UmlEditorTool.EDIT,
+                          'cursor-move': tool === UmlEditorTool.MOVE,
+                          'cursor-crosshair': tool === UmlEditorTool.ADD || tool === UmlEditorTool.REMOVE}" />
+      </div>
 
-    <div id="editor">
-      <fieldset>
-        <legend class="capitalized">{{ t("navigation") }}</legend>
+      <div id="divider" @mousedown="startResize"></div>
 
-        <div class="grid-form" style="margin-bottom: 5px">
-          <label for="scale" class="capitalized">{{ t("scale") }}</label>
-          <input id="scale" type="number" v-model="scale">
-        </div>
-        <div class="half-half-grid">
-          <button @click="onScaleSet" class="capitalized">{{ t("set") }}</button>
-          <button @click="onScaleReset" class="capitalized">{{ t("reset") }}</button>
-        </div>
-      </fieldset>
+      <div id="editor" :style="{ flex: editorWidth + 'px' }">
+        <v-expansion-panels variant="accordion" multiple>
+          <v-expansion-panel :title="t('navigation')">
+            <v-expansion-panel-text>
+              <v-text-field
+                :label="t('scale')"
+                v-model="scale"
+                density="comfortable"
+                type="number" />
 
-      <template v-if="data !== null && 'instance' in data && 'type' in data">
-        <template v-if="data.type==='classifier'">
-          <ClassifierEditorPanel :classifierData="data" @save="onSave" />
-        </template>
-        <template v-else-if="data.type==='primitive'">
-          <PrimitiveEditorPanel :primitiveData="data" @save="onSave" />
-        </template>
-        <template v-else-if="data.type==='enumeration'">
-          <EnumerationEditorPanel :enumerationData="data" @save="onSave" />
-        </template>
-        <template v-else-if="data.type==='comment'">
-          <CommentEditorPanel :commentData="data" @save="onSave" />
-        </template>
-        <template v-else-if="data.type==='connection'">
-          <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
-        </template>
-        <template v-else-if="data.type==='editor'">
-          <fieldset>
-            <legend class="capitalized">{{ t("option", 2) }}</legend>
-            <div class="grid-form">
-              <label for="gridSize" class="capitalized">{{ t("grid_size") }}</label>
-              <select id="gridSize" v-model="data.instance.gridSize">
-                <option :value="0">0</option>
-                <option :value="25">25</option>
-                <option :value="50">50</option>
-              </select>
-            </div>
-          </fieldset>
-        </template>
-        <template v-else-if="data.type==='addOption'">
-          <fieldset>
-            <legend class="capitalized">{{ t("option", 2) }}</legend>
-            <div class="grid-form">
-              <label for="addOption" class="capitalized">{{ t("type") }}</label>
-              <select id="addOption" v-model="data.instance.type">
-                <option :value="NodeType.CLASS" selected>{{ t("node_types.class") }}</option>
-                <option :value="NodeType.INTERFACE">{{ t("node_types.interface") }}</option>
-                <option :value="NodeType.DATATYPE">{{ t("node_types.datatype") }}</option>
-                <option :value="NodeType.PRIMITIVE">{{ t("node_types.primitive") }}</option>
-                <option :value="NodeType.ENUMERATION">{{ t("node_types.enumeration") }}</option>
-                <option :value="NodeType.COMMENT">{{ t("node_types.comment") }}</option>
-                <option :value="NodeType.AGGREGATION">{{ t("node_types.connection.aggregation") }}</option>
-                <option :value="NodeType.ASSOCIATION">{{ t("node_types.connection.association") }}</option>
-                <option :value="NodeType.COMPOSITION">{{ t("node_types.connection.composition") }}</option>
-                <option :value="NodeType.GENERALIZATION">{{ t("node_types.connection.generalization") }}</option>
-              </select>
-              <label for=keepAdding class="capitalized">{{ t("keep_adding") }}</label>
-              <input id="keepAdding" type="checkbox" v-model="data.instance.keepAdding">
-            </div>
-          </fieldset>
-        </template>
-      </template>
+              <div class="half-half-grid">
+                <v-btn density="comfortable" @click="onScaleSet">{{ t('set') }}</v-btn>
+                <v-btn density="comfortable" @click="onScaleReset">{{ t('reset') }}</v-btn>
+              </div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <template v-if="data !== null && 'instance' in data && 'type' in data">
+            <template v-if="data.type==='classifier'">
+              <ClassifierEditorPanel :classifierData="data" @save="onSave" />
+            </template>
+            <template v-else-if="data.type==='primitive'">
+              <PrimitiveEditorPanel :primitiveData="data" @save="onSave" />
+            </template>
+            <template v-else-if="data.type==='enumeration'">
+              <EnumerationEditorPanel :enumerationData="data" @save="onSave" />
+            </template>
+            <template v-else-if="data.type==='comment'">
+              <CommentEditorPanel :commentData="data" @save="onSave" />
+            </template>
+            <template v-else-if="data.type==='connection'">
+              <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
+            </template>
+            <template v-else-if="data.type==='editor'">
+              <v-expansion-panel :title="t('option', 2)">
+                <v-expansion-panel-text>
+                  <v-select :label="t('grid_size')" v-model="data.instance.gridSize" density="comfortable" :items="[0, 25, 50]" />
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </template>
+            <template v-else-if="data.type==='addOption'">
+              <v-expansion-panel :title="t('option', 2)">
+                <v-expansion-panel-text>
+                  <v-select :label="t('type')" v-model="data.instance.type" density="comfortable" :items="[
+                    { title: t('node_types.class'), value: NodeType.CLASS },
+                    { title: t('node_types.interface'), value: NodeType.INTERFACE },
+                    { title: t('node_types.datatype'), value: NodeType.DATATYPE },
+                    { title: t('node_types.primitive'), value: NodeType.PRIMITIVE },
+                    { title: t('node_types.enumeration'), value: NodeType.ENUMERATION },
+                    { title: t('node_types.comment'), value: NodeType.COMMENT },
+                    { title: t('node_types.connection.aggregation'), value: NodeType.AGGREGATION },
+                    { title: t('node_types.connection.association'), value: NodeType.ASSOCIATION },
+                    { title: t('node_types.connection.composition'), value: NodeType.COMPOSITION },
+                    { title: t('node_types.connection.generalization'), value: NodeType.GENERALIZATION },
+                  ]" />
+                  <v-checkbox density="compact" :label="t('keep_adding')" v-model="data.instance.keepAdding" />
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </template>
+          </template>
+        </v-expansion-panels>
+      </div>
     </div>
   </div>
 </template>

@@ -5,10 +5,7 @@ import {AssociationNavigability, InvalidNodeParameterCause} from '../../../utils
 import {findError} from '../../../utils/functions.ts';
 import {Connection} from '../../../utils/nodes/connection/Connection.ts';
 import {ConnectionPart} from '../../../utils/nodes/connection/ConnectionPart.ts';
-import {
-    BasicConnectionPoint,
-    ConnectionPoint
-} from '../../../utils/nodes/connection/ConnectionPoint.ts';
+import {BasicConnectionPoint, ConnectionPoint} from '../../../utils/nodes/connection/ConnectionPoint.ts';
 import {Generalization} from '../../../utils/nodes/connection/Generalization.ts';
 import {Association} from '../../../utils/nodes/connection/Association.ts';
 import {Aggregation} from '../../../utils/nodes/connection/Aggregation.ts';
@@ -97,9 +94,12 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'connection') return '';
+            if (data.value === null || data.value.type !== 'connection') return null;
 
-            return findError(errors, context);
+            const error = findError(errors, context);
+
+            if (!error) return null;
+            return t(error);
         };
         const onSave = () => {
             emit('save', data.value as NodeData<Connection | ConnectionPart | ConnectionPoint>);

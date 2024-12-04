@@ -140,9 +140,12 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'classifier') return '';
+            if (data.value === null || data.value.type !== 'classifier') return null;
 
-            return findError(errors, context);
+            const error = findError(errors, context);
+
+            if (!error) return null;
+            return t(error);
         };
 
         return {

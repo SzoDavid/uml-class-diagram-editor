@@ -1,12 +1,11 @@
 canvas {
-    border: 1px solid black;
     width: 100%;
-    height: auto;
-    display: block;
+    height: 100%;
+    background-color: #ffffff;
 }
 
 .active {
-    background-color: gray;
+    background-color: #66F;
 }
 
 .rm {
@@ -28,13 +27,48 @@ canvas {
 
 .editor-container {
     display: flex;
+    padding-top: 48px;
     flex-direction: row;
-    gap: 20px;
     width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#main-container {
+    display: flex;
+    flex: 1;
     height: 100%;
+    overflow: hidden;
+}
+
+#canvas {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 100%;
+    background-color: white;
+    overflow: hidden;
+}
+
+#divider {
+    width: 5px;
+    cursor: col-resize;
+    background-color: #ccc;
+}
+
+#divider:hover {
+    background-color: #999;
+}
+
+#editor {
+    overflow-y: auto;
 }
 
 #tools {
+    position: fixed;
+    top: 48px;
+    left: 0;
     display: flex;
     flex-direction: column;
 }
@@ -55,4 +89,8 @@ canvas {
 
 #editor input[type=checkbox] {
     width: fit-content;
+}
+
+#editor .v-btn {
+    background-color: #66F;
 }
