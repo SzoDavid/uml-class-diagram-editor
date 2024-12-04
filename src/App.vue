@@ -18,23 +18,22 @@ function switchLocale(locale: string) {
   <v-app>
     <nav id="nav-bar">
       <v-toolbar density="compact">
-        <v-toolbar-title><strong>UCDE</strong> v{{ version }}</v-toolbar-title>
+        <v-toolbar-title><strong>UCDE</strong> <span style="font-size: small">v{{ version }}</span></v-toolbar-title>
 
         <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }" custom>
           <template #default="{ navigate }">
-            <v-btn @click="navigate">*filename*</v-btn>
+            <v-btn @click="navigate" rounded="xl">*filename*</v-btn>
           </template>
         </RouterLink>
 
         <v-spacer />
 
-        <v-btn icon="mdi-content-save" rounded="0" density="comfortable"></v-btn>
-        <v-btn icon="mdi-import" rounded="0" density="comfortable"></v-btn>
+        <v-btn icon="mdi-content-save" density="comfortable"></v-btn>
+        <v-btn icon="mdi-import" density="comfortable"></v-btn>
 
-        <v-menu>
+        <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
             <v-btn icon="mdi-translate"
-                   rounded="0"
                    density="comfortable"
                    v-bind="props" />
           </template>
@@ -52,7 +51,7 @@ function switchLocale(locale: string) {
 
         <RouterLink :to="{ name: 'settings', params: { locale: route.params.locale ?? 'en' } }" custom>
           <template #default="{ navigate }">
-            <v-btn icon="mdi-cog" rounded="0" @click="navigate" density="comfortable" />
+            <v-btn icon="mdi-cog" @click="navigate" density="comfortable" />
           </template>
         </RouterLink>
       </v-toolbar>
