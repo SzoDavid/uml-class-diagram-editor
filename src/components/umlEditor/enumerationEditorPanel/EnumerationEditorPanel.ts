@@ -54,9 +54,12 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'enumeration') return '';
+            if (data.value === null || data.value.type !== 'enumeration') return null;
 
-            return findError(errors, context);
+            const error = findError(errors, context);
+
+            if (!error) return null;
+            return t(error);
         };
 
         const onSave = () => {

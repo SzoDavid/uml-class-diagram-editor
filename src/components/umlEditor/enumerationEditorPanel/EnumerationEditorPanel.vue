@@ -8,13 +8,22 @@
       <v-text-field label="y" v-model="data.instance.y" type="number" density="comfortable" />
     </v-expansion-panel-text>
   </v-expansion-panel>
+  <v-expansion-panel :title="t('detail', 2)">
+    <v-expansion-panel-text>
+      <v-text-field :label="t('name')"
+                    v-model="data.instance.name"
+                    :rules="[() => getError({parameter: 'name'}) ?? true]"
+                    density="comfortable"
+                    type="text" />
+    </v-expansion-panel-text>
+  </v-expansion-panel>
   <v-expansion-panel :title="t('value', 2)">
     <v-expansion-panel-text>
       <div class="list-form">
         <template v-for="(_, index) in data.instance.values" :key="index">
           <v-text-field :label="`${t('value')} ${index + 1}`"
                         v-model="data.instance.values[index]"
-                        :rules="[() => t(getError({parameter: 'values', index: index})) ?? true]"
+                        :rules="[() => getError({parameter: 'values', index: index}) ?? true]"
                         density="comfortable"
                         type="text" />
           <v-btn class="rm-btn" density="comfortable" @click="removeValue(index)"

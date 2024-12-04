@@ -13,7 +13,7 @@
     <v-expansion-panel-text>
       <v-textarea :label="t('node_types.comment')"
                   v-model="data.instance.text"
-                  :rules="[() => t(getError({parameter: 'text'})) ?? true]"/>
+                  :rules="[() => getError({parameter: 'text'}) ?? true]"/>
     </v-expansion-panel-text>
   </v-expansion-panel>
   <v-btn block @click="onSave">{{ t("save") }}</v-btn>

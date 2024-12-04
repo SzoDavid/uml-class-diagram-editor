@@ -12,7 +12,7 @@
     <v-expansion-panel-text>
       <v-text-field :label="t('name')"
                     v-model="data.instance.name"
-                    :rules="[() => t(getError({parameter: 'name'})) ?? true]"
+                    :rules="[() => getError({parameter: 'name'}) ?? true]"
                     density="comfortable"
                     type="text" />
 
@@ -35,7 +35,7 @@
     <v-expansion-panel-text>
       <v-expansion-panels multiple>
         <v-expansion-panel :id="`property${index}`" v-for="(prop, index) in data.instance.properties" :key="index">
-          <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'properties', index: index}) }">
+          <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'properties', index: index}) !== null }">
             <span>{{ prop.prefix }}</span>
             <span :class="{underlined: prop.isStatic}">{{ prop.text }}</span>
             <span>{{ prop.postfix }}</span>
@@ -53,19 +53,19 @@
 
             <v-text-field :label="t('name')"
                           v-model="prop.name"
-                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'name'}})) ?? true]"
+                          :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'name'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
             <v-text-field :label="t('type')"
                           v-model="prop.type"
-                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'type'}})) ?? true]"
+                          :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'type'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
             <v-text-field :label="t('default_value')"
                           v-model="prop.defaultValue"
-                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}})) ?? true]"
+                          :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
@@ -77,13 +77,13 @@
 
             <v-text-field :label="t('redefines')"
                           v-model="prop.redefines"
-                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'redefines'}})) ?? true]"
+                          :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'redefines'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
             <v-text-field :label="t('subsets')"
                           v-model="prop.subsets"
-                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'subsets'}})) ?? true]"
+                          :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'subsets'}}) ?? true]"
                           density="comfortable"
                           type="text" />
             
@@ -100,15 +100,15 @@
               <v-card-text>
                 <v-text-field :label="t('multiplicity_upper')"
                               v-model="prop.multiplicity.upper"
-                              :rules="[() => t(getError({ parameter: 'properties', index: index, child:
-                                { parameter: 'multiplicity', child: { parameter: 'upper' }}})) ?? true]"
+                              :rules="[() => getError({ parameter: 'properties', index: index, child:
+                                { parameter: 'multiplicity', child: { parameter: 'upper' }}}) ?? true]"
                               density="comfortable"
                               type="text" />
 
                 <v-text-field :label="t('multiplicity_lower')"
                               v-model="prop.multiplicity.lower"
-                              :rules="[() => t(getError({ parameter: 'properties', index: index, child:
-                                { parameter: 'multiplicity', child: { parameter: 'upper' }}})) ?? true]"
+                              :rules="[() => getError({ parameter: 'properties', index: index, child:
+                                { parameter: 'multiplicity', child: { parameter: 'upper' }}}) ?? true]"
                               density="comfortable"
                               type="number" />
               </v-card-text>
@@ -128,12 +128,48 @@
     <v-expansion-panel-text>
       <v-expansion-panels multiple>
         <v-expansion-panel :id="`operation${index}`" v-for="(operation, index) in data.instance.operations" :key="index">
-          <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'operations', index: index}) }">
+          <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'operations', index: index}) !== null }">
             <span>{{ operation.prefix }}</span>
             <span :class="{underlined: operation.isStatic}">{{ operation.text }}</span>
             <span>{{ operation.postfix }}</span>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
+            <template v-if="!(data.instance instanceof DataTypeNode)">
+              <v-select :label="t('visibility.name')" v-model="operation.visibility" density="comfortable" :items="[
+                { title: '--', value: null },
+                { title: t('visibility.public'), value: Visibility.PUBLIC },
+                { title: t('visibility.private'), value: Visibility.PRIVATE },
+                { title: t('visibility.protected'), value: Visibility.PROTECTED },
+                { title: t('visibility.package'), value: Visibility.PACKAGE }
+              ]" />
+            </template>
+
+            <v-text-field :label="t('name')"
+                          v-model="operation.name"
+                          :rules="[() => getError({parameter: 'operations', index: index, child: {parameter: 'name'}}) ?? true]"
+                          density="comfortable"
+                          type="text" />
+
+            <v-text-field :label="t('return_type')"
+                          v-model="operation.returnType"
+                          :rules="[() => getError({parameter: 'operations', index: index, child: {parameter: 'returnType'}}) ?? true]"
+                          density="comfortable"
+                          type="text" />
+
+            <template v-if="data.instance instanceof ClassNode && data.instance.stereotype !== ClassStereotype.UTILITY">
+              <v-checkbox density="compact" :label="t('static_type')" v-model="operation.isStatic" />
+
+              <v-checkbox :label="t('abstract')"
+                          v-model="operation.isAbstract"
+                          :rules="[() => getError({parameter:'operations', index:index, child:{parameter:'isAbstract'}}) ?? true]"
+                          density="compact" />
+
+              <v-text-field :label="t('redefines')"
+                            v-model="operation.redefines"
+                            :rules="[() => getError({parameter: 'operations', index: index, child: {parameter: 'redefines'}}) ?? true]"
+                            density="comfortable"
+                            type="text" />
+            </template>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -156,45 +192,6 @@
 
         <div class="details sep">
           <div class="grid-form">
-            <template v-if="!(data.instance instanceof DataTypeNode)">
-              <label :for="`operationVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
-              <select :id="`operationVisibility${index}`" v-model="operation.visibility">
-                <option :value="null">--</option>
-                <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
-                <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
-                <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
-                <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
-              </select>
-            </template>
-
-            <label :for="`operationName${index}`" class="capitalized">{{ t("name") }}</label>
-            <input :id="`operationName${index}`" type="text" v-model="operation.name">
-            <span v-if="getError({parameter: 'operations', index: index, child: {parameter:'name'}})"
-                  class="error capitalized" style="grid-column: span 2;">
-              {{ t(getError({parameter: 'operations', index: index, child: {parameter:'name'} })) }}
-            </span>
-
-            <label :for="`operationReturnType${index}`" class="capitalized">{{ t("return_type") }}</label>
-            <input :id="`operationReturnType${index}`" type="text" v-model="operation.returnType">
-            <span v-if="getError({parameter:'operations', index:index, child:{parameter:'returnType'}})"
-                  class="error capitalized" style="grid-column: span 2;">
-              {{ t(getError({parameter:'operations', index:index, child:{parameter:'returnType'} })) }}
-            </span>
-
-            <template v-if="data.instance instanceof ClassNode && data.instance.stereotype !== ClassStereotype.UTILITY">
-              <label :for="`operationStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
-              <input type="checkbox" :id="`operationStatic${index}`" v-model="operation.isStatic">
-
-              <label :for="`operationAbstract${index}`" class="capitalized">{{ t("abstract") }}</label>
-              <input :id="`operationAbstract${index}`" type="checkbox" v-model="operation.isAbstract">
-              <span v-if="getError({parameter:'operations', index:index, child:{parameter:'isAbstract'}})"
-                    class="error capitalized" style="grid-column: span 2;">
-                {{ t(getError({parameter:'operations', index:index, child:{parameter:'isAbstract'} })) }}
-              </span>
-            </template>
-
-            <label :for="`operationRedefines${index}`" class="capitalized">{{ t("redefines") }}</label>
-            <input :id="`operationRedefines${index}`" type="text" v-model="operation.redefines">
 
             <label :for="`operationProperties${index}`" class="capitalized">{{ t("property", 2) }}</label>
             <select :id="`operationProperties${index}`" v-model="operation.properties" multiple>

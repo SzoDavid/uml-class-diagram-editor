@@ -12,7 +12,7 @@
     <v-expansion-panel-text>
       <v-text-field :label="t('name')"
                     v-model="data.instance.name"
-                    :rules="[() => t(getError({parameter: 'name'})) ?? true]"
+                    :rules="[() => getError({parameter: 'name'}) ?? true]"
                     density="comfortable"
                     type="text" />
     </v-expansion-panel-text>

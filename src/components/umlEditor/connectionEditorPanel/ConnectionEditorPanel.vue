@@ -27,7 +27,7 @@
         <template v-else-if="data.instance instanceof Association">
           <v-text-field :label="t('name')"
                         v-model="data.instance.associationName"
-                        :rules="[() => t(getError({parameter: 'associationName'})) ?? true]"
+                        :rules="[() => getError({parameter: 'associationName'}) ?? true]"
                         density="comfortable"
                         type="text" />
 
@@ -45,7 +45,7 @@
               <v-expansion-panel-text>
                 <v-text-field :label="t('name')"
                               v-model="data.instance.startName"
-                              :rules="[() => t(getError({parameter: 'startName'})) ?? true]"
+                              :rules="[() => getError({parameter: 'startName'}) ?? true]"
                               density="comfortable"
                               type="text" />
 
@@ -64,13 +64,13 @@
                   <v-card-text>
                     <v-text-field :label="t('multiplicity_upper')"
                                   v-model="data.instance.startMultiplicity.upper"
-                                  :rules="[() => t(getError({parameter: 'startMultiplicity', child: {parameter: 'upper'}})) ?? true]"
+                                  :rules="[() => getError({parameter: 'startMultiplicity', child: {parameter: 'upper'}}) ?? true]"
                                   density="comfortable"
                                   type="text" />
 
                     <v-text-field :label="t('multiplicity_lower')"
                                   v-model="data.instance.startMultiplicity.lower"
-                                  :rules="[() => t(getError({parameter: 'startMultiplicity', child: {parameter: 'lower'}})) ?? true]"
+                                  :rules="[() => getError({parameter: 'startMultiplicity', child: {parameter: 'lower'}}) ?? true]"
                                   density="comfortable"
                                   type="number" />
                   </v-card-text>
@@ -81,7 +81,7 @@
               <v-expansion-panel-text>
                 <v-text-field :label="t('name')"
                               v-model="data.instance.endName"
-                              :rules="[() => t(getError({parameter: 'endName'})) ?? true]"
+                              :rules="[() => getError({parameter: 'endName'}) ?? true]"
                               density="comfortable"
                               type="text" />
 
@@ -100,13 +100,13 @@
                   <v-card-text>
                     <v-text-field :label="t('multiplicity_upper')"
                                   v-model="data.instance.endMultiplicity.upper"
-                                  :rules="[() => t(getError({parameter: 'endMultiplicity', child: {parameter: 'upper'}})) ?? true]"
+                                  :rules="[() => getError({parameter: 'endMultiplicity', child: {parameter: 'upper'}}) ?? true]"
                                   density="comfortable"
                                   type="text" />
 
                     <v-text-field :label="t('multiplicity_lower')"
                                   v-model="data.instance.endMultiplicity.lower"
-                                  :rules="[() => t(getError({parameter: 'endMultiplicity', child: {parameter: 'lower'}})) ?? true]"
+                                  :rules="[() => getError({parameter: 'endMultiplicity', child: {parameter: 'lower'}}) ?? true]"
                                   density="comfortable"
                                   type="number" />
                   </v-card-text>
@@ -123,7 +123,7 @@
         <template v-if="data.instance.isStartPoint">
           <v-text-field :label="t('name')"
                         v-model="data.instance.parent.startName"
-                        :rules="[() => t(getError({parameter: 'parent', child: {parameter: 'startName'}})) ?? true]"
+                        :rules="[() => getError({parameter: 'parent', child: {parameter: 'startName'}}) ?? true]"
                         density="comfortable"
                         type="text" />
 
@@ -142,13 +142,13 @@
             <v-card-text>
               <v-text-field :label="t('multiplicity_upper')"
                             v-model="data.instance.parent.startMultiplicity.upper"
-                            :rules="[() => t(getError({parameter: 'parent', child: {parameter: 'startMultiplicity', child: {parameter: 'upper'}}})) ?? true]"
+                            :rules="[() => getError({parameter: 'parent', child: {parameter: 'startMultiplicity', child: {parameter: 'upper'}}}) ?? true]"
                             density="comfortable"
                             type="text" />
 
               <v-text-field :label="t('multiplicity_lower')"
                             v-model="data.instance.parent.startMultiplicity.lower"
-                            :rules="[() => t(getError({parameter: 'parent', child: {parameter: 'startMultiplicity', child: {parameter: 'lower'}}})) ?? true]"
+                            :rules="[() => getError({parameter: 'parent', child: {parameter: 'startMultiplicity', child: {parameter: 'lower'}}}) ?? true]"
                             density="comfortable"
                             type="number" />
             </v-card-text>
@@ -157,7 +157,7 @@
         <template v-else-if="data.instance.isEndpoint">
           <v-text-field :label="t('name')"
                         v-model="data.instance.parent.endName"
-                        :rules="[() => t(getError({parameter: 'parent', child: {parameter: 'endName'}})) ?? true]"
+                        :rules="[() => getError({parameter: 'parent', child: {parameter: 'endName'}}) ?? true]"
                         density="comfortable"
                         type="text" />
 
@@ -176,13 +176,13 @@
             <v-card-text>
               <v-text-field :label="t('multiplicity_upper')"
                             v-model="data.instance.parent.endMultiplicity.upper"
-                            :rules="[() => t(getError({parameter: 'parent', child: {parameter: 'endMultiplicity', child: {parameter: 'upper'}}})) ?? true]"
+                            :rules="[() => getError({parameter: 'parent', child: {parameter: 'endMultiplicity', child: {parameter: 'upper'}}}) ?? true]"
                             density="comfortable"
                             type="text" />
 
               <v-text-field :label="t('multiplicity_lower')"
                             v-model="data.instance.parent.endMultiplicity.lower"
-                            :rules="[() => t(getError({parameter: 'parent', child: {parameter: 'endMultiplicity', child: {parameter: 'lower'}}})) ?? true]"
+                            :rules="[() => getError({parameter: 'parent', child: {parameter: 'endMultiplicity', child: {parameter: 'lower'}}}) ?? true]"
                             density="comfortable"
                             type="number" />
             </v-card-text>

@@ -94,9 +94,12 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'connection') return '';
+            if (data.value === null || data.value.type !== 'connection') return null;
 
-            return findError(errors, context);
+            const error = findError(errors, context);
+
+            if (!error) return null;
+            return t(error);
         };
         const onSave = () => {
             emit('save', data.value as NodeData<Connection | ConnectionPart | ConnectionPoint>);
