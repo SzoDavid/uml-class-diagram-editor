@@ -2,145 +2,145 @@
 <style scoped src="./ClassifierEditorPanel.css" />
 
 <template>
-  <fieldset>
-    <legend class="capitalized">{{ t("appearance") }}</legend>
-    <div class="grid-form">
-      <label for="x">x</label>
-      <input id="x" type="number" v-model="data.instance.x">
-
-      <label for="y">y</label>
-      <input id="y" type="number" v-model="data.instance.y">
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <legend class="capitalized">{{ t("detail", 2) }}</legend>
-    <div class="grid-form">
-      <label for="className" class="capitalized">{{ t("name") }}</label>
-      <input id="className" type="text" v-model="data.instance.name">
-      <span v-if="getError({parameter: 'name'})" class="error capitalized" style="grid-column: span 2;">{{ t(getError({parameter: 'name'})) }}</span>
+  <v-expansion-panel :title="t('appearance')">
+    <v-expansion-panel-text>
+      <v-text-field label="x" v-model="data.instance.x" type="number" density="comfortable" />
+      <v-text-field label="y" v-model="data.instance.y" type="number" density="comfortable" />
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-expansion-panel :title="t('detail', 2)">
+    <v-expansion-panel-text>
+      <v-text-field :label="t('name')"
+                    v-model="data.instance.name"
+                    :rules="[() => t(getError({parameter: 'name'})) ?? true]"
+                    density="comfortable"
+                    type="text" />
 
       <template v-if="data.instance instanceof ClassNode">
-        <label for="classAbstract" class="capitalized">{{ t("abstract") }}</label>
-        <input id="classAbstract" type="checkbox" v-model="data.instance.hasAbstractFlag">
+        <v-checkbox density="compact" :label="t('abstract')" v-model="data.instance.hasAbstractFlag" />
 
-        <label for="classStereotype" class="capitalized">{{ t("class_stereotype.name") }}</label>
-        <select id="classStereotype" v-model="data.instance.stereotype">
-          <option :value="undefined">--</option>
-          <option :value="ClassStereotype.AUXILIARY" class="capitalized">{{ t("class_stereotype.auxiliary") }}</option>
-          <option :value="ClassStereotype.FOCUS" class="capitalized">{{ t("class_stereotype.focus") }}</option>
-          <option :value="ClassStereotype.IMPLEMENTATION_CLASS" class="capitalized">{{ t("class_stereotype.implementation_class") }}</option>
-          <option :value="ClassStereotype.METACLASS" class="capitalized">{{ t("class_stereotype.metaclass") }}</option>
-          <option :value="ClassStereotype.TYPE" class="capitalized">{{ t("class_stereotype.type") }}</option>
-          <option :value="ClassStereotype.UTILITY" class="capitalized">{{ t("class_stereotype.utility") }}</option>
-        </select>
+        <v-select :label="t('class_stereotype.name')" density="comfortable" v-model="data.instance.stereotype" :items="[
+          { title: '--', value: null },
+          { title: t('class_stereotype.auxiliary'), value: ClassStereotype.AUXILIARY },
+          { title: t('class_stereotype.focus'), value: ClassStereotype.FOCUS },
+          { title: t('class_stereotype.implementation_class'), value: ClassStereotype.IMPLEMENTATION_CLASS },
+          { title: t('class_stereotype.metaclass'), value: ClassStereotype.METACLASS },
+          { title: t('class_stereotype.type'), value: ClassStereotype.TYPE },
+          { title: t('class_stereotype.utility'), value: ClassStereotype.UTILITY },
+        ]" />
       </template>
-    </div>
-
-    <fieldset>
-      <legend class="capitalized">{{ t('class_property', 2) }}</legend>
-      <div :id="`property${index}`" class="collapsed" v-for="(prop, index) in data.instance.properties" :key="index">
-        <div @click="onCollapseClicked('prop', index)" class="header"
-             :class="{ 'error-header': getError({parameter: 'properties', index: index}) }">
-          <span>
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-expansion-panel :title="t('class_property', 2)">
+    <v-expansion-panel-text>
+      <v-expansion-panels multiple>
+        <v-expansion-panel :id="`property${index}`" v-for="(prop, index) in data.instance.properties" :key="index">
+          <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'properties', index: index}) }">
             <span>{{ prop.prefix }}</span>
             <span :class="{underlined: prop.isStatic}">{{ prop.text }}</span>
             <span>{{ prop.postfix }}</span>
-          </span>
-        </div>
-        <div class="details sep">
-          <div class="grid-form">
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
             <template v-if="!(data.instance instanceof DataTypeNode)">
-              <label :for="`propVisibility${index}`" class="capitalized">{{ t("visibility.name") }}</label>
-              <select :id="`propVisibility${index}`" v-model="prop.visibility">
-                <option :value="null">--</option>
-                <option :value="Visibility.PUBLIC" class="capitalized">{{ t("visibility.public") }} (+)</option>
-                <option :value="Visibility.PRIVATE" class="capitalized">{{ t("visibility.private") }} (-)</option>
-                <option :value="Visibility.PROTECTED" class="capitalized">{{ t("visibility.protected") }} (#)</option>
-                <option :value="Visibility.PACKAGE" class="capitalized">{{ t("visibility.package") }} (~)</option>
-              </select>
+              <v-select :label="t('visibility.name')" v-model="prop.visibility" density="comfortable" :items="[
+                { title: '--', value: null },
+                { title: t('visibility.public'), value: Visibility.PUBLIC },
+                { title: t('visibility.private'), value: Visibility.PRIVATE },
+                { title: t('visibility.protected'), value: Visibility.PROTECTED },
+                { title: t('visibility.package'), value: Visibility.PACKAGE }
+              ]" />
             </template>
 
-            <label :for="`propName${index}`" class="capitalized">{{ t("name") }}</label>
-            <input :id="`propName${index}`" type="text" v-model="prop.name">
-            <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'name'}})"
-                  class="error capitalized" style="grid-column: span 2;">
-              {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'name'} })) }}
-            </span>
+            <v-text-field :label="t('name')"
+                          v-model="prop.name"
+                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'name'}})) ?? true]"
+                          density="comfortable"
+                          type="text" />
 
-            <label :for="`propType${index}`" class="capitalized">{{ t("type") }}</label>
-            <input :id="`propType${index}`" type="text" v-model="prop.type">
-            <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'type'}})"
-                  class="error capitalized" style="grid-column: span 2;">
-              {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'type'} })) }}
-            </span>
+            <v-text-field :label="t('type')"
+                          v-model="prop.type"
+                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'type'}})) ?? true]"
+                          density="comfortable"
+                          type="text" />
 
-            <label :for="`propDefault${index}`" class="capitalized">{{ t("default_value") }}</label>
-            <input :id="`propDefault${index}`" type="text" v-model="prop.defaultValue">
-            <span v-if="getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}})"
-                  class="error capitalized" style="grid-column: span 2;">
-              {{ t(getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'} })) }}
-            </span>
+            <v-text-field :label="t('default_value')"
+                          v-model="prop.defaultValue"
+                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}})) ?? true]"
+                          density="comfortable"
+                          type="text" />
 
             <template v-if="data.instance instanceof ClassNode && data.instance.stereotype !== ClassStereotype.UTILITY">
-              <label :for="`propStatic${index}`" class="capitalized">{{ t("static_type") }}</label>
-              <input type="checkbox" :id="`propStatic${index}`" v-model="prop.isStatic">
+              <v-checkbox density="compact" :label="t('static_type')" v-model="prop.isStatic" />
             </template>
 
-            <label :for="`propDerived${index}`" class="capitalized">{{ t("derived") }}</label>
-            <input type="checkbox" :id="`propDerived${index}`" v-model="prop.isDerived">
+            <v-checkbox density="compact" :label="t('derived')" v-model="prop.isDerived" />
 
-            <label :for="`propRedefines${index}`" class="capitalized">{{ t("redefines") }}</label>
-            <input :id="`propRedefines${index}`" type="text" v-model="prop.redefines">
+            <v-text-field :label="t('redefines')"
+                          v-model="prop.redefines"
+                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'redefines'}})) ?? true]"
+                          density="comfortable"
+                          type="text" />
 
-            <label :for="`propSubsets${index}`" class="capitalized">{{ t("subsets") }}</label>
-            <input :id="`propSubsets${index}`" type="text" v-model="prop.subsets">
+            <v-text-field :label="t('subsets')"
+                          v-model="prop.subsets"
+                          :rules="[() => t(getError({parameter: 'properties', index: index, child: {parameter: 'subsets'}})) ?? true]"
+                          density="comfortable"
+                          type="text" />
+            
+            <v-select :label="t('modifier', 2)" v-model="prop.modifiers" density="comfortable" multiple chips :items="[
+              { title: t('modifiers.id'), value: 'id' },
+              { title: t('modifiers.readonly'), value: 'readonly' },
+              { title: t('modifiers.unique'), value: 'unique' },
+              { title: t('modifiers.nonunique'), value: 'nonunique' },
+              { title: t('modifiers.sequence'), value: 'sequence' },
+              { title: t('modifiers.union'), value: 'union' }
+            ]" />
 
-            <label :for="`propModifiers${index}`" class="capitalized">{{ t("modifier", 2) }}</label>
-            <select :id="`propModifiers${index}`" v-model="prop.modifiers" multiple>
-              <option value="id">id</option>
-              <option value="readonly">readonly</option>
-              <option value="unique">unique</option>
-              <option value="nonunique">nonunique</option>
-              <option value="sequence">sequence</option>
-              <option value="union">union</option>
-            </select>
-          </div>
+            <v-card :title="t('multiplicity')" variant="tonal" density="compact">
+              <v-card-text>
+                <v-text-field :label="t('multiplicity_upper')"
+                              v-model="prop.multiplicity.upper"
+                              :rules="[() => t(getError({ parameter: 'properties', index: index, child:
+                                { parameter: 'multiplicity', child: { parameter: 'upper' }}})) ?? true]"
+                              density="comfortable"
+                              type="text" />
 
-          <fieldset>
-            <legend class="capitalized">{{ t("multiplicity") }}</legend>
-            <div class="grid-form">
-              <label :for="`propMultiUpper${index}`" class="capitalized">{{ t("multiplicity_upper") }}</label>
-              <input :id="`propMultiUpper${index}`" type="text" v-model="prop.multiplicity.upper">
-              <span v-if="getError({parameter: 'properties', index: index, child: 
-                      {parameter: 'multiplicity', child: {parameter: 'upper'}}})"
-                    class="error capitalized" style="grid-column: span 2;">
-                {{ t(getError({parameter: 'properties', index: index, child:
-                  {parameter: 'multiplicity', child: {parameter: 'upper'} } })) }}
-              </span>
+                <v-text-field :label="t('multiplicity_lower')"
+                              v-model="prop.multiplicity.lower"
+                              :rules="[() => t(getError({ parameter: 'properties', index: index, child:
+                                { parameter: 'multiplicity', child: { parameter: 'upper' }}})) ?? true]"
+                              density="comfortable"
+                              type="number" />
+              </v-card-text>
+            </v-card>
 
-              <label :for="`propMultiLower${index}`" class="capitalized">{{ t("multiplicity_lower") }}</label>
-              <input :id="`propMultiLower${index}`" type="number" v-model="prop.multiplicity.lower">
-              <span v-if="getError({parameter: 'properties', index: index, child: 
-                      {parameter: 'multiplicity', child: {parameter: 'lower'}}})"
-                    class="error capitalized" style="grid-column: span 2;">
-                {{ t(getError({parameter: 'properties', index: index, child:
-                  {parameter: 'multiplicity', child: {parameter: 'lower'} } })) }}
-              </span>
-            </div>
-          </fieldset>
+            <v-btn block class="rm" @click="onRemoveClicked('prop', index)">{{ t('remove') }}</v-btn>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
 
-          <button class="rm capitalized" @click="onRemoveClicked('prop', index)" >{{ t("remove") }}</button>
-        </div>
-      </div>
+      <v-btn density="compact" block @click="onAddClicked('prop')" icon="mdi-plus" rounded="0"></v-btn>
 
-      <div class="grid-form">
-        <label for="hasNotShownProperties" class="capitalized">{{ t("not_shown_properties") }}</label>
-        <input id="hasNotShownProperties" type="checkbox" v-model="data.instance.isNotShownPropertiesExist">
-      </div>
-
-      <button @click="onAddClicked('prop')" class="capitalized">{{ t("add") }}</button>
-    </fieldset>
+      <v-checkbox density="compact" :label="t('not_shown_properties')" v-model="data.instance.isNotShownPropertiesExist" />
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <v-expansion-panel :title="t('operation', 2)">
+    <v-expansion-panel-text>
+      <v-expansion-panels multiple>
+        <v-expansion-panel :id="`operation${index}`" v-for="(operation, index) in data.instance.operations" :key="index">
+          <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'operations', index: index}) }">
+            <span>{{ operation.prefix }}</span>
+            <span :class="{underlined: operation.isStatic}">{{ operation.text }}</span>
+            <span>{{ operation.postfix }}</span>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+  <fieldset>
+    <legend class="capitalized">{{ t("detail", 2) }}</legend>
 
     <fieldset>
       <legend>Operations</legend>

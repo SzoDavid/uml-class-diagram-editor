@@ -62,11 +62,12 @@
               <v-text-field
                 :label="t('scale')"
                 v-model="scale"
+                density="comfortable"
                 type="number" />
 
               <div class="half-half-grid">
-                <v-btn density="compact" @click="onScaleSet">{{ t('set') }}</v-btn>
-                <v-btn density="compact" @click="onScaleReset">{{ t('reset') }}</v-btn>
+                <v-btn density="comfortable" @click="onScaleSet">{{ t('set') }}</v-btn>
+                <v-btn density="comfortable" @click="onScaleReset">{{ t('reset') }}</v-btn>
               </div>
             </v-expansion-panel-text>
           </v-expansion-panel>
@@ -90,14 +91,14 @@
             <template v-else-if="data.type==='editor'">
               <v-expansion-panel :title="t('option', 2)">
                 <v-expansion-panel-text>
-                  <v-select :label="t('grid_size')" v-model="data.instance.gridSize" :items="[0, 25, 50]" />
+                  <v-select :label="t('grid_size')" v-model="data.instance.gridSize" density="comfortable" :items="[0, 25, 50]" />
                 </v-expansion-panel-text>
               </v-expansion-panel>
             </template>
             <template v-else-if="data.type==='addOption'">
               <v-expansion-panel :title="t('option', 2)">
                 <v-expansion-panel-text>
-                  <v-select :label="t('type')" v-model="data.instance.type" :items="[
+                  <v-select :label="t('type')" v-model="data.instance.type" density="comfortable" :items="[
                     { title: t('node_types.class'), value: NodeType.CLASS },
                     { title: t('node_types.interface'), value: NodeType.INTERFACE },
                     { title: t('node_types.datatype'), value: NodeType.DATATYPE },
@@ -109,7 +110,7 @@
                     { title: t('node_types.connection.composition'), value: NodeType.COMPOSITION },
                     { title: t('node_types.connection.generalization'), value: NodeType.GENERALIZATION },
                   ]" />
-                  <v-checkbox :label="t('keep_adding')" v-model="data.instance.keepAdding" />
+                  <v-checkbox density="compact" :label="t('keep_adding')" v-model="data.instance.keepAdding" />
                 </v-expansion-panel-text>
               </v-expansion-panel>
             </template>

@@ -5,7 +5,7 @@ canvas {
 }
 
 .active {
-    background-color: gray;
+    background-color: #66F;
 }
 
 .rm {
@@ -89,4 +89,8 @@ canvas {
 
 #editor input[type=checkbox] {
     width: fit-content;
+}
+
+#editor .v-btn {
+    background-color: #66F;
 }

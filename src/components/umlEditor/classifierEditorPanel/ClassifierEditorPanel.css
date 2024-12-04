@@ -46,8 +46,21 @@
 }
 
 .error-header {
-    background-color: red;
+    background-color: darkred;
 }
+
+.v-btn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #66F;
+}
+
+.rm {
+    background-color: darkred;
+    margin-top: 20px;
+}
+
+
 
 .underlined {
     text-decoration: underline;

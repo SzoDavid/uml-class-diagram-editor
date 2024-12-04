@@ -75,14 +75,7 @@ export default {
             editor = new UmlEditorService(canvas, new Renderer(canvas, settings.renderer));
             tool.value = editor.tool;
 
-            window.addEventListener('resize', () => {
-                const titleBar = document.querySelector('#nav-bar');
-                const titleBarHeight = titleBar?.clientHeight || 0;
-
-                document.documentElement.style.setProperty('--title-bar-height', `${titleBarHeight}px`);
-
-                resizeCanvas(canvas);
-            });
+            window.addEventListener('resize', () => resizeCanvas(canvas));
             resizeCanvas(canvas);
 
             window.addEventListener('keydown', onKeyPress);

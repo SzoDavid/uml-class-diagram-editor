@@ -56,6 +56,14 @@
     "grid_size": "Grid size",
     "keep_adding": "Keep adding",
     "modifier": "Modifier | Modifiers",
+    "modifiers": {
+        "id": "Id",
+        "nonunique": "Nonunique",
+        "readonly": "Readonly",
+        "sequence": "Sequence",
+        "union": "Union",
+        "unique": "Unique"
+    },
     "move": "Move",
     "multiplicity": "Multiplicity",
     "multiplicity_lower": "Lower",

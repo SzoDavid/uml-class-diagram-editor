@@ -56,6 +56,14 @@
     "grid_size": "Rácsméret",
     "keep_adding": "Hozzáadás folytatása",
     "modifier": "Módosító | Módosítók",
+    "modifiers": {
+        "id": "Id",
+        "nonunique": "Nonunique",
+        "readonly": "Readonly",
+        "sequence": "Sequence",
+        "union": "Union",
+        "unique": "Unique"
+    },
     "move": "Mozgatás",
     "multiplicity": "Multiplicitás",
     "multiplicity_lower": "Felső",
