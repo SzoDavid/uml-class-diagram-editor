@@ -18,6 +18,11 @@
     "derived": "Derived",
     "detail": "Detail | Details",
     "direction": "Direction",
+    "directions": {
+        "in": "In",
+        "inout": "In-out",
+        "out": "Out"
+    },
     "edit": "Edit",
     "editor": "Editor",
     "end_point": "End point",
@@ -96,6 +101,14 @@
     "option": "Option | Options",
     "parameter": "Parameter | Parameters",
     "property": "Property | Properties",
+    "properties": {
+        "nonunique": "Nonunique",
+        "ordered": "Ordered",
+        "query": "Query",
+        "sequence": "Sequence",
+        "unique": "Unique",
+        "unordered": "Unordered"
+    },
     "redefines": "Redefines",
     "remove": "Remove",
     "return_multiplicity": "Return multiplicity",

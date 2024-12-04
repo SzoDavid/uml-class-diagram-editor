@@ -36,9 +36,11 @@
       <v-expansion-panels multiple>
         <v-expansion-panel :id="`property${index}`" v-for="(prop, index) in data.instance.properties" :key="index">
           <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'properties', index: index}) !== null }">
-            <span>{{ prop.prefix }}</span>
-            <span :class="{underlined: prop.isStatic}">{{ prop.text }}</span>
-            <span>{{ prop.postfix }}</span>
+            <span>
+              <span>{{ prop.prefix }}</span>
+              <span :class="{underlined: prop.isStatic}">{{ prop.text }}</span>
+              <span>{{ prop.postfix }}</span>
+            </span>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <template v-if="!(data.instance instanceof DataTypeNode)">
@@ -94,7 +96,7 @@
               { title: t('modifiers.nonunique'), value: 'nonunique' },
               { title: t('modifiers.sequence'), value: 'sequence' },
               { title: t('modifiers.union'), value: 'union' }
-            ]" />
+            ]" :rules="[() => getError({parameter:'properties', index:index, child:{parameter:'modifiers'}}) ?? true]" />
 
             <v-card :title="t('multiplicity')" variant="tonal" density="compact">
               <v-card-text>
@@ -108,7 +110,7 @@
                 <v-text-field :label="t('multiplicity_lower')"
                               v-model="prop.multiplicity.lower"
                               :rules="[() => getError({ parameter: 'properties', index: index, child:
-                                { parameter: 'multiplicity', child: { parameter: 'upper' }}}) ?? true]"
+                                { parameter: 'multiplicity', child: { parameter: 'lower' }}}) ?? true]"
                               density="comfortable"
                               type="number" />
               </v-card-text>
@@ -129,9 +131,11 @@
       <v-expansion-panels multiple>
         <v-expansion-panel :id="`operation${index}`" v-for="(operation, index) in data.instance.operations" :key="index">
           <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'operations', index: index}) !== null }">
-            <span>{{ operation.prefix }}</span>
-            <span :class="{underlined: operation.isStatic}">{{ operation.text }}</span>
-            <span>{{ operation.postfix }}</span>
+            <span>
+              <span>{{ operation.prefix }}</span>
+              <span :class="{underlined: operation.isStatic}">{{ operation.text }}</span>
+              <span>{{ operation.postfix }}</span>
+            </span>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <template v-if="!(data.instance instanceof DataTypeNode)">
@@ -170,173 +174,111 @@
                             density="comfortable"
                             type="text" />
             </template>
+
+            <v-select :label="t('property', 2)" v-model="operation.properties" density="comfortable" multiple chips :items="[
+              { title: t('properties.query'), value: 'query' },
+              { title: t('properties.ordered'), value: 'ordered' },
+              { title: t('properties.unique'), value: 'unique' },
+            ]" :rules="[() => getError({parameter:'operations', index:index, child:{parameter:'properties'}}) ?? true]" />
+
+            <v-card :title="t('return_multiplicity')" variant="tonal" density="compact">
+              <v-card-text>
+                <v-text-field :label="t('multiplicity_upper')"
+                              v-model="operation.returnMultiplicity.upper"
+                              :rules="[() => getError({ parameter: 'operations', index: index, child:
+                                { parameter: 'returnMultiplicity', child: { parameter: 'upper' }}}) ?? true]"
+                              density="comfortable"
+                              type="text" />
+
+                <v-text-field :label="t('multiplicity_lower')"
+                              v-model="operation.returnMultiplicity.lower"
+                              :rules="[() => getError({ parameter: 'operations', index: index, child:
+                                { parameter: 'returnMultiplicity', child: { parameter: 'lower' }}}) ?? true]"
+                              density="comfortable"
+                              type="number" />
+              </v-card-text>
+            </v-card>
+
+            <p>{{ t('parameter', 2) }}</p>
+
+            <v-expansion-panels multiple>
+              <v-expansion-panel :id="`parameter${index}${pIndex}`" v-for="(param, pIndex) in operation.params" :key="pIndex">
+                <v-expansion-panel-title :class="{ 'error-header': getError({parameter: 'operations', index: index, child: {parameter: 'params', index: pIndex}}) !== null }">
+                  <span>{{ param.toString() }}</span>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                  <v-text-field :label="t('name')"
+                                v-model="param.name"
+                                :rules="[() => getError({ parameter: 'operations', index: index, child:
+                                  { parameter: 'params', index: pIndex, child: { parameter: 'name' }}}) ?? true]"
+                                density="comfortable"
+                                type="text" />
+
+                  <v-text-field :label="t('type')"
+                                v-model="param.type"
+                                :rules="[() => getError({ parameter: 'operations', index: index, child:
+                                  { parameter: 'params', index: pIndex, child: { parameter: 'type' }}}) ?? true]"
+                                density="comfortable"
+                                type="text" />
+
+                  <v-text-field :label="t('default_value')"
+                                v-model="param.defaultValue"
+                                :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}}) ?? true]"
+                                density="comfortable"
+                                type="text" />
+
+                  <v-select :label="t('direction')" v-model="param.direction" density="comfortable" :items="[
+                    { title: '--', value: null },
+                    { title: t('directions.in'), value: 'in' },
+                    { title: t('directions.out'), value: 'out' },
+                    { title: t('directions.inout'), value: 'inout' },
+                  ]" />
+
+                  <v-select :label="t('property', 2)" v-model="param.properties" density="comfortable" multiple chips :items="[
+                    { title: t('properties.ordered'), value: 'ordered' },
+                    { title: t('properties.unordered'), value: 'unordered' },
+                    { title: t('properties.unique'), value: 'unique' },
+                    { title: t('properties.nonunique'), value: 'nonunique' },
+                    { title: t('properties.sequence'), value: 'sequence' },
+                  ]" :rules="[() => getError({ parameter: 'operations', index: index, child:
+                    { parameter: 'params', index: pIndex, child: { parameter: 'properties' }}}) ?? true]" />
+
+                  <v-card :title="t('multiplicity')" variant="tonal" density="compact">
+                    <v-card-text>
+                      <v-text-field :label="t('multiplicity_upper')"
+                                    v-model="param.multiplicity.upper"
+                                    :rules="[() => getError({ parameter: 'operations', index: index, child:
+                                      { parameter: 'params', index: pIndex, child: 
+                                        { parameter: 'multiplicity', child: { parameter: 'upper' }}}}) ?? true]"
+                                    density="comfortable"
+                                    type="text" />
+
+                      <v-text-field :label="t('multiplicity_lower')"
+                                    v-model="param.multiplicity.lower"
+                                    :rules="[() => getError({ parameter: 'operations', index: index, child:
+                                      { parameter: 'params', index: pIndex, child: 
+                                        { parameter: 'multiplicity', child: { parameter: 'lower' }}}}) ?? true]"
+                                    density="comfortable"
+                                    type="number" />
+                    </v-card-text>
+                  </v-card>
+
+                  <v-btn block class="rm" @click="onRemoveClicked('param', pIndex, index)">{{ t('remove') }}</v-btn>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+
+            <v-btn density="compact" block @click="onAddClicked('param', index)" icon="mdi-plus" rounded="0"></v-btn>
+
+            <v-btn block class="rm" @click="onRemoveClicked('operation', index)">{{ t('remove') }}</v-btn>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
+
+      <v-btn density="compact" block @click="onAddClicked('operation')" icon="mdi-plus" rounded="0"></v-btn>
+
+      <v-checkbox density="compact" :label="t('not_shown_operations')" v-model="data.instance.isNotShownOperationsExist" />
     </v-expansion-panel-text>
   </v-expansion-panel>
-  <fieldset>
-    <legend class="capitalized">{{ t("detail", 2) }}</legend>
-
-    <fieldset>
-      <legend>Operations</legend>
-      <div :id="`operation${index}`" class="collapsed" v-for="(operation, index) in data.instance.operations" :key="index">
-        <div @click="onCollapseClicked('operation', index)" class="header"
-             :class="{ 'error-header': getError({parameter: 'operations', index: index}) }">
-          <span>
-            <span>{{ operation.prefix }}</span>
-            <span :class="{underlined: operation.isStatic}">{{ operation.text }}</span>
-            <span>{{ operation.postfix }}</span>
-          </span>
-        </div>
-
-        <div class="details sep">
-          <div class="grid-form">
-
-            <label :for="`operationProperties${index}`" class="capitalized">{{ t("property", 2) }}</label>
-            <select :id="`operationProperties${index}`" v-model="operation.properties" multiple>
-              <option value="query">query</option>
-              <option value="ordered">ordered</option>
-              <option value="unique">unique</option>
-            </select>
-            <span v-if="getError({parameter:'operations', index:index, child:{parameter:'properties'}})"
-                  class="error capitalized" style="grid-column: span 2;">
-              {{ t(getError({parameter:'operations', index:index, child:{parameter:'properties'} })) }}
-            </span>
-          </div>
-
-          <fieldset>
-            <legend class="capitalized">{{ t("return_multiplicity") }}</legend>
-            <div class="grid-form">
-              <label :for="`returnMultiUpper${index}`" class="capitalized">{{ t("multiplicity_upper") }}</label>
-              <input :id="`returnMultiUpper${index}`" type="text" v-model="operation.returnMultiplicity.upper">
-              <span v-if="getError({parameter: 'operations', index: index, child:
-                      {parameter: 'returnMultiplicity', child: {parameter: 'upper'}}})"
-                    class="error capitalized" style="grid-column: span 2;">
-                {{ t(getError({parameter: 'operations', index: index, child:
-                  {parameter: 'returnMultiplicity', child: {parameter: 'upper'} } })) }}
-              </span>
-
-              <label :for="`returnMultiLower${index}`" class="capitalized">{{ t("multiplicity_lower") }}</label>
-              <input :id="`returnMultiLower${index}`" type="number" v-model="operation.returnMultiplicity.lower">
-              <span v-if="getError({parameter: 'operations', index: index, child:
-                      {parameter: 'returnMultiplicity', child: {parameter: 'lower'}}})"
-                    class="error capitalized" style="grid-column: span 2;">
-                {{ t(getError({parameter: 'operations', index: index, child:
-                  {parameter: 'returnMultiplicity', child: {parameter: 'lower'} } })) }}
-              </span>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend class="capitalized">{{ t("parameter", 2) }}</legend>
-
-            <div :id="`parameter${index}${pIndex}`" class="collapsed" v-for="(param, pIndex) in operation.params" :key="pIndex">
-              <div @click="onCollapseClicked('param', pIndex, index)" class="header"
-                   :class="{ 'error-header': getError({parameter: 'operations', index: index, child: {parameter: 'params', index: pIndex}}) }">
-                <span>{{ param.toString() }}</span>
-              </div>
-
-              <div class="details sep">
-                <div class="grid-form">
-                  <label :for="`paramName${index}${pIndex}`" class="capitalized">{{ t("name") }}</label>
-                  <input :id="`paramName${index}${pIndex}`" type="text" v-model="param.name">
-                  <span v-if="getError({parameter: 'operations', index: index, child:
-                          {parameter: 'params', index: pIndex, child: {parameter: 'name'}}})"
-                        class="error capitalized" style="grid-column: span 2;">
-                    {{ t(getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'name'} } })) }}
-                  </span>
-
-                  <label :for="`paramType${index}${pIndex}`" class="capitalized">{{ t("type") }}</label>
-                  <input :id="`paramType${index}${pIndex}`" type="text" v-model="param.type">
-                  <span v-if="getError({parameter: 'operations', index: index, child:
-                          {parameter: 'params', index: pIndex, child: {parameter: 'type'}}})"
-                        class="error capitalized" style="grid-column: span 2;">
-                    {{ t(getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'type'} } })) }}
-                  </span>
-
-
-                  <label :for="`paramDefault${index}${pIndex}`" class="capitalized">{{ t("default_value") }}</label>
-                  <input :id="`paramDefault${index}${pIndex}`" type="text" v-model="param.defaultValue">
-                  <span v-if="getError({parameter: 'operations', index: index, child:
-                          {parameter: 'params', index: pIndex, child: {parameter: 'defaultValue'}}})"
-                        class="error capitalized" style="grid-column: span 2;">
-                    {{ t(getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'defaultValue'} } })) }}
-                  </span>
-
-                  <label :for="`paramDirection${index}${pIndex}`" class="capitalized">{{ t("direction") }}</label>
-                  <select :id="`paramDirection${index}${pIndex}`" v-model="param.direction">
-                    <option :value="null">--</option>
-                    <option value="in">in</option>
-                    <option value="out">out</option>
-                    <option value="inout">inout</option>
-                  </select>
-
-                  <label :for="`paramProps${index}${pIndex}`" class="capitalized">{{ t("property", 2) }}</label>
-                  <select multiple :id="`paramProps${index}${pIndex}`" v-model="param.properties">
-                    <option value="ordered">ordered</option>
-                    <option value="unordered">unordered</option>
-                    <option value="unique">unique</option>
-                    <option value="nonunique">nonunique</option>
-                    <option value="sequence">sequence</option>
-                  </select>
-                  <span v-if="getError({parameter: 'operations', index: index, child:
-                          {parameter: 'params', index: pIndex, child: {parameter: 'properties'}}})"
-                        class="error capitalized" style="grid-column: span 2;">
-                    {{ t(getError({parameter: 'operations', index: index, child:
-                      {parameter: 'params', index: pIndex, child: {parameter: 'properties'} } })) }}
-                  </span>
-                </div>
-
-                <fieldset>
-                  <legend class="capitalized">{{ t("multiplicity") }}</legend>
-                  <div class="grid-form">
-                    <label :for="`paramMultiUpper${index}${pIndex}`" class="capitalized">{{ t("multiplicity_upper") }}</label>
-                    <input :id="`paramMultiUpper${index}${pIndex}`" type="text" v-model="param.multiplicity.upper">
-                    <span v-if="getError({parameter: 'operations', index: index, child:
-                            {parameter: 'params', index: pIndex, child: 
-                              {parameter: 'multiplicity', child: {parameter: 'upper'}}}})"
-                          class="error" style="grid-column: span 2;">
-                      {{ t(getError({parameter: 'operations', index: index, child:
-                        {parameter: 'params', index: pIndex, child:
-                          {parameter: 'multiplicity', child: {parameter: 'upper'} } } })) }}
-                    </span>
-
-                    <label :for="`paramMultiLower${index}${pIndex}`" class="capitalized">{{ t("multiplicity_lower") }}</label>
-                    <input :id="`paramMultiLower${index}${pIndex}`" type="number" v-model="param.multiplicity.lower">
-                    <span v-if="getError({parameter: 'operations', index: index, child:
-                            {parameter: 'params', index: pIndex, child: 
-                              {parameter: 'multiplicity', child: {parameter: 'lower'}}}})"
-                          class="error" style="grid-column: span 2;">
-                      {{ t(getError({parameter: 'operations', index: index, child:
-                        {parameter: 'params', index: pIndex, child:
-                          {parameter: 'multiplicity', child: {parameter: 'lower'} } } })) }}
-                    </span>
-                  </div>
-                </fieldset>
-
-                <button class="rm capitalized" @click="onRemoveClicked('param', pIndex, index)">{{ t("remove") }}</button>
-              </div>
-            </div>
-
-            <button @click="onAddClicked('param', index)" class="capitalized">{{ t("add") }}</button>
-          </fieldset>
-
-          <button class="rm capitalized" @click="onRemoveClicked('operation', index)">{{ t("remove") }}</button>
-        </div>
-      </div>
-
-      <div class="grid-form">
-        <label for="hasNotShownOperations" class="capitalized">{{ t("not_shown_operations") }}</label>
-        <input id="hasNotShownOperations" type="checkbox" v-model="data.instance.isNotShownOperationsExist">
-      </div>
-
-      <button @click="onAddClicked('operation')" class="capitalized">{{ t("add") }}</button>
-    </fieldset>
-  </fieldset>
-
-  <button @click="onSave" class="capitalized">{{ t("save") }}</button>
+  <v-btn block @click="onSave">{{ t("save") }}</v-btn>
 </template>

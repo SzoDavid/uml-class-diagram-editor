@@ -18,6 +18,11 @@
     "derived": "Derivált",
     "detail": "Részlet | Részletek",
     "direction": "Irány",
+    "directions": {
+        "in": "In",
+        "inout": "In-out",
+        "out": "Out"
+    },
     "edit": "Szerkesztés",
     "editor": "Szerkesztő",
     "end_point": "Végső pont",
@@ -96,6 +101,14 @@
     "option": "Opció | Opciók",
     "parameter": "Paraméter | Paraméterek",
     "property": "Tulajdonság | Tulajdonságok",
+    "properties": {
+        "nonunique": "Nonunique",
+        "ordered": "Ordered",
+        "query": "Query",
+        "sequence": "Sequence",
+        "unique": "Unique",
+        "unordered": "Unordered"
+    },
     "redefines": "Újradefiniálja",
     "remove": "Törlés",
     "return_multiplicity": "Visszatérési multiplicitás",
