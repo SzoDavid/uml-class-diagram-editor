@@ -19,11 +19,43 @@ function switchLocale(locale: string) {
   <v-app>
     <nav id="nav-bar">
       <v-toolbar density="compact">
-        <button @click="switchLocale('en')">en</button>
-        <button @click="switchLocale('hu')">hu</button>
+        <v-toolbar-title>UCDE</v-toolbar-title>
 
-        <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }">{{ t('editor') }}</RouterLink>
-        <RouterLink :to="{ name: 'settings', params: { locale: route.params.locale ?? 'en' } }">{{ t('settings.title') }}</RouterLink>
+        <RouterLink :to="{ name: 'editor', params: { locale: route.params.locale ?? 'en' } }" custom>
+          <template #default="{ navigate }">
+            <v-btn @click="navigate">*filename*</v-btn>
+          </template>
+        </RouterLink>
+
+        <v-spacer />
+
+        <v-btn icon="mdi-content-save" rounded="0" density="comfortable"></v-btn>
+        <v-btn icon="mdi-import" rounded="0" density="comfortable"></v-btn>
+
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn icon="mdi-translate"
+                   rounded="0"
+                   density="comfortable"
+                   v-bind="props" />
+          </template>
+          <v-list>
+            <v-list-item>
+              <v-list-item-title @click="switchLocale('en')">en</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>
+                <v-list-item-title @click="switchLocale('hu')">hu</v-list-item-title>
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <RouterLink :to="{ name: 'settings', params: { locale: route.params.locale ?? 'en' } }" custom>
+          <template #default="{ navigate }">
+            <v-btn icon="mdi-cog" rounded="0" @click="navigate" density="comfortable" />
+          </template>
+        </RouterLink>
       </v-toolbar>
     </nav>
     <RouterView />
@@ -39,15 +71,11 @@ html, body {
 }
 
 #nav-bar {
-  position: fixed; /* Make it stay on top of the content */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* Full width */
+  width: 100%;
   z-index: 1000;
-  background-color: black; /* TODO */
 }
 
-#nav-bar * {
-  padding-left: 10px;
-}
 </style>
