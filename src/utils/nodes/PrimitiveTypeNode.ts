@@ -3,6 +3,8 @@ import {Validator} from '../Validator.ts';
 import {PositionalNode} from './PositionalNode.ts';
 
 export class PrimitiveTypeNode extends PositionalNode {
+    NODE_TYPE= 'PrimitiveType';
+
     name: string;
 
     constructor(name: string, x: number, y: number) {

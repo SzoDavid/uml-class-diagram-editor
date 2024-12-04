@@ -5,6 +5,8 @@ import {MultiplicityRange} from '../features/MultiplicityRange.ts';
 import {AssociationNavigability} from '../types.ts';
 
 export class Association extends Connection {
+    NODE_TYPE= 'Association';
+
     public associationName: string = '';
     public showOwnership: boolean = false;
     public reversedOwnership: boolean = false;

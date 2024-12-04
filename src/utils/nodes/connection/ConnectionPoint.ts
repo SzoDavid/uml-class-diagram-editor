@@ -6,6 +6,8 @@ import {Point} from '../../types.ts';
 import {Connection} from './Connection.ts';
 
 export abstract class ConnectionPoint extends PositionalNode implements Point {
+    NODE_TYPE= 'ConnectionPoint';
+
     constructor(
         x: number,
         y: number,
@@ -76,6 +78,8 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
 }
 
 export class BasicConnectionPoint extends ConnectionPoint {
+    NODE_TYPE= 'BasicConnectionPoint';
+
     clone(): BasicConnectionPoint {
         const clone = new BasicConnectionPoint(this.x, this.y, this.parent);
         clone.isSelected = this.isSelected;
@@ -102,6 +106,8 @@ export class BasicConnectionPoint extends ConnectionPoint {
 }
 
 export class LooseConnectionPoint extends ConnectionPoint implements Point {
+    NODE_TYPE= 'LooseConnectionPoint';
+
     constructor(
         public node: PositionalNode,
         parent: Connection

@@ -1,6 +1,8 @@
 import {InvalidNodeParameterCause} from './types.ts';
 
 export abstract class Node {
+    NODE_TYPE= 'Node';
+
     isSelected: boolean = false;
     isDragging: boolean = false;
 

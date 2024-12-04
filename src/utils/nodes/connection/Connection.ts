@@ -6,6 +6,8 @@ import {PositionalNode} from '../PositionalNode.ts';
 import {Point} from '../../types.ts';
 
 export abstract class Connection extends Node {
+    NODE_TYPE= 'Connection';
+
     parts: ConnectionPart[] = [];
     points: ConnectionPoint[] = [];
 

@@ -4,6 +4,8 @@ import {Point} from '../../types.ts';
 import {MultiplicityRange} from '../features/MultiplicityRange.ts';
 
 export class Composition extends Connection {
+    NODE_TYPE= 'Composition';
+
     public reversed: boolean = false;
 
     public startName: string = '';

@@ -3,6 +3,8 @@ import {Validator} from '../Validator.ts';
 import {PositionalNode} from './PositionalNode.ts';
 
 export class EnumerationNode extends PositionalNode {
+    NODE_TYPE = 'Enumeration';
+
     name: string;
     values: string[];
 

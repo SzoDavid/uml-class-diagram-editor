@@ -6,6 +6,8 @@ import {GeometryUtils} from '../../GeometryUtils.ts';
 import {Connection} from './Connection.ts';
 
 export class ConnectionPart extends Node {
+    NODE_TYPE= 'ConnectionPart';
+
     constructor(
         public startIndex: number,
         public endIndex: number,

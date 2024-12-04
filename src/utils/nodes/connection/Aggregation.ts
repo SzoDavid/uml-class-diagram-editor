@@ -4,6 +4,8 @@ import {PositionalNode} from '../PositionalNode.ts';
 import {Point} from '../../types.ts';
 
 export class Aggregation extends Connection {
+    NODE_TYPE= 'Aggregation';
+
     public startName: string = '';
     public isStartShared: boolean = false;
     public startMultiplicity: MultiplicityRange = new MultiplicityRange(null);

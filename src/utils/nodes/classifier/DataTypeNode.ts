@@ -3,6 +3,8 @@ import {Property} from '../features/Property.ts';
 import {Operation} from '../features/Operation.ts';
 
 export class DataTypeNode extends ClassifierNode {
+    NODE_TYPE= 'DataType';
+
     constructor(name: string,
                 x: number,
                 y: number,

@@ -129,6 +129,8 @@ export class UmlEditorService {
         }
 
         this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
+
+        this.saveChangesToLocalStorage();
     }
 
     public addNode(node: Node): void {
@@ -648,5 +650,9 @@ export class UmlEditorService {
     private deselectAll() {
         this._nodes.forEach(node => node.deselect());
         this.render();
+    }
+
+    private saveChangesToLocalStorage(): void {
+        localStorage.setItem('file', JSON.stringify(this._nodes));
     }
 }

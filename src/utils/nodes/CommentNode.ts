@@ -2,8 +2,9 @@ import {InvalidNodeParameterCause} from './types.ts';
 import {PositionalNode} from './PositionalNode.ts';
 
 export class CommentNode extends PositionalNode {
-    text: string;
+    NODE_TYPE= 'Comment';
 
+    text: string;
 
     constructor(text: string, x: number, y: number) {
         super(x, y);

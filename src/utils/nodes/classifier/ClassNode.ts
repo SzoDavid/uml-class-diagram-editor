@@ -12,6 +12,8 @@ export enum ClassStereotype {
 }
 
 export class ClassNode extends ClassifierNode {
+    NODE_TYPE= 'Class';
+
     hasAbstractFlag: boolean;
     private _stereotype?: ClassStereotype;
 

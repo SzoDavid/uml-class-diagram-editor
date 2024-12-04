@@ -3,6 +3,8 @@ import {PositionalNode} from '../PositionalNode.ts';
 import {Point} from '../../types.ts';
 
 export class Generalization extends Connection {
+    NODE_TYPE= 'Generalization';
+
     public reversed: boolean = false;
 
     constructor(points: (Point | PositionalNode)[]) {
