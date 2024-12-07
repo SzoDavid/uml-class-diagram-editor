@@ -21,4 +21,8 @@ export class MockPositionalNode extends PositionalNode {
     validate(): InvalidNodeParameterCause[] {
         return [];
     }
+
+    toSerializable(): object {
+        return {};
+    }
 }

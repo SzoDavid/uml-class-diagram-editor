@@ -58,6 +58,7 @@
             "required": "Value is required"
         }
     },
+    "export_document": "Export",
     "grid_size": "Grid size",
     "keep_adding": "Keep adding",
     "modifier": "Modifier | Modifiers",
@@ -111,6 +112,7 @@
     },
     "redefines": "Redefines",
     "remove": "Remove",
+    "rename": "Rename",
     "return_multiplicity": "Return multiplicity",
     "return_type": "Return type",
     "reset": "Reset",

@@ -58,6 +58,7 @@
             "required": "Az érték kötelező"
         }
     },
+    "export_document": "Exportálás",
     "grid_size": "Rácsméret",
     "keep_adding": "Hozzáadás folytatása",
     "modifier": "Módosító | Módosítók",
@@ -111,6 +112,7 @@
     },
     "redefines": "Újradefiniálja",
     "remove": "Törlés",
+    "rename": "Átnevezés",
     "return_multiplicity": "Visszatérési multiplicitás",
     "return_type": "Visszatérési típus",
     "reset": "Visszaállítás",
