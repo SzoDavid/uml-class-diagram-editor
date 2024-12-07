@@ -1,6 +1,7 @@
 import {Property} from '../features/Property.ts';
 import {Operation} from '../features/Operation.ts';
 import {ClassifierNode} from './ClassifierNode.ts';
+import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
 
 export enum ClassStereotype {
     AUXILIARY = 'Auxiliary', //TODO: validate when connections are implemented
@@ -11,9 +12,9 @@ export enum ClassStereotype {
     UTILITY = 'Utility'
 }
 
-export class ClassNode extends ClassifierNode {
-    NODE_TYPE= 'Class';
+const CLASS_TAG = 'ClassNode';
 
+export class ClassNode extends ClassifierNode {
     hasAbstractFlag: boolean;
     private _stereotype?: ClassStereotype;
 
@@ -83,4 +84,33 @@ export class ClassNode extends ClassifierNode {
         this.hasAbstractFlag = node.isAbstract;
         this.stereotype = node.stereotype;
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        const obj: any = super.toSerializable();
+        obj['tag'] = CLASS_TAG;
+        obj['isAbstract'] = this.isAbstract;
+        obj['stereotype'] = this.stereotype;
+
+        return obj;
+    }
+
+    static fromSerializable(data: any): ClassNode {
+        return new ClassNode(
+            data.name,
+            data.x,
+            data.y,
+            data.properties.map((prop: any) => Property.fromSerializable(prop)),
+            data.operations.map((operation: any) => Operation.fromSerializable(operation)),
+            data.isNotShownPropertiesExist,
+            data.isNotShownOperationsExist,
+            data.isAbstract,
+            data.stereotype
+        );
+    }
+
+    //endregion
 }
+
+SerializationRegistryService.register(CLASS_TAG, ClassNode);

@@ -4,10 +4,9 @@ import {ConnectionPart} from './ConnectionPart.ts';
 import {BasicConnectionPoint, ConnectionPoint, LooseConnectionPoint} from './ConnectionPoint.ts';
 import {PositionalNode} from '../PositionalNode.ts';
 import {Point} from '../../types.ts';
+import {Serializable} from '../Serializable.ts';
 
-export abstract class Connection extends Node {
-    NODE_TYPE= 'Connection';
-
+export abstract class Connection extends Node implements Serializable {
     parts: ConnectionPart[] = [];
     points: ConnectionPoint[] = [];
 
@@ -67,5 +66,12 @@ export abstract class Connection extends Node {
         clone.parts = [...this.parts];
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
+    }
+
+    public toSerializable(): object {
+        return {
+            parts: this.parts.map(part => part.toSerializable()),
+            points: this.points.map(point => point.toSerializable())
+        };
     }
 }

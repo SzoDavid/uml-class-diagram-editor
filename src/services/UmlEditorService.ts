@@ -119,6 +119,11 @@ export class UmlEditorService {
         return {x: this._panOffsetX, y: this._panOffsetY};
     }
 
+    public set nodes(nodes: Node[]) {
+        this._nodes = nodes;
+        this.render();
+    }
+
     public render(): void {
         // If adding a connection is in progress, render its ghost
         if (this._isAddingConnection) {
@@ -653,6 +658,6 @@ export class UmlEditorService {
     }
 
     private saveChangesToLocalStorage(): void {
-        localStorage.setItem('file', JSON.stringify(this._nodes));
+        localStorage.setItem('file', JSON.stringify(this._nodes.map(node => node.toSerializable())));
     }
 }

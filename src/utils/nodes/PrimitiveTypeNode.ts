@@ -1,10 +1,12 @@
 import {InvalidNodeParameterCause} from './types.ts';
 import {Validator} from '../Validator.ts';
 import {PositionalNode} from './PositionalNode.ts';
+import {Serializable} from './Serializable.ts';
+import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
 
-export class PrimitiveTypeNode extends PositionalNode {
-    NODE_TYPE= 'PrimitiveType';
+const CLASS_TAG = 'PrimitiveTypeNode';
 
+export class PrimitiveTypeNode extends PositionalNode implements Serializable {
     name: string;
 
     constructor(name: string, x: number, y: number) {
@@ -41,4 +43,23 @@ export class PrimitiveTypeNode extends PositionalNode {
 
         return errors;
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        return {
+            tag: CLASS_TAG,
+            name: this.name,
+            x: this.x,
+            y: this.y,
+        };
+    }
+
+    static fromSerializable(data: any): PrimitiveTypeNode {
+        return new PrimitiveTypeNode(data.name, data.x, data.y);
+    }
+
+    //endregion
 }
+
+SerializationRegistryService.register(CLASS_TAG, PrimitiveTypeNode);

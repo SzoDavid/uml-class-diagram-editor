@@ -1,9 +1,11 @@
 import {InvalidNodeParameterCause} from './types.ts';
 import {PositionalNode} from './PositionalNode.ts';
+import {Serializable} from './Serializable.ts';
+import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
 
-export class CommentNode extends PositionalNode {
-    NODE_TYPE= 'Comment';
+const CLASS_TAG = 'CommentNode';
 
+export class CommentNode extends PositionalNode implements Serializable {
     text: string;
 
     constructor(text: string, x: number, y: number) {
@@ -35,4 +37,25 @@ export class CommentNode extends PositionalNode {
 
         return errors;
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        return {
+            tag: CLASS_TAG,
+            text: this.text,
+            x: this.x,
+            y: this.y,
+            width: this.width
+        };
+    }
+
+    static fromSerializable(data: any): CommentNode {
+        const node = new CommentNode(data.text, data.x, data.y);
+        node.width = data.width;
+        return node;
+    }
+    //endregion
 }
+
+SerializationRegistryService.register(CLASS_TAG, CommentNode);

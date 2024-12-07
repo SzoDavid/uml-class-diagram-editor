@@ -1,9 +1,11 @@
 import {ClassifierNode} from './ClassifierNode.ts';
 import {Property} from '../features/Property.ts';
 import {Operation} from '../features/Operation.ts';
+import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
+
+const CLASS_TAG = 'DataTypeNode';
 
 export class DataTypeNode extends ClassifierNode {
-    NODE_TYPE= 'DataType';
 
     constructor(name: string,
                 x: number,
@@ -41,4 +43,29 @@ export class DataTypeNode extends ClassifierNode {
     public get header(): string {
         return 'DataType';
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        const obj: any = super.toSerializable();
+        obj['tag'] = CLASS_TAG;
+
+        return obj;
+    }
+
+    static fromSerializable(data: any): DataTypeNode {
+        return new DataTypeNode(
+            data.name,
+            data.x,
+            data.y,
+            data.properties.map((prop: any) => Property.fromSerializable(prop)),
+            data.operations.map((operation: any) => Operation.fromSerializable(operation)),
+            data.isNotShownPropertiesExist,
+            data.isNotShownOperationsExist,
+        );
+    }
+
+    //endregion
 }
+
+SerializationRegistryService.register(CLASS_TAG, DataTypeNode);

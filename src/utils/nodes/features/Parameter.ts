@@ -87,4 +87,15 @@ export class Parameter implements Feature {
             [...this.properties]
         );
     }
+
+    static fromSerializable(data: any): Parameter {
+        return new Parameter(
+            data.name,
+            data.type,
+            data.direction,
+            data.multiplicity ? MultiplicityRange.fromSerializable(data.multiplicity) : undefined,
+            data.defaultValue,
+            [...data.properties],
+        );
+    }
 }

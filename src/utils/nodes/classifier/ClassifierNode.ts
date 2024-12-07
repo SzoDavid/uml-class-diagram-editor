@@ -3,8 +3,9 @@ import {Operation} from '../features/Operation.ts';
 import {InvalidNodeParameterCause} from '../types.ts';
 import {Validator} from '../../Validator.ts';
 import {PositionalNode} from '../PositionalNode.ts';
+import {Serializable} from '../Serializable.ts';
 
-export abstract class ClassifierNode extends PositionalNode {
+export abstract class ClassifierNode extends PositionalNode implements Serializable {
     name: string;
     properties: Property[];
     operations: Operation[];
@@ -55,5 +56,17 @@ export abstract class ClassifierNode extends PositionalNode {
         this.operations = node.operations.map(operation => operation.clone());
         this.isNotShownPropertiesExist = node.isNotShownPropertiesExist;
         this.isNotShownOperationsExist = node.isNotShownOperationsExist;
+    }
+
+    public toSerializable(): object {
+        return {
+            name: this.name,
+            x: this.x,
+            y: this.y,
+            properties: [...this.properties],
+            operations: [...this.operations],
+            isNotShownPropertiesExist: this.isNotShownPropertiesExist,
+            isNotShownOperationsExist: this.isNotShownOperationsExist
+        };
     }
 }

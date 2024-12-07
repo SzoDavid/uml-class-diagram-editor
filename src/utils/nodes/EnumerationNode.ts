@@ -1,10 +1,12 @@
 import {InvalidNodeParameterCause} from './types.ts';
 import {Validator} from '../Validator.ts';
 import {PositionalNode} from './PositionalNode.ts';
+import {Serializable} from './Serializable.ts';
+import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
 
-export class EnumerationNode extends PositionalNode {
-    NODE_TYPE = 'Enumeration';
+const CLASS_TAG = 'EnumerationNode';
 
+export class EnumerationNode extends PositionalNode implements Serializable {
     name: string;
     values: string[];
 
@@ -50,4 +52,24 @@ export class EnumerationNode extends PositionalNode {
 
         return errors;
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        return {
+            tag: CLASS_TAG,
+            name: this.name,
+            x: this.x,
+            y: this.y,
+            values: [...this.values]
+        };
+    }
+
+    static fromSerializable(data: any): EnumerationNode {
+        return new EnumerationNode(data.name, data.x, data.y, data.values);
+    }
+
+    //endregion
 }
+
+SerializationRegistryService.register(CLASS_TAG, EnumerationNode);

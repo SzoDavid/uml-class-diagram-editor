@@ -33,6 +33,7 @@ import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 import {Association} from '../../utils/nodes/connection/Association.ts';
 import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
 import {Composition} from '../../utils/nodes/connection/Composition.ts';
+import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
 
 
 export default {
@@ -71,6 +72,8 @@ export default {
                 return;
             }
 
+            const save = localStorage.getItem('file');
+
             const canvas = umlCanvas.value as HTMLCanvasElement;
             editor = new UmlEditorService(canvas, new Renderer(canvas, settings.renderer));
             tool.value = editor.tool;
@@ -98,12 +101,17 @@ export default {
                 scale.value = Math.round(newScale * 100);
             });
 
-            editor.addNode(new ClassNode('ClassA', 50, 50,
-                                         [new Property('prop', 'type', Visibility.PUBLIC),
-                                             new Property('prop2', 'type', Visibility.PUBLIC, false, new MultiplicityRange('*'), 'value', true)],
-                                         [new Operation('operationA', [new Parameter('param', 'type')], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
-            editor.addNode(new InterfaceNode('InterfaceB', 400, 200, [], [new Operation('operationB', [new Parameter('param', 'type')])]));
-            editor.addNode(new EnumerationNode('EnumerationC', 70, 250, ['VALUE_A', 'VALUE_B']));
+            if (save) {
+                const deserializable = JSON.parse(save);
+                editor.nodes = SerializationRegistryService.batchDeserialize<Node>(deserializable);
+            } else {
+                editor.addNode(new ClassNode('ClassA', 50, 50,
+                                             [new Property('prop', 'type', Visibility.PUBLIC),
+                                                 new Property('prop2', 'type', Visibility.PUBLIC, false, new MultiplicityRange('*'), 'value', true)],
+                                             [new Operation('operationA', [new Parameter('param', 'type')], Visibility.PRIVATE, 'string', new MultiplicityRange('*', 1))]));
+                editor.addNode(new InterfaceNode('InterfaceB', 400, 200, [], [new Operation('operationB', [new Parameter('param', 'type')])]));
+                editor.addNode(new EnumerationNode('EnumerationC', 70, 250, ['VALUE_A', 'VALUE_B']));
+            }
         });
 
         const resizeCanvas = (canvas: HTMLCanvasElement) => {
