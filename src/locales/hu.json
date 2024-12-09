@@ -59,7 +59,9 @@
         }
     },
     "export_document": "Exportálás",
+    "file_input": "Fálj feltöltése",
     "grid_size": "Rácsméret",
+    "import": "Importálás",
     "keep_adding": "Hozzáadás folytatása",
     "modifier": "Módosító | Módosítók",
     "modifiers": {

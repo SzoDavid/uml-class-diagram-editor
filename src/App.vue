@@ -4,6 +4,7 @@ import { version } from '../package.json';
 import {useI18n} from 'vue-i18n';
 import { saveAs } from 'file-saver';
 import RenameDialog from './components/dialogs/renameDialog.vue';
+import ImportDialog from './components/dialogs/importDialog.vue';
 
 const { t } = useI18n();
 
@@ -35,6 +36,18 @@ function saveName(name: string) {
     fileName = name;
     localStorage.setItem('name', fileName);
 }
+
+function importFile(file: File) {
+    if (file) {
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+            const fileContent = fileReader.result as string;
+            console.log(fileContent);
+        };
+        fileReader.readAsText(file);
+    }
+}
+
 </script>
 
 <template>
@@ -64,7 +77,16 @@ function saveName(name: string) {
 
         <v-spacer />
 
-        <v-btn icon="mdi-import" density="comfortable"></v-btn>
+        <v-dialog activator="parent" max-width="340">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon="mdi-import" density="comfortable" v-bind="activatorProps" />
+          </template>
+          <template v-slot:default="{ isActive }">
+            <import-dialog @submit="(file: File) => { importFile(file); isActive.value = false; }"
+                           @cancel="() => { isActive.value = false; }" />
+          </template>
+        </v-dialog>
+        
 
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">

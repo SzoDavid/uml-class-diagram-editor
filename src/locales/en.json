@@ -59,7 +59,9 @@
         }
     },
     "export_document": "Export",
+    "file_input": "File input",
     "grid_size": "Grid size",
+    "import": "Import",
     "keep_adding": "Keep adding",
     "modifier": "Modifier | Modifiers",
     "modifiers": {

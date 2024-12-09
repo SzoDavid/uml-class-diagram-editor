@@ -3,24 +3,23 @@ import {useI18n} from 'vue-i18n';
 
 const { t } = useI18n();
 
-const props = defineProps({ name: String });
 const emit = defineEmits(['submit', 'cancel']);
 
-let name = props.name;
+let file: File;
 
 </script>
 
 <template>
-  <v-card :title="`${t('rename')} ${props.name}`">
+  <v-card :title="t('import')">
     <v-card-text>
-      <v-text-field :label="t('name')"
-                    v-model="name"
-                    required />
+      <v-file-input accept=".ucde,text/json"
+                    v-model="file"
+                    :label="t('file_input')" />
     </v-card-text>
     <v-card-actions>
       <v-spacer />
       <v-btn @click="()=>{ emit('cancel'); }">{{ t('cancel') }}</v-btn>
-      <v-btn color="primary" @click="()=>{ emit('submit', name); }">{{ t('save') }}</v-btn>
+      <v-btn color="primary" @click="()=>{ emit('submit', file); }">{{ t('import')}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>
