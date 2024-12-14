@@ -3,6 +3,7 @@
     "add": "Hozzáadás",
     "add_breakpoint": "Töréspont hozzáadása",
     "appearance": "Megjelenés",
+    "cancel": "Mégse",
     "class_property": "Attribútum | Attribútumok",
     "class_stereotype": {
         "name": "Sztereotípus",
@@ -51,6 +52,7 @@
             "alphanumeric": "A névnek alfanumerikusnak kell lennie",
             "required": "A név kötelező"
         },
+        "nothing_to_save": "Nincs mit menteni",
         "type_alphanumeric": "A típusnak alfanumerikusnak kell lennie",
         "value": {
             "name": "Érték",
@@ -60,8 +62,9 @@
     },
     "export_document": "Exportálás",
     "file_input": "Fálj feltöltése",
+    "file_saved": "{file} mentésre került",
     "grid_size": "Rácsméret",
-    "import": "Importálás",
+    "import_file": "Importálás",
     "keep_adding": "Hozzáadás folytatása",
     "modifier": "Módosító | Módosítók",
     "modifiers": {

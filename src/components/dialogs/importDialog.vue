@@ -10,7 +10,7 @@ let file: File;
 </script>
 
 <template>
-  <v-card :title="t('import')">
+  <v-card :title="t('import_file')">
     <v-card-text>
       <v-file-input accept=".ucde,text/json"
                     v-model="file"
@@ -19,7 +19,7 @@ let file: File;
     <v-card-actions>
       <v-spacer />
       <v-btn @click="()=>{ emit('cancel'); }">{{ t('cancel') }}</v-btn>
-      <v-btn color="primary" @click="()=>{ emit('submit', file); }">{{ t('import')}}</v-btn>
+      <v-btn color="primary" @click="()=>{ emit('submit', file); }">{{ t('import_file')}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>

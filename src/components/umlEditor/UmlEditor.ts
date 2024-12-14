@@ -1,4 +1,4 @@
-import {onMounted, ref} from 'vue';
+import {inject, onBeforeUnmount, onMounted, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import ClassifierEditorPanel from './classifierEditorPanel/ClassifierEditorPanel.vue';
 import CommentEditorPanel from './commentEditorPanel/CommentEditorPanel.vue';
@@ -34,7 +34,7 @@ import {Association} from '../../utils/nodes/connection/Association.ts';
 import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
 import {Composition} from '../../utils/nodes/connection/Composition.ts';
 import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
-
+import {TriggerService} from '../../services/TriggerService.ts';
 
 export default {
     components: {
@@ -55,6 +55,8 @@ export default {
     setup() {
         const { t } = useI18n();
         const { settings } = useSettingsService();
+
+        const triggerService: TriggerService | undefined = inject('triggerService');
 
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
@@ -112,6 +114,15 @@ export default {
                 editor.addNode(new InterfaceNode('InterfaceB', 400, 200, [], [new Operation('operationB', [new Parameter('param', 'type')])]));
                 editor.addNode(new EnumerationNode('EnumerationC', 70, 250, ['VALUE_A', 'VALUE_B']));
             }
+            
+            triggerService?.register('refreshEditor', onRefresh);
+        });
+
+        onBeforeUnmount(() => {
+            const canvas = umlCanvas.value as HTMLCanvasElement;
+            window.removeEventListener('resize', () => resizeCanvas(canvas));
+            window.removeEventListener('keydown', onKeyPress);
+            triggerService?.unregister('refreshEditor', onRefresh);
         });
 
         const resizeCanvas = (canvas: HTMLCanvasElement) => {
@@ -302,6 +313,13 @@ export default {
             }
         };
 
+        const onRefresh = (nodes: Node[]) => {
+            if (!nodes && !editor) return;
+
+            editor.nodes = nodes;
+            editor.render();
+        };
+        
         return {
             umlCanvas,
             data,

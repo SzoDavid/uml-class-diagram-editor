@@ -3,6 +3,7 @@
     "add": "Add",
     "add_breakpoint": "Add breakpoint",
     "appearance": "Appearance",
+    "cancel": "Cancel",
     "class_property": "Property | Properties",
     "class_stereotype": {
         "name": "Stereotype",
@@ -51,6 +52,7 @@
             "alphanumeric": "Name must be alphanumeric",
             "required": "Name is required"
         },
+        "nothing_to_save": "There is nothing to save",
         "type_alphanumeric": "Type must be alphanumeric",
         "value": {
             "name": "Value",
@@ -60,8 +62,9 @@
     },
     "export_document": "Export",
     "file_input": "File input",
+    "file_saved": "{file} is saved",
     "grid_size": "Grid size",
-    "import": "Import",
+    "import_file": "Import",
     "keep_adding": "Keep adding",
     "modifier": "Modifier | Modifiers",
     "modifiers": {
