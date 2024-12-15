@@ -29,6 +29,7 @@ describe('UCDE-Renderer', () => {
             beginPath: vi.fn(),
             rect: vi.fn(),
             fill: vi.fn(),
+            fillRect: vi.fn(),
             stroke: vi.fn(),
             measureText: vi.fn().mockImplementation((text: string) => ({
                 width: text.length * 7, // Mocking width based on text length
