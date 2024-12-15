@@ -73,7 +73,7 @@ export class UmlEditorService {
         keepAdding: false
     };
 
-    constructor(canvas: HTMLCanvasElement, renderer: Renderer) {
+    constructor(canvas: HTMLCanvasElement, renderer: Renderer, private virtual = false) {
         this._renderer = renderer;
 
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
@@ -119,6 +119,11 @@ export class UmlEditorService {
         return {x: this._panOffsetX, y: this._panOffsetY};
     }
 
+    public set nodes(nodes: Node[]) {
+        this._nodes = nodes;
+        this.render();
+    }
+
     public render(): void {
         // If adding a connection is in progress, render its ghost
         if (this._isAddingConnection) {
@@ -129,6 +134,8 @@ export class UmlEditorService {
         }
 
         this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
+
+        this.saveChangesToLocalStorage();
     }
 
     public addNode(node: Node): void {
@@ -648,5 +655,10 @@ export class UmlEditorService {
     private deselectAll() {
         this._nodes.forEach(node => node.deselect());
         this.render();
+    }
+
+    private saveChangesToLocalStorage(): void {
+        if (this.virtual) return;
+        localStorage.setItem('file', JSON.stringify(this._nodes.map(node => node.toSerializable())));
     }
 }

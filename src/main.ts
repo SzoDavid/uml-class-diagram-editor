@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import {createApp} from 'vue';
 import './style.css';
 import App from './App.vue';
 import i18n from './i18n';
@@ -10,6 +10,7 @@ import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
 import {createVueI18nAdapter} from 'vuetify/locale/adapters/vue-i18n';
 import {useI18n} from 'vue-i18n';
+import {TriggerService} from './services/TriggerService.ts';
 
 const vuetify = createVuetify({
     components,
@@ -25,8 +26,10 @@ const vuetify = createVuetify({
     }
 });
 
-createApp(App)
+const app = createApp(App)
     .use(i18n)
     .use(router)
-    .use(vuetify)
-    .mount('#app');
+    .use(vuetify);
+
+app.provide('triggerService', new TriggerService());
+app.mount('#app');

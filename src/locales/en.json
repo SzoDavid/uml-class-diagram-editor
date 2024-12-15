@@ -3,6 +3,7 @@
     "add": "Add",
     "add_breakpoint": "Add breakpoint",
     "appearance": "Appearance",
+    "cancel": "Cancel",
     "class_property": "Property | Properties",
     "class_stereotype": {
         "name": "Stereotype",
@@ -51,6 +52,7 @@
             "alphanumeric": "Name must be alphanumeric",
             "required": "Name is required"
         },
+        "nothing_to_save": "There is nothing to save",
         "type_alphanumeric": "Type must be alphanumeric",
         "value": {
             "name": "Value",
@@ -58,7 +60,13 @@
             "required": "Value is required"
         }
     },
+    "export_document": "Export",
+    "export_method": "Export to",
+    "file_input": "File input",
+    "file_saved": "{file} is saved",
     "grid_size": "Grid size",
+    "image_margin_size": "Margin size",
+    "import_file": "Import",
     "keep_adding": "Keep adding",
     "modifier": "Modifier | Modifiers",
     "modifiers": {
@@ -81,6 +89,7 @@
         "unnavigable": "Unnavigable"
     },
     "navigation": "Navigation",
+    "new_diagram": "New diagram",
     "node_types": {
         "class": "Class",
         "comment": "Comment",
@@ -111,6 +120,7 @@
     },
     "redefines": "Redefines",
     "remove": "Remove",
+    "rename": "Rename",
     "return_multiplicity": "Return multiplicity",
     "return_type": "Return type",
     "reset": "Reset",

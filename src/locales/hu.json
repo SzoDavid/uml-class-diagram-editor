@@ -3,6 +3,7 @@
     "add": "Hozzáadás",
     "add_breakpoint": "Töréspont hozzáadása",
     "appearance": "Megjelenés",
+    "cancel": "Mégse",
     "class_property": "Attribútum | Attribútumok",
     "class_stereotype": {
         "name": "Sztereotípus",
@@ -51,6 +52,7 @@
             "alphanumeric": "A névnek alfanumerikusnak kell lennie",
             "required": "A név kötelező"
         },
+        "nothing_to_save": "Nincs mit menteni",
         "type_alphanumeric": "A típusnak alfanumerikusnak kell lennie",
         "value": {
             "name": "Érték",
@@ -58,7 +60,13 @@
             "required": "Az érték kötelező"
         }
     },
+    "export_document": "Exportálás",
+    "export_method": "Exportálás mint",
+    "file_input": "Fálj feltöltése",
+    "file_saved": "{file} mentésre került",
     "grid_size": "Rácsméret",
+    "image_margin_size": "Margó méret",
+    "import_file": "Importálás",
     "keep_adding": "Hozzáadás folytatása",
     "modifier": "Módosító | Módosítók",
     "modifiers": {
@@ -81,6 +89,7 @@
         "unnavigable": "Navigálhatatlan"
     },
     "navigation": "Navigáció",
+    "new_diagram": "Új diagram",
     "node_types": {
         "class": "Osztály",
         "comment": "Megjegyzés",
@@ -111,6 +120,7 @@
     },
     "redefines": "Újradefiniálja",
     "remove": "Törlés",
+    "rename": "Átnevezés",
     "return_multiplicity": "Visszatérési multiplicitás",
     "return_type": "Visszatérési típus",
     "reset": "Visszaállítás",

@@ -4,8 +4,14 @@ import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
 import {Point} from '../../types.ts';
 import {Connection} from './Connection.ts';
+import {Serializable} from '../Serializable.ts';
+import {Node} from '../Node.ts';
+import {DeserializationError} from '../../../services/SerializationRegistryService.ts';
 
-export abstract class ConnectionPoint extends PositionalNode implements Point {
+const BASIC_CLASS_TAG = 'BasicConnectionPoint';
+const LOOSE_CLASS_TAG = 'LooseConnectionPoint';
+
+export abstract class ConnectionPoint extends PositionalNode implements Point, Serializable {
     constructor(
         x: number,
         y: number,
@@ -73,6 +79,25 @@ export abstract class ConnectionPoint extends PositionalNode implements Point {
 
         this.parent.points.splice(index, 1);
     }
+
+    //region Serializable Members
+
+    toSerializable(): object {
+        return {
+            x: this.x,
+            y: this.y
+        };
+    }
+
+    static fromSerializable(data: any, parent: Connection, previousNodes: Node[]): ConnectionPoint {
+        if (data.tag === BASIC_CLASS_TAG) {
+            return BasicConnectionPoint.fromSerializable(data, parent);
+        }
+
+        return LooseConnectionPoint.fromSerializable(data, parent, previousNodes);
+    }
+
+    //endregion
 }
 
 export class BasicConnectionPoint extends ConnectionPoint {
@@ -99,6 +124,21 @@ export class BasicConnectionPoint extends ConnectionPoint {
 
         return newPoint;
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        const obj: any = super.toSerializable();
+        obj['tag'] = BASIC_CLASS_TAG;
+
+        return obj;
+    }
+
+    static fromSerializable(data: any, parent: Connection): BasicConnectionPoint {
+        return new BasicConnectionPoint(data.x, data.y, parent);
+    }
+
+    //endregion
 }
 
 export class LooseConnectionPoint extends ConnectionPoint implements Point {
@@ -170,4 +210,33 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
 
         return newPoint;
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        return {
+            tag: LOOSE_CLASS_TAG,
+            node: {
+                x: this.node.x,
+                y: this.node.y,
+            }
+        };
+    }
+
+    static fromSerializable(data: any, parent: Connection, previousNodes: Node[]): LooseConnectionPoint {
+        const node = previousNodes.find(node => {
+            return (node instanceof PositionalNode)
+                && node.x === data.node.x
+                && node.y === data.node.y;
+        });
+
+        // The second part of this test is just for type safety it should never not be a positional node
+        if (!node || !(node instanceof PositionalNode)) {
+            throw new DeserializationError(`Could not find positional node with coordinates (${data.node.x};${data.node.y})`);
+        }
+
+        return new LooseConnectionPoint(node, parent);
+    }
+
+    //endregion
 }

@@ -51,4 +51,8 @@ export class MultiplicityRange implements Feature {
             return new MultiplicityRange(null, null);
         return new MultiplicityRange(this.upper, this.lower);
     }
+
+    static fromSerializable(data: any): MultiplicityRange {
+        return new MultiplicityRange(data.upper, data.lower);
+    }
 }

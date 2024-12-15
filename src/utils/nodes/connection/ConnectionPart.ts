@@ -4,8 +4,9 @@ import {InvalidNodeParameterCause} from '../types.ts';
 import {EditorConstants} from '../../constants.ts';
 import {GeometryUtils} from '../../GeometryUtils.ts';
 import {Connection} from './Connection.ts';
+import {Serializable} from '../Serializable.ts';
 
-export class ConnectionPart extends Node {
+export class ConnectionPart extends Node implements Serializable {
     constructor(
         public startIndex: number,
         public endIndex: number,
@@ -92,4 +93,19 @@ export class ConnectionPart extends Node {
         startPoint.remove();
         endPoint.remove();
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        return {
+            startIndex: this.startIndex,
+            endIndex: this.endIndex
+        };
+    }
+
+    static fromSerializable(data: any, parent: Connection): ConnectionPart {
+        return new ConnectionPart(data.startIndex, data.endIndex, parent);
+    }
+
+    //endregion
 }

@@ -148,4 +148,18 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility, Multi
 
         return returnText;
     }
+
+    static fromSerializable(data: any): Operation {
+        return new Operation(
+            data.name,
+            data.params.map((param: any) => Parameter.fromSerializable(param)),
+            data.visibility,
+            data.returnType,
+            data.returnMultiplicity ? MultiplicityRange.fromSerializable(data.returnMultiplicity) : undefined,
+            data.isStatic,
+            data.isAbstract,
+            [...data.properties],
+            data.redefines,
+        );
+    }
 }

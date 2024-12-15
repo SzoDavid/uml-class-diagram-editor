@@ -116,4 +116,19 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
             this.subsets
         );
     }
+
+    static fromSerializable(data: any): Property {
+        return new Property(
+            data.name,
+            data.type,
+            data.visibility,
+            data.isDerived,
+            data.multiplicity ? MultiplicityRange.fromSerializable(data.multiplicity) : undefined,
+            data.defaultValue,
+            data.isStatic,
+            [...data.modifiers],
+            data.redefines,
+            data.subsets
+        );
+    }
 }

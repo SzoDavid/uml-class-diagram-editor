@@ -1,6 +1,7 @@
 import {InvalidNodeParameterCause} from './types.ts';
+import {Serializable} from './Serializable.ts';
 
-export abstract class Node {
+export abstract class Node implements Serializable {
     isSelected: boolean = false;
     isDragging: boolean = false;
 
@@ -8,6 +9,7 @@ export abstract class Node {
     abstract clone(): Node;
     abstract copy(node: Node): void;
     abstract containsDot(x: number, y: number): boolean;
+    abstract toSerializable(): object;
 
     deselect(): void {
         this.isSelected = false;

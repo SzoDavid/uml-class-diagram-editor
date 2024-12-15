@@ -1,6 +1,9 @@
 import {ClassifierNode} from './ClassifierNode.ts';
 import {Property} from '../features/Property.ts';
 import {Operation} from '../features/Operation.ts';
+import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
+
+const CLASS_TAG = 'InterfaceNode';
 
 export class InterfaceNode extends ClassifierNode {
     constructor(name: string,
@@ -39,4 +42,34 @@ export class InterfaceNode extends ClassifierNode {
     public get header(): string {
         return 'Interface';
     }
+
+    //region Serializable members
+
+    toSerializable(): object {
+        const obj: any = super.toSerializable();
+        obj['tag'] = CLASS_TAG;
+
+        return obj;
+    }
+
+    static fromSerializable(data: any): InterfaceNode {
+        const node = new InterfaceNode(
+            data.name,
+            data.x,
+            data.y,
+            data.properties.map((prop: any) => Property.fromSerializable(prop)),
+            data.operations.map((operation: any) => Operation.fromSerializable(operation)),
+            data.isNotShownPropertiesExist,
+            data.isNotShownOperationsExist
+        );
+
+        node.width = data.width;
+        node.height = data.height;
+
+        return node;
+    }
+
+    //endregion
 }
+
+SerializationRegistryService.register(CLASS_TAG, InterfaceNode);
