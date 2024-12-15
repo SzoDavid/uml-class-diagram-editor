@@ -61,12 +61,19 @@ export class EnumerationNode extends PositionalNode implements Serializable {
             name: this.name,
             x: this.x,
             y: this.y,
+            width: this.width,
+            height: this.height,
             values: [...this.values]
         };
     }
 
     static fromSerializable(data: any): EnumerationNode {
-        return new EnumerationNode(data.name, data.x, data.y, data.values);
+        const node = new EnumerationNode(data.name, data.x, data.y, data.values);
+
+        node.width = data.width;
+        node.height = data.height;
+
+        return node;
     }
 
     //endregion

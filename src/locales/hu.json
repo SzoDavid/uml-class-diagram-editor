@@ -61,9 +61,11 @@
         }
     },
     "export_document": "Exportálás",
+    "export_method": "Exportálás mint",
     "file_input": "Fálj feltöltése",
     "file_saved": "{file} mentésre került",
     "grid_size": "Rácsméret",
+    "image_margin_size": "Margó méret",
     "import_file": "Importálás",
     "keep_adding": "Hozzáadás folytatása",
     "modifier": "Módosító | Módosítók",
@@ -87,6 +89,7 @@
         "unnavigable": "Navigálhatatlan"
     },
     "navigation": "Navigáció",
+    "new_diagram": "Új diagram",
     "node_types": {
         "class": "Osztály",
         "comment": "Megjegyzés",

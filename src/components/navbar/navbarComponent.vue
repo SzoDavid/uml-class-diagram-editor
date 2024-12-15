@@ -5,13 +5,14 @@ import {useI18n} from 'vue-i18n';
 import { saveAs } from 'file-saver';
 import RenameDialog from '../dialogs/renameDialog.vue';
 import ImportDialog from '../dialogs/importDialog.vue';
-import {ref} from 'vue';
+import {inject, ref} from 'vue';
 import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
 import {Node} from '../../utils/nodes/Node.ts';
+import {TriggerService} from '../../services/TriggerService.ts';
+import ExportDialog from '../dialogs/exportDialog.vue';
 
 const { t } = useI18n();
-
-const emit = defineEmits(['imported']);
+const triggerService: TriggerService | undefined = inject('triggerService');
 
 // Get the current locale from the route
 const route = useRoute();
@@ -70,7 +71,8 @@ function importFile(file: File) {
             localStorage.setItem('name', file.name);
             fileName.value = file.name;
 
-            emit('imported', nodes);
+            triggerService?.trigger('refreshEditor', nodes);
+
             showSnackbar('Successfully loaded file');
         } catch (e) {
             console.error(e);
@@ -79,6 +81,14 @@ function importFile(file: File) {
     };
     fileReader.readAsText(file);
 }
+
+function newDiagram() {
+    localStorage.setItem('file', '[]');
+    localStorage.setItem('name', 'untitled.ucde');
+    fileName.value = 'untitled.ucde';
+    triggerService?.trigger('refreshEditor', []);
+}
+
 </script>
 
 <template>
@@ -87,7 +97,7 @@ function importFile(file: File) {
 
     <template v-slot:actions>
       <v-btn
-        color="blue"
+        color="primary"
         variant="text"
         @click="snackbar = false">
         OK
@@ -114,7 +124,14 @@ function importFile(file: File) {
             </v-dialog>
           </v-list-item>
           <v-list-item @click="saveFile" :title="t('save')" />
-          <v-list-item :title="t('export_document')" />
+          <v-list-item :title="t('export_document')">
+            <v-dialog activator="parent" max-width="340">
+              <template v-slot:default="{ isActive }">
+                <export-dialog @cancel="() => { isActive.value = false; }" />
+              </template>
+            </v-dialog>
+          </v-list-item>
+          <v-list-item @click="newDiagram" :title="t('new_diagram')" />
         </v-list>
       </v-menu>
 

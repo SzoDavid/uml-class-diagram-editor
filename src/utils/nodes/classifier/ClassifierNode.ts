@@ -63,6 +63,8 @@ export abstract class ClassifierNode extends PositionalNode implements Serializa
             name: this.name,
             x: this.x,
             y: this.y,
+            width: this.width,
+            height: this.height,
             properties: [...this.properties],
             operations: [...this.operations],
             isNotShownPropertiesExist: this.isNotShownPropertiesExist,

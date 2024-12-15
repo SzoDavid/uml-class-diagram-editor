@@ -54,7 +54,7 @@ export class DataTypeNode extends ClassifierNode {
     }
 
     static fromSerializable(data: any): DataTypeNode {
-        return new DataTypeNode(
+        const node = new DataTypeNode(
             data.name,
             data.x,
             data.y,
@@ -63,6 +63,11 @@ export class DataTypeNode extends ClassifierNode {
             data.isNotShownPropertiesExist,
             data.isNotShownOperationsExist,
         );
+
+        node.width = data.width;
+        node.height = data.height;
+
+        return node;
     }
 
     //endregion

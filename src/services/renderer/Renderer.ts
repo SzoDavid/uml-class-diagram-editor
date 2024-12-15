@@ -17,6 +17,8 @@ export class Renderer {
 
     public render(nodes: Node[], scale: number, offsetX: number, offsetY: number, connectionLine?: {start: {x: number, y: number}, end: {x: number, y: number} }): void {
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        this._ctx.fillStyle = 'white';
+        this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
         this._ctx.save();
         this._ctx.translate(offsetX, offsetY);

@@ -46,13 +46,15 @@ export class CommentNode extends PositionalNode implements Serializable {
             text: this.text,
             x: this.x,
             y: this.y,
-            width: this.width
+            width: this.width,
+            height: this.height
         };
     }
 
     static fromSerializable(data: any): CommentNode {
         const node = new CommentNode(data.text, data.x, data.y);
         node.width = data.width;
+        node.height = data.height;
         return node;
     }
     //endregion

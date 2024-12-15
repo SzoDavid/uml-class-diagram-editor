@@ -52,11 +52,18 @@ export class PrimitiveTypeNode extends PositionalNode implements Serializable {
             name: this.name,
             x: this.x,
             y: this.y,
+            width: this.width,
+            height: this.height
         };
     }
 
     static fromSerializable(data: any): PrimitiveTypeNode {
-        return new PrimitiveTypeNode(data.name, data.x, data.y);
+        const node = new PrimitiveTypeNode(data.name, data.x, data.y);
+
+        node.width = data.width;
+        node.height = data.height;
+
+        return node;
     }
 
     //endregion

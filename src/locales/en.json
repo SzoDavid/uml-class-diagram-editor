@@ -61,9 +61,11 @@
         }
     },
     "export_document": "Export",
+    "export_method": "Export to",
     "file_input": "File input",
     "file_saved": "{file} is saved",
     "grid_size": "Grid size",
+    "image_margin_size": "Margin size",
     "import_file": "Import",
     "keep_adding": "Keep adding",
     "modifier": "Modifier | Modifiers",
@@ -87,6 +89,7 @@
         "unnavigable": "Unnavigable"
     },
     "navigation": "Navigation",
+    "new_diagram": "New diagram",
     "node_types": {
         "class": "Class",
         "comment": "Comment",

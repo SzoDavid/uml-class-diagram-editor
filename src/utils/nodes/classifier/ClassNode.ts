@@ -97,7 +97,7 @@ export class ClassNode extends ClassifierNode {
     }
 
     static fromSerializable(data: any): ClassNode {
-        return new ClassNode(
+        const classNode = new ClassNode(
             data.name,
             data.x,
             data.y,
@@ -108,6 +108,11 @@ export class ClassNode extends ClassifierNode {
             data.isAbstract,
             data.stereotype
         );
+
+        classNode.width = data.width;
+        classNode.height = data.height;
+
+        return classNode;
     }
 
     //endregion

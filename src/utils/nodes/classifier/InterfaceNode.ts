@@ -53,7 +53,7 @@ export class InterfaceNode extends ClassifierNode {
     }
 
     static fromSerializable(data: any): InterfaceNode {
-        return new InterfaceNode(
+        const node = new InterfaceNode(
             data.name,
             data.x,
             data.y,
@@ -62,6 +62,11 @@ export class InterfaceNode extends ClassifierNode {
             data.isNotShownPropertiesExist,
             data.isNotShownOperationsExist
         );
+
+        node.width = data.width;
+        node.height = data.height;
+
+        return node;
     }
 
     //endregion

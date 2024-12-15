@@ -73,7 +73,7 @@ export class UmlEditorService {
         keepAdding: false
     };
 
-    constructor(canvas: HTMLCanvasElement, renderer: Renderer) {
+    constructor(canvas: HTMLCanvasElement, renderer: Renderer, private virtual = false) {
         this._renderer = renderer;
 
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
@@ -658,6 +658,7 @@ export class UmlEditorService {
     }
 
     private saveChangesToLocalStorage(): void {
+        if (this.virtual) return;
         localStorage.setItem('file', JSON.stringify(this._nodes.map(node => node.toSerializable())));
     }
 }
