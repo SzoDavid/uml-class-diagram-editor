@@ -74,9 +74,9 @@ function importFile(file: File) {
             triggerService?.trigger('refreshEditor', nodes);
 
             showSnackbar('Successfully loaded file');
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            showSnackbar(e);
+            showSnackbar(e.toString());
         }
     };
     fileReader.readAsText(file);
