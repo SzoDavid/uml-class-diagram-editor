@@ -263,7 +263,7 @@ export default {
                     setSelectedNode(editor.selectedNode);
                     break;
                 case UmlEditorTool.MOVE:
-                    data.value = { type: 'editor', instance: editor.editorConfig };
+                    data.value = { type: 'editor' };
                     break;
                 case UmlEditorTool.ADD:
                     data.value = { type: 'addOption', instance: editor.addConfig };
