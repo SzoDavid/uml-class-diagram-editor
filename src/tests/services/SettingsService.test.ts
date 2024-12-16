@@ -26,6 +26,7 @@ describe('UCDE-SettingsService', () => {
             separateObjectParametersWidthLimit: 500,
             dotSize: 4,
             options: {
+                gridSize: 5,
                 classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
             }
         };
