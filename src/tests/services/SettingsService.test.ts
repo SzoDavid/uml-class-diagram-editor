@@ -6,9 +6,9 @@ describe('UCDE-SettingsService', () => {
     test('UCDE-SS-01 GIVEN default settings WHEN the settings are initialized THEN they should have the correct default values', () => {
         const { settings } = useSettingsService();
         const defaultConfig: RenderConfiguration = {
-            textSize: 16,
+            textSize: 20,
             defaultWidth: 100,
-            lineHeight: 24,
+            lineHeight: 30,
             lineMargin: 5,
             tabSize: 10,
             borderSize: 1,
@@ -26,6 +26,7 @@ describe('UCDE-SettingsService', () => {
             separateObjectParametersWidthLimit: 500,
             dotSize: 4,
             options: {
+                gridSize: 15,
                 classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
             }
         };

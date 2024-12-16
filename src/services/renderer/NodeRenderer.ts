@@ -162,14 +162,18 @@ export class NodeRenderer {
         }
     }
 
+    roundUpToGridSize(value: number): number {
+        return Math.ceil(value / (this.rc.options.gridSize * 2)) * (this.rc.options.gridSize * 2);
+    }
+
     private renderPrimitiveType(node: PrimitiveTypeNode) {
         this.ctx.font = `bold ${this.rc.textSize}px Arial`;
 
-        node.width = Math.max(
+        node.width = this.roundUpToGridSize(Math.max(
             this.rc.defaultWidth,
             this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
             this.ctx.measureText('«Primitive»').width + 2 * this.rc.lineMargin,
-        );
+        ));
 
         this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive', '',
                         node.isSelected, node.validate().length > 0, false);
@@ -181,11 +185,11 @@ export class NodeRenderer {
 
         const invalid = node.validate().length > 0;
 
-        node.width = Math.max(
+        node.width = this.roundUpToGridSize(Math.max(
             this.rc.defaultWidth,
             this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
             this.ctx.measureText('«Enumeration»').width + 2 * this.rc.lineMargin,
-        );
+        ));
 
         this.ctx.font = `${this.rc.textSize}px Arial`;
 

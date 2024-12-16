@@ -88,13 +88,6 @@
             <template v-else-if="data.type==='connection'">
               <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
             </template>
-            <template v-else-if="data.type==='editor'">
-              <v-expansion-panel :title="t('option', 2)">
-                <v-expansion-panel-text>
-                  <v-select :label="t('grid_size')" v-model="data.instance.gridSize" density="comfortable" :items="[0, 25, 50]" />
-                </v-expansion-panel-text>
-              </v-expansion-panel>
-            </template>
             <template v-else-if="data.type==='addOption'">
               <v-expansion-panel :title="t('option', 2)">
                 <v-expansion-panel-text>

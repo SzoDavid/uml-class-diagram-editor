@@ -32,10 +32,6 @@ export enum UmlEditorTool {
 export type EmitReason = 'toolChange'|'scaleChange'|'mouseDown';
 export type EmitType = Node | UmlEditorTool | number | null;
 
-export interface EditorConfig {
-    gridSize: number;
-}
-
 export interface AddConfig {
     type: NodeType;
     keepAdding: boolean
@@ -63,10 +59,6 @@ export class UmlEditorService {
     private _panOffsetY: number = 0;
     private _lastPanX: number = 0;
     private _lastPanY: number = 0;
-
-    editorConfig: EditorConfig = {
-        gridSize: 0
-    };
 
     addConfig: AddConfig = {
         type: NodeType.CLASS,
@@ -289,18 +281,20 @@ export class UmlEditorService {
     private onMouseMove(event: MouseEvent): void {
         const { offsetX, offsetY } = event;
 
+        const gridSize = this._renderer.renderConfiguration.options.gridSize;
+
         if (this._selectedNode && this._selectedNode.isDragging) {
             if (this._selectedNode instanceof PositionalNode) {
-                this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
-                this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
+                this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, gridSize);
+                this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, gridSize);
             } else if (this._selectedNode instanceof ConnectionPart) {
                 if (!(this._selectedNode.startPoint instanceof LooseConnectionPoint)) {
-                    this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, this.editorConfig.gridSize);
-                    this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, this.editorConfig.gridSize);
+                    this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, gridSize);
+                    this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, gridSize);
                 }
                 if (!(this._selectedNode.endPoint instanceof LooseConnectionPoint)) {
-                    this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, this.editorConfig.gridSize);
-                    this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, this.editorConfig.gridSize);
+                    this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, gridSize);
+                    this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, gridSize);
                 }
             }
             this.render();
@@ -308,8 +302,8 @@ export class UmlEditorService {
         }
 
         if (this._isAddingConnection) {
-            this._secondaryDragOffsetX = this.roundToNearest((offsetX - this._panOffsetX) / this._scale, this.editorConfig.gridSize);
-            this._secondaryDragOffsetY = this.roundToNearest((offsetY - this._panOffsetY) / this._scale, this.editorConfig.gridSize);
+            this._secondaryDragOffsetX = this.roundToNearest((offsetX - this._panOffsetX) / this._scale, gridSize);
+            this._secondaryDragOffsetY = this.roundToNearest((offsetY - this._panOffsetY) / this._scale, gridSize);
             this.render();
             return;
         }
@@ -413,8 +407,8 @@ export class UmlEditorService {
      * @param y - The y-coordinate (in screen space) where the node should be added.
      */
     private handleAddNode(x: number, y: number): void {
-        const transformedX = (x - this._panOffsetX) / this._scale;
-        const transformedY = (y - this._panOffsetY) / this._scale;
+        const transformedX = this.roundToNearest((x - this._panOffsetX) / this._scale, this._renderer.renderConfiguration.options.gridSize);
+        const transformedY = this.roundToNearest((y - this._panOffsetY) / this._scale, this._renderer.renderConfiguration.options.gridSize);
 
         let node: Node;
         switch (this.addConfig.type) {

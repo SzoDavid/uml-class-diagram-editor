@@ -2,9 +2,9 @@ import {ClassAbstractionDisplayMode, RenderConfiguration} from './renderer/Rende
 import {reactive} from 'vue';
 
 const defaultRenderConfiguration: RenderConfiguration = {
-    textSize: 16,
+    textSize: 20,
     defaultWidth: 100,
-    lineHeight: 24,
+    lineHeight: 30,
     lineMargin: 5,
     tabSize: 10,
     borderSize: 1,
@@ -22,6 +22,7 @@ const defaultRenderConfiguration: RenderConfiguration = {
     separateObjectParametersWidthLimit: 500,
     dotSize: 4,
     options: {
+        gridSize: 15,
         classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
     }
 };
