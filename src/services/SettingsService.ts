@@ -38,6 +38,20 @@ export const useSettingsService = () => {
         Object.assign(settings, newSettings);
     };
 
-    return { settings, updateSettings };
-};
+    const resetRenderSettings = () => {
+        Object.assign(settings.renderer, {
+            textSize: 20,
+            defaultWidth: 100,
+            lineHeight: 30,
+            lineMargin: 5,
+            tabSize: 10,
+            borderSize: 1,
+            underlineDelta: -2,
+            underlineWidth: 1,
+            separateObjectParametersWidthLimit: 500,
+            dotSize: 4,
+        });
+    };
 
+    return { settings, updateSettings, resetRenderSettings };
+};
