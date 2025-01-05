@@ -33,5 +33,4 @@
       <v-btn density="compact" block @click="addValue" icon="mdi-plus" rounded="0"></v-btn>
     </v-expansion-panel-text>
   </v-expansion-panel>
-  <v-btn block @click="onSave">{{ t("save") }}</v-btn>
 </template>
