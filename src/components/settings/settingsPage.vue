@@ -3,12 +3,18 @@ import {useSettingsService} from '../../services/SettingsService.ts';
 import {useI18n} from 'vue-i18n';
 import {ClassAbstractionDisplayMode} from '../../services/renderer/RenderConfiguration.ts';
 
-const { settings, resetRenderSettings } = useSettingsService();
+const { settings, resetRenderSettings, saveRenderSettings } = useSettingsService();
 const { t } = useI18n();
+
 </script>
 
 <template>
   <div class="main-container">
+    <div class="header-container">
+      <h1>{{ t('settings.title') }}</h1>
+      <v-btn :text="t('save')" @click="saveRenderSettings"/>
+    </div>
+
     <v-card :title="t('settings.options.title')">
       <v-card-text>
         <v-select :label="t('settings.options.class_abstraction_display_mode.title')"
@@ -69,7 +75,8 @@ const { t } = useI18n();
                       type="number" />
       </v-card-text>
       <v-card-actions>
-        <v-btn :text="t('reset')" @click="resetRenderSettings"/>
+        <v-spacer />
+        <v-btn variant="tonal" :text="t('reset')" @click="resetRenderSettings"/>
       </v-card-actions>
     </v-card>
   </div>
@@ -77,15 +84,35 @@ const { t } = useI18n();
 
 <style scoped>
   .main-container {
+    max-width: 1000px;
+    width: 100%;
+    margin: auto;
     padding-top: 48px;
   }
 
+  .header-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+  }
+
+  .header-container .v-btn {
+    margin-left: auto;
+    align-self: center;
+    background-color: #66F;
+  }
+
   .v-card {
-    max-width: 1000px;
-    margin: 25px auto;
+    margin-bottom: 25px;
+  }
+
+  h1 {
+    height: 100%;
+    vertical-align: middle;
   }
 
   .v-btn {
-    background-color: #66F;
+
   }
 </style>

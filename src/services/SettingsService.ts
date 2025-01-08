@@ -29,13 +29,28 @@ const defaultRenderConfiguration: RenderConfiguration = {
 
 export type SettingsType = { renderer: RenderConfiguration };
 
+const initConfig = () => {
+    const savedSettings = localStorage.getItem('render-settings');
+    const config = defaultRenderConfiguration;
+
+    if (savedSettings) {
+        Object.assign(config, JSON.parse(savedSettings));
+    }
+
+    return config;
+};
+
 const settings: SettingsType = reactive({
-    renderer: defaultRenderConfiguration
+    renderer: initConfig()
 });
 
 export const useSettingsService = () => {
     const updateSettings = (newSettings: SettingsType) => {
         Object.assign(settings, newSettings);
+    };
+
+    const updateRenderSettings = (newSettings: RenderConfiguration) => {
+        Object.assign(settings.renderer, newSettings);
     };
 
     const resetRenderSettings = () => {
@@ -53,5 +68,9 @@ export const useSettingsService = () => {
         });
     };
 
-    return { settings, updateSettings, resetRenderSettings };
+    const saveRenderSettings = () => {
+        localStorage.setItem('render-settings', JSON.stringify(settings.renderer));
+    };
+
+    return { settings, updateSettings, updateRenderSettings, resetRenderSettings, saveRenderSettings };
 };
