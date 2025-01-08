@@ -29,8 +29,19 @@ const defaultRenderConfiguration: RenderConfiguration = {
 
 export type SettingsType = { renderer: RenderConfiguration };
 
+const initConfig = () => {
+    const savedSettings = localStorage.getItem('render-settings');
+    const config = defaultRenderConfiguration;
+
+    if (savedSettings) {
+        Object.assign(config, JSON.parse(savedSettings));
+    }
+
+    return config;
+};
+
 const settings: SettingsType = reactive({
-    renderer: defaultRenderConfiguration
+    renderer: initConfig()
 });
 
 export const useSettingsService = () => {
@@ -38,6 +49,28 @@ export const useSettingsService = () => {
         Object.assign(settings, newSettings);
     };
 
-    return { settings, updateSettings };
-};
+    const updateRenderSettings = (newSettings: RenderConfiguration) => {
+        Object.assign(settings.renderer, newSettings);
+    };
 
+    const resetRenderSettings = () => {
+        Object.assign(settings.renderer, {
+            textSize: 20,
+            defaultWidth: 100,
+            lineHeight: 30,
+            lineMargin: 5,
+            tabSize: 10,
+            borderSize: 1,
+            underlineDelta: -2,
+            underlineWidth: 1,
+            separateObjectParametersWidthLimit: 500,
+            dotSize: 4,
+        });
+    };
+
+    const saveRenderSettings = () => {
+        localStorage.setItem('render-settings', JSON.stringify(settings.renderer));
+    };
+
+    return { settings, updateSettings, updateRenderSettings, resetRenderSettings, saveRenderSettings };
+};

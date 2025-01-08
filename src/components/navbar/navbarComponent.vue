@@ -2,14 +2,12 @@
 import {useRoute, useRouter} from 'vue-router';
 import { version } from '../../../package.json';
 import {useI18n} from 'vue-i18n';
-import { saveAs } from 'file-saver';
 import RenameDialog from '../dialogs/renameDialog.vue';
 import ImportDialog from '../dialogs/importDialog.vue';
 import {inject, ref} from 'vue';
-import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
-import {Node} from '../../utils/nodes/Node.ts';
 import {TriggerService} from '../../services/TriggerService.ts';
 import ExportDialog from '../dialogs/exportDialog.vue';
+import {saveFile, importFile} from '../../utils/IOUtils.ts';
 
 const { t } = useI18n();
 const triggerService: TriggerService | undefined = inject('triggerService');
@@ -37,17 +35,12 @@ function switchToEditor() {
     router.push({ name: 'editor', params: { locale: route.params.locale ?? 'en' }});
 }
 
-function saveFile() {
-    const document = localStorage.getItem('file');
-
-    if (!document) {
+function onFileSave() {
+    if (saveFile('file', 'render', fileName.value)) {
+        showSnackbar(t('file_saved', {file: fileName}));
+    } else {
         showSnackbar(t('nothing_to_save'));
-        return;
-    } 
-
-    saveAs(new Blob([document], {type: 'text/json;charset=utf-8'}), fileName.value);
-
-    showSnackbar(t('file_saved', {file: fileName}));
+    }
 }
 
 function saveName(name: string) {
@@ -55,31 +48,20 @@ function saveName(name: string) {
     localStorage.setItem('name', fileName.value);
 }
 
-function importFile(file: File) {
+function onFileImport(file: File) {
     if (!file) {
         showSnackbar('No file has been uploaded!');
         return;
     }
 
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-        const fileContent = fileReader.result as string;
-
-        try {
-            const nodes = SerializationRegistryService.batchDeserialize<Node>(JSON.parse(fileContent));
-            localStorage.setItem('file', JSON.stringify(nodes.map(node => node.toSerializable())));
-            localStorage.setItem('name', file.name);
+    importFile(file, triggerService)
+        .then(() => {
             fileName.value = file.name;
-
-            triggerService?.trigger('refreshEditor', nodes);
-
             showSnackbar('Successfully loaded file');
-        } catch (e: any) {
-            console.error(e);
-            showSnackbar(e.toString());
-        }
-    };
-    fileReader.readAsText(file);
+        })
+        .catch((error) => {
+            showSnackbar(error.toString());
+        });
 }
 
 function newDiagram() {
@@ -123,7 +105,7 @@ function newDiagram() {
               </template>
             </v-dialog>
           </v-list-item>
-          <v-list-item @click="saveFile" :title="t('save')" />
+          <v-list-item @click="onFileSave" :title="t('save')" />
           <v-list-item :title="t('export_document')">
             <v-dialog activator="parent" max-width="340">
               <template v-slot:default="{ isActive }">
@@ -142,7 +124,7 @@ function newDiagram() {
           <v-btn icon="mdi-import" density="comfortable" v-bind="activatorProps" />
         </template>
         <template v-slot:default="{ isActive }">
-          <import-dialog @submit="(file: File) => { importFile(file); isActive.value = false; }"
+          <import-dialog @submit="(file: File) => { onFileImport(file); isActive.value = false; }"
                          @cancel="() => { isActive.value = false; }" />
         </template>
       </v-dialog>

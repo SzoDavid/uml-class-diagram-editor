@@ -64,7 +64,6 @@
     "export_method": "Export to",
     "file_input": "File input",
     "file_saved": "{file} is saved",
-    "grid_size": "Grid size",
     "image_margin_size": "Margin size",
     "import_file": "Import",
     "keep_adding": "Keep adding",
@@ -135,7 +134,10 @@
                 "italic": "Italic",
                 "keyword": "Keyword",
                 "title": "Class abstraction display mode"
-            }
+            },
+            "grid_size": "Grid size",
+            "show_invalidity": "Show invalidity",
+            "title": "Options"
         },
         "renderer": {
             "border_thickness": "Border thickness",
@@ -149,10 +151,10 @@
                 "invalid_selected": "Invalid and selected"
             },
             "default_width": "Default width",
+            "dot_size": "Dot size",
             "line_height": "Line height",
             "line_margin": "Line margin",
             "separate_object_parameters_width_limit": "Width limit to separate parameters",
-            "show_invalidity": "Show invalidity",
             "tab_size": "Tab size",
             "text_size": "Text size",
             "title": "Renderer",

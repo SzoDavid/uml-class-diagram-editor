@@ -64,7 +64,6 @@
     "export_method": "Exportálás mint",
     "file_input": "Fálj feltöltése",
     "file_saved": "{file} mentésre került",
-    "grid_size": "Rácsméret",
     "image_margin_size": "Margó méret",
     "import_file": "Importálás",
     "keep_adding": "Hozzáadás folytatása",
@@ -135,7 +134,10 @@
                 "italic": "Dőlt betűs",
                 "keyword": "Kulcsszó",
                 "title": "Osztály absztrakció jelzés"
-            }
+            },
+            "grid_size": "Rácsméret",
+            "show_invalidity": "Invaliditás kimutatása",
+            "title": "Opciók"
         },
         "renderer": {
             "border_thickness": "Keret vastagság",
@@ -149,10 +151,10 @@
                 "invalid_selected": "Invalid és kijelölt"
             },
             "default_width": "Alap szélesség",
+            "dot_size": "Pont méret",
             "line_height": "Vonal magasság",
             "line_margin": "Vonal margó",
             "separate_object_parameters_width_limit": "Szélesség limit a paraméterek szétválasztására",
-            "show_invalidity": "Invaliditás kimutatása",
             "tab_size": "Tab méret",
             "text_size": "Betűméret",
             "title": "Renderelő",
