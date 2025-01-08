@@ -4,9 +4,9 @@
 <template>
   <v-expansion-panel :title="t('appearance')">
     <v-expansion-panel-text>
-      <v-text-field label="x" v-model="data.instance.x" type="number" />
-      <v-text-field label="y" v-model="data.instance.y" type="number" />
-      <v-text-field :label="t('width')" v-model="data.instance.width" type="number" />
+      <v-text-field label="x" v-model="data.instance.x" readonly density="comfortable" />
+      <v-text-field label="y" v-model="data.instance.y" readonly density="comfortable" />
+      <v-text-field :label="t('width')" v-model="data.instance.width" type="number" density="comfortable" />
     </v-expansion-panel-text>
   </v-expansion-panel>
   <v-expansion-panel :title="t('detail', 2)">
