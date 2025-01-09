@@ -2,7 +2,7 @@ import {Connection} from './Connection.ts';
 import {Point} from '../../types.ts';
 import {PositionalNode} from '../PositionalNode.ts';
 import {MultiplicityRange} from '../features/MultiplicityRange.ts';
-import {AssociationNavigability} from '../types.ts';
+import {AssociationNavigability, PixelOffset} from '../types.ts';
 import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
 import {ConnectionPoint} from './ConnectionPoint.ts';
 import {Node} from '../Node.ts';
@@ -12,14 +12,17 @@ const CLASS_TAG = 'Association';
 
 export class Association extends Connection {
     public associationName: string = '';
+    public nameOffset: PixelOffset = { x: 0, y: 0 };
     public showOwnership: boolean = false;
     public reversedOwnership: boolean = false;
 
     public startName: string = '';
+    public startNameOffset: PixelOffset = { x: 0, y: 0 };
     public startMultiplicity: MultiplicityRange = new MultiplicityRange(null);
     public startNavigability: AssociationNavigability = AssociationNavigability.UNSPECIFIED;
 
     public endName: string = '';
+    public endNameOffset: PixelOffset = { x: 0, y: 0 };
     public endMultiplicity: MultiplicityRange = new MultiplicityRange(null);
     public endNavigability: AssociationNavigability = AssociationNavigability.UNSPECIFIED;
 
@@ -32,14 +35,17 @@ export class Association extends Connection {
         this.basicClone(clone);
 
         clone.associationName = this.associationName;
+        clone.nameOffset = { ...this.nameOffset };
         clone.showOwnership = this.showOwnership;
         clone.reversedOwnership = this.reversedOwnership;
 
         clone.startName = this.startName;
+        clone.startNameOffset = { ...this.startNameOffset };
         clone.startMultiplicity = this.startMultiplicity;
         clone.startNavigability = this.startNavigability;
 
         clone.endName = this.endName;
+        clone.endNameOffset = { ...this.endNameOffset };
         clone.endMultiplicity = this.endMultiplicity;
         clone.endNavigability = this.endNavigability;
 
@@ -50,14 +56,17 @@ export class Association extends Connection {
         super.copy(node);
 
         this.associationName = node.associationName;
+        this.nameOffset = { x: +node.nameOffset.x, y: +node.nameOffset.y };
         this.showOwnership = node.showOwnership;
         this.reversedOwnership = node.reversedOwnership;
 
         this.startName = node.startName;
+        this.startNameOffset = { x: +node.startNameOffset.x, y: +node.startNameOffset.y };
         this.startMultiplicity = node.startMultiplicity;
         this.startNavigability = node.startNavigability;
 
         this.endName = node.endName;
+        this.endNameOffset = { x: +node.endNameOffset.x, y: +node.endNameOffset.y };
         this.endMultiplicity = node.endMultiplicity;
         this.endNavigability = node.endNavigability;
     }
@@ -69,14 +78,17 @@ export class Association extends Connection {
         obj['tag'] = CLASS_TAG;
 
         obj['associationName'] = this.associationName;
+        obj['nameOffset'] = { ...this.nameOffset };
         obj['showOwnership'] = this.showOwnership;
         obj['reversedOwnership'] = this.reversedOwnership;
 
         obj['startName'] = this.startName;
+        obj['startNameOffset'] = { ...this.startNameOffset };
         obj['startMultiplicity'] = this.startMultiplicity;
         obj['startNavigability'] = this.startNavigability;
 
         obj['endName'] = this.endName;
+        obj['endNameOffset'] = { ...this.endNameOffset };
         obj['endMultiplicity'] = this.endMultiplicity;
         obj['endNavigability'] = this.endNavigability;
 
@@ -89,14 +101,17 @@ export class Association extends Connection {
         deserialized.parts = data.parts.map((part: any) => ConnectionPart.fromSerializable(part, deserialized));
 
         deserialized.associationName = data.associationName;
+        deserialized.nameOffset = { ...data.nameOffset };
         deserialized.showOwnership = data.showOwnership;
         deserialized.reversedOwnership = data.reversedOwnership;
 
         deserialized.startName = data.startName;
+        deserialized.startNameOffset = { ...data.startNameOffset };
         deserialized.startMultiplicity = MultiplicityRange.fromSerializable(data.startMultiplicity);
         deserialized.startNavigability = data.startNavigability;
 
         deserialized.endName = data.endName;
+        deserialized.endNameOffset = { ...data.endNameOffset };
         deserialized.endMultiplicity = MultiplicityRange.fromSerializable(data.endMultiplicity);
         deserialized.endNavigability = data.endNavigability;
 
