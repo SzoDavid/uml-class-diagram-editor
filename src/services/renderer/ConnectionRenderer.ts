@@ -4,7 +4,7 @@ import {Point} from '../../utils/types.ts';
 import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
 import {Association} from '../../utils/nodes/connection/Association.ts';
 import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
-import {AssociationNavigability} from '../../utils/nodes/types.ts';
+import {AssociationNavigability, PixelOffset} from '../../utils/nodes/types.ts';
 import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
 import {Composition} from '../../utils/nodes/connection/Composition.ts';
 import {LooseConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
@@ -138,8 +138,8 @@ export class ConnectionRenderer {
         if (connection.parts.length % 2 === 1) {
             const midPart = connection.parts[Math.floor(connection.parts.length / 2)];
             const midPoint = {
-                x: (midPart.startPoint.x + midPart.endPoint.x) / 2,
-                y: (midPart.startPoint.y + midPart.endPoint.y) / 2,
+                x: ((midPart.startPoint.x + midPart.endPoint.x) / 2) + connection.nameOffset.x,
+                y: ((midPart.startPoint.y + midPart.endPoint.y) / 2) + connection.nameOffset.y,
             };
 
             const angle = GeometryUtils.normalizeRadians(midPart.angle);
@@ -275,6 +275,7 @@ export class ConnectionRenderer {
     private renderEndTexts(connection: Composition|Aggregation|Association, startPart: ConnectionPart, endPart: ConnectionPart): void {
         this.renderEndText(
             startPart.startPoint,
+            connection.startNameOffset,
             connection.startMultiplicity.toString(),
             connection.startName,
             startPart.angle,
@@ -282,6 +283,7 @@ export class ConnectionRenderer {
         );
         this.renderEndText(
             endPart.endPoint,
+            connection.endNameOffset,
             connection.endMultiplicity.toString(),
             connection.endName,
             endPart.angle + Math.PI,
@@ -289,12 +291,14 @@ export class ConnectionRenderer {
         );
     }
 
-    private renderEndText(point: Point, textA: string, textB: string, angle: number, isSelected: boolean = false): void {
+    private renderEndText(point: Point, offset: PixelOffset, textA: string, textB: string, angle: number, isSelected: boolean = false): void {
+        if (!textA && !textB) return;
+
         const len = this._nr.rc.lineHeight * Math.sqrt(2);
 
         const coords = {
-            x: point.x + len * Math.cos(angle),
-            y: point.y + len * Math.sin(angle)
+            x: point.x + len * Math.cos(angle) + offset.x,
+            y: point.y + len * Math.sin(angle) + offset.y,
         };
 
         angle = GeometryUtils.normalizeRadians(angle);

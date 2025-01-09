@@ -67,6 +67,7 @@
     "image_margin_size": "Margin size",
     "import_file": "Import",
     "keep_adding": "Keep adding",
+    "label_offset": "Label offset",
     "modifier": "Modifier | Modifiers",
     "modifiers": {
         "id": "Id",

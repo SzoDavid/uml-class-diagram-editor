@@ -31,6 +31,21 @@
                         density="comfortable"
                         type="text" />
 
+          <!-- Association name label offset -->
+          <v-card v-if="data.instance.associationName" :title="t('label_offset')" variant="tonal" density="compact">
+            <v-card-text>
+              <v-text-field label="x"
+                            v-model="data.instance.nameOffset.x"
+                            density="comfortable"
+                            type="number" />
+
+              <v-text-field label="y"
+                            v-model="data.instance.nameOffset.y"
+                            density="comfortable"
+                            type="number" />
+            </v-card-text>
+          </v-card>
+
           <v-checkbox density="compact" :label="t('show_ownership')" v-model="data.instance.showOwnership" />
           <v-checkbox density="compact" :label="t('reversed')" v-model="data.instance.reversedOwnership" />
         </template>
@@ -49,6 +64,20 @@
                               density="comfortable"
                               type="text" />
 
+                <!-- Start name label offset -->
+                <v-card v-if="data.instance.startName" :title="t('label_offset')" variant="tonal" density="compact">
+                  <v-card-text>
+                    <v-text-field label="x"
+                                  v-model="data.instance.startNameOffset.x"
+                                  density="comfortable"
+                                  type="number" />
+
+                    <v-text-field label="y"
+                                  v-model="data.instance.startNameOffset.y"
+                                  density="comfortable"
+                                  type="number" />
+                  </v-card-text>
+                </v-card>
                 <template v-if="data.instance instanceof Aggregation">
                   <v-checkbox density="compact" :label="t('shared')" v-model="data.instance.isStartShared" />
                 </template>
@@ -84,6 +113,21 @@
                               :rules="[() => getError({parameter: 'endName'}) ?? true]"
                               density="comfortable"
                               type="text" />
+
+                <!-- End name label offset -->
+                <v-card v-if="data.instance.endName" :title="t('label_offset')" variant="tonal" density="compact">
+                  <v-card-text>
+                    <v-text-field label="x"
+                                  v-model="data.instance.endNameOffset.x"
+                                  density="comfortable"
+                                  type="number" />
+
+                    <v-text-field label="y"
+                                  v-model="data.instance.endNameOffset.y"
+                                  density="comfortable"
+                                  type="number" />
+                  </v-card-text>
+                </v-card>
 
                 <template v-if="data.instance instanceof Aggregation">
                   <v-checkbox density="compact" :label="t('shared')" v-model="data.instance.isEndShared" />
@@ -127,6 +171,21 @@
                         density="comfortable"
                         type="text" />
 
+          <!-- Start name label offset -->
+          <v-card v-if="data.instance.parent.startName" :title="t('label_offset')" variant="tonal" density="compact">
+            <v-card-text>
+              <v-text-field label="x"
+                            v-model="data.instance.parent.startNameOffset.x"
+                            density="comfortable"
+                            type="number" />
+
+              <v-text-field label="y"
+                            v-model="data.instance.parent.startNameOffset.y"
+                            density="comfortable"
+                            type="number" />
+            </v-card-text>
+          </v-card>
+
           <template v-if="data.instance.parent instanceof Aggregation">
             <v-checkbox density="compact" :label="t('shared')" v-model="data.instance.parent.isStartShared" />
           </template>
@@ -160,6 +219,21 @@
                         :rules="[() => getError({parameter: 'parent', child: {parameter: 'endName'}}) ?? true]"
                         density="comfortable"
                         type="text" />
+
+          <!-- End name label offset -->
+          <v-card v-if="data.instance.parent.endName" :title="t('label_offset')" variant="tonal" density="compact">
+            <v-card-text>
+              <v-text-field label="x"
+                            v-model="data.instance.parent.endNameOffset.x"
+                            density="comfortable"
+                            type="number" />
+
+              <v-text-field label="y"
+                            v-model="data.instance.parent.endNameOffset.y"
+                            density="comfortable"
+                            type="number" />
+            </v-card-text>
+          </v-card>
 
           <template v-if="data.instance.parent instanceof Aggregation">
             <v-checkbox density="compact" :label="t('shared')" v-model="data.instance.parent.isEndShared" />
