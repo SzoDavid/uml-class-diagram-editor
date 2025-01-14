@@ -31,6 +31,12 @@
         "comment_empty": "A megjegyzés nem lehet üres",
         "default_value_alphanumeric": "Az alapértelmezett értéknek alfanumerikusnak kell lennie",
         "invalid_class_property": "Invalid attribútum",
+        "invalid_end_point": "Invalid végső pont",
+        "invalid_start_point": "Invalid start pont",
+        "label_offset": {
+            "invalid": "Invalid c1mke eltolás",
+            "numeric": "Az eltolásnak numerikusnak kell lennie"
+        },
         "multiplicity_range": {
             "invalid": "Invalid multiplicitás",
             "invalid_non_numeric_value": "Az egyetlen elfogadható nem numerikus érték a \"*\"",
@@ -38,6 +44,11 @@
             "lower_not_less_than_upper": "Az alsó határértéknek kisebbnek kell lennie, mint a felső",
             "upper_not_larger_than_zero": "A felső határértéknek 0-nál nagyobbnak kell lennie"
         },
+        "name": {
+            "alphanumeric": "A névnek alfanumerikusnak kell lennie",
+            "required": "A név kötelező"
+        },
+        "nothing_to_save": "Nincs mit menteni",
         "operation": {
             "invalid": "Invalid operáció",
             "static_and_abstract": "Az operáció nem lehet egyszerre statikus és absztrakt"
@@ -48,16 +59,16 @@
             "unique_nonunique": "A paraméter nem lehet egyedi és nem egyedi egyszerre (unique-nonunique)",
             "unique_ordered_needs_multiplicity": "Multiplicitás beállítása szükséges \"unique\" és \"ordered\" alkalmazhatóságához"
         },
-        "name": {
-            "alphanumeric": "A névnek alfanumerikusnak kell lennie",
-            "required": "A név kötelező"
+        "relationship": {
+            "unconnected": "A kapcsolat végpontjai nem kapcsolódik sehova",
+            "loops": "A végpontok ugyan ahhoz az elemhez csatlakoznak"
         },
-        "nothing_to_save": "Nincs mit menteni",
         "type_alphanumeric": "A típusnak alfanumerikusnak kell lennie",
         "value": {
             "name": "Érték",
             "alphanumeric": "Az értéknek alfanumerikusnak kell lennie",
-            "required": "Az érték kötelező"
+            "required": "Az érték kötelező",
+            "whitespace_only": "Az érték nem tartalmazhat csak üres karaktereket"
         }
     },
     "export_document": "Exportálás",

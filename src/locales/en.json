@@ -31,6 +31,12 @@
         "comment_empty": "Comment cannot be empty",
         "default_value_alphanumeric": "Default value must be alphanumeric",
         "invalid_class_property": "Property is invalid",
+        "invalid_end_point": "Invalid end point",
+        "invalid_start_point": "Invalid start point",
+        "label_offset": {
+            "invalid": "Label offset is invalid",
+            "numeric": "Offset must be numeric"
+        },
         "multiplicity_range": {
             "invalid": "Multiplicity is invalid",
             "invalid_non_numeric_value": "The only acceptable non-numeric value is \"*\"",
@@ -38,6 +44,11 @@
             "lower_not_less_than_upper": "Lower limit must be less than upper",
             "upper_not_larger_than_zero": "Upper limit must be larger than 0"
         },
+        "name": {
+            "alphanumeric": "Name must be alphanumeric",
+            "required": "Name is required"
+        },
+        "nothing_to_save": "There is nothing to save",
         "operation": {
             "invalid": "Operation is invalid",
             "static_and_abstract": "Operation cannot be both static and abstract"
@@ -48,16 +59,16 @@
             "unique_nonunique": "Parameter cannot be unique and nonunique in the same time",
             "unique_ordered_needs_multiplicity": "Properties \"unique\" and \"ordered\" requires multiplicity to be set"
         },
-        "name": {
-            "alphanumeric": "Name must be alphanumeric",
-            "required": "Name is required"
+        "relationship": {
+            "unconnected": "Relationship endpoint is unconnected",
+            "loops": "The two endpoints are connected to the same node"
         },
-        "nothing_to_save": "There is nothing to save",
         "type_alphanumeric": "Type must be alphanumeric",
         "value": {
             "name": "Value",
             "alphanumeric": "Value must be alphanumeric",
-            "required": "Value is required"
+            "required": "Value is required",
+            "whitespace_only": "Value cannot contain only whitespace characters"
         }
     },
     "export_document": "Export",

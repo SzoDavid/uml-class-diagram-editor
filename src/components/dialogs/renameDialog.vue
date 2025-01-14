@@ -14,7 +14,7 @@ let name = props.name;
   <v-card :title="`${t('rename')} ${props.name}`">
     <v-card-text>
       <v-text-field :label="t('name')"
-                    v-model="name"
+                    v-model.trim="name"
                     required />
     </v-card-text>
     <v-card-actions>

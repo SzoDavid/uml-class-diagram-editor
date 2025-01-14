@@ -4,14 +4,14 @@
 <template>
   <v-expansion-panel :title="t('appearance')">
     <v-expansion-panel-text>
-      <v-text-field label="x" v-model="data.instance.x" density="comfortable" readonly />
-      <v-text-field label="y" v-model="data.instance.y" density="comfortable" readonly />
+      <v-text-field label="x" v-model.number="data.instance.x" density="comfortable" type="number" />
+      <v-text-field label="y" v-model.number="data.instance.y" density="comfortable" type="number" />
     </v-expansion-panel-text>
   </v-expansion-panel>
   <v-expansion-panel :title="t('detail', 2)">
     <v-expansion-panel-text>
       <v-text-field :label="t('name')"
-                    v-model="data.instance.name"
+                    v-model.trim="data.instance.name"
                     :rules="[() => getError({parameter: 'name'}) ?? true]"
                     density="comfortable"
                     type="text" />
@@ -54,19 +54,19 @@
             </template>
 
             <v-text-field :label="t('name')"
-                          v-model="prop.name"
+                          v-model.trim="prop.name"
                           :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'name'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
             <v-text-field :label="t('type')"
-                          v-model="prop.type"
+                          v-model.trim="prop.type"
                           :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'type'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
             <v-text-field :label="t('default_value')"
-                          v-model="prop.defaultValue"
+                          v-model.trim="prop.defaultValue"
                           :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}}) ?? true]"
                           density="comfortable"
                           type="text" />
@@ -78,13 +78,13 @@
             <v-checkbox density="compact" :label="t('derived')" v-model="prop.isDerived" />
 
             <v-text-field :label="t('redefines')"
-                          v-model="prop.redefines"
+                          v-model.trim="prop.redefines"
                           :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'redefines'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
             <v-text-field :label="t('subsets')"
-                          v-model="prop.subsets"
+                          v-model.trim="prop.subsets"
                           :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'subsets'}}) ?? true]"
                           density="comfortable"
                           type="text" />
@@ -101,14 +101,14 @@
             <v-card :title="t('multiplicity')" variant="tonal" density="compact">
               <v-card-text>
                 <v-text-field :label="t('multiplicity_upper')"
-                              v-model="prop.multiplicity.upper"
+                              v-model.trim="prop.multiplicity.upper"
                               :rules="[() => getError({ parameter: 'properties', index: index, child:
                                 { parameter: 'multiplicity', child: { parameter: 'upper' }}}) ?? true]"
                               density="comfortable"
                               type="text" />
 
                 <v-text-field :label="t('multiplicity_lower')"
-                              v-model="prop.multiplicity.lower"
+                              v-model.number="prop.multiplicity.lower"
                               :rules="[() => getError({ parameter: 'properties', index: index, child:
                                 { parameter: 'multiplicity', child: { parameter: 'lower' }}}) ?? true]"
                               density="comfortable"
@@ -149,13 +149,13 @@
             </template>
 
             <v-text-field :label="t('name')"
-                          v-model="operation.name"
+                          v-model.trim="operation.name"
                           :rules="[() => getError({parameter: 'operations', index: index, child: {parameter: 'name'}}) ?? true]"
                           density="comfortable"
                           type="text" />
 
             <v-text-field :label="t('return_type')"
-                          v-model="operation.returnType"
+                          v-model.trim="operation.returnType"
                           :rules="[() => getError({parameter: 'operations', index: index, child: {parameter: 'returnType'}}) ?? true]"
                           density="comfortable"
                           type="text" />
@@ -169,7 +169,7 @@
                           density="compact" />
 
               <v-text-field :label="t('redefines')"
-                            v-model="operation.redefines"
+                            v-model.trim="operation.redefines"
                             :rules="[() => getError({parameter: 'operations', index: index, child: {parameter: 'redefines'}}) ?? true]"
                             density="comfortable"
                             type="text" />
@@ -184,14 +184,14 @@
             <v-card :title="t('return_multiplicity')" variant="tonal" density="compact">
               <v-card-text>
                 <v-text-field :label="t('multiplicity_upper')"
-                              v-model="operation.returnMultiplicity.upper"
+                              v-model.trim="operation.returnMultiplicity.upper"
                               :rules="[() => getError({ parameter: 'operations', index: index, child:
                                 { parameter: 'returnMultiplicity', child: { parameter: 'upper' }}}) ?? true]"
                               density="comfortable"
                               type="text" />
 
                 <v-text-field :label="t('multiplicity_lower')"
-                              v-model="operation.returnMultiplicity.lower"
+                              v-model.number="operation.returnMultiplicity.lower"
                               :rules="[() => getError({ parameter: 'operations', index: index, child:
                                 { parameter: 'returnMultiplicity', child: { parameter: 'lower' }}}) ?? true]"
                               density="comfortable"
@@ -208,21 +208,21 @@
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <v-text-field :label="t('name')"
-                                v-model="param.name"
+                                v-model.trim="param.name"
                                 :rules="[() => getError({ parameter: 'operations', index: index, child:
                                   { parameter: 'params', index: pIndex, child: { parameter: 'name' }}}) ?? true]"
                                 density="comfortable"
                                 type="text" />
 
                   <v-text-field :label="t('type')"
-                                v-model="param.type"
+                                v-model.trim="param.type"
                                 :rules="[() => getError({ parameter: 'operations', index: index, child:
                                   { parameter: 'params', index: pIndex, child: { parameter: 'type' }}}) ?? true]"
                                 density="comfortable"
                                 type="text" />
 
                   <v-text-field :label="t('default_value')"
-                                v-model="param.defaultValue"
+                                v-model.trim="param.defaultValue"
                                 :rules="[() => getError({parameter: 'properties', index: index, child: {parameter: 'defaultValue'}}) ?? true]"
                                 density="comfortable"
                                 type="text" />
@@ -246,7 +246,7 @@
                   <v-card :title="t('multiplicity')" variant="tonal" density="compact">
                     <v-card-text>
                       <v-text-field :label="t('multiplicity_upper')"
-                                    v-model="param.multiplicity.upper"
+                                    v-model.trim="param.multiplicity.upper"
                                     :rules="[() => getError({ parameter: 'operations', index: index, child:
                                       { parameter: 'params', index: pIndex, child: 
                                         { parameter: 'multiplicity', child: { parameter: 'upper' }}}}) ?? true]"
@@ -254,7 +254,7 @@
                                     type="text" />
 
                       <v-text-field :label="t('multiplicity_lower')"
-                                    v-model="param.multiplicity.lower"
+                                    v-model.number="param.multiplicity.lower"
                                     :rules="[() => getError({ parameter: 'operations', index: index, child:
                                       { parameter: 'params', index: pIndex, child: 
                                         { parameter: 'multiplicity', child: { parameter: 'lower' }}}}) ?? true]"

@@ -33,13 +33,13 @@ export class MultiplicityRange implements Feature {
         if (isNaN(+this.upper) && this.upper !== '*')
             errors.push({parameter: 'upper', message: 'error.multiplicity_range.invalid_non_numeric_value'});
 
-        if (this.upper !== '*' && this.upper <= 0)
+        if (this.upper !== '*' && +this.upper <= 0)
             errors.push({parameter: 'upper', message: 'error.multiplicity_range.upper_not_larger_than_zero'});
 
         if (this.lower !== null) {
             if (this.lower < 0)
                 errors.push({parameter: 'lower', message: 'error.multiplicity_range.lower_less_than_zero'});
-            if (this.upper !== '*' && this.lower >= this.upper)
+            if (this.upper !== '*' && this.lower >= +this.upper)
                 errors.push({parameter: 'lower', message: 'error.multiplicity_range.lower_not_less_than_upper'});
         }
 

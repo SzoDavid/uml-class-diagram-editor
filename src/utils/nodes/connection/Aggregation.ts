@@ -6,7 +6,8 @@ import {SerializationRegistryService} from '../../../services/SerializationRegis
 import {ConnectionPart} from './ConnectionPart.ts';
 import {Node} from '../Node.ts';
 import {ConnectionPoint} from './ConnectionPoint.ts';
-import {PixelOffset} from '../types.ts';
+import {InvalidNodeParameterCause, PixelOffset} from '../types.ts';
+import {validatePixelOffset} from '../../functions.ts';
 
 const CLASS_TAG = 'Aggregation';
 
@@ -54,6 +55,27 @@ export class Aggregation extends Connection {
         this.endNameOffset = { x: +node.endNameOffset.x, y: +node.endNameOffset.y };
         this.isEndShared = node.isEndShared;
         this.endMultiplicity = node.endMultiplicity;
+    }
+
+    validate(): InvalidNodeParameterCause[] {
+        const errors = super.validate();
+
+        if (this.startName !== '' && this.startName.trim() === '') errors.push({parameter: 'startName', message: 'error.value.whitespace_only'});
+        if (this.endName !== '' && this.endName.trim() === '') errors.push({parameter: 'endName', message: 'error.value.whitespace_only'});
+
+        errors.push(...validatePixelOffset(this.startNameOffset, 'startNameOffset'));
+        errors.push(...validatePixelOffset(this.endNameOffset, 'endNameOffset'));
+
+        if (this.startMultiplicity) {
+            const multiErrors = this.startMultiplicity.validate();
+            if (multiErrors.length > 0) errors.push({parameter: 'startMultiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
+        }
+        if (this.endMultiplicity) {
+            const multiErrors = this.endMultiplicity.validate();
+            if (multiErrors.length > 0) errors.push({parameter: 'endMultiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
+        }
+
+        return errors;
     }
 
     //region Serializable members
