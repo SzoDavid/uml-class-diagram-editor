@@ -20,7 +20,7 @@
         || data.instance instanceof Generalization
         || data.instance instanceof Composition">
 
-        <p class="error-text" v-if="getError({parameter: 'root'})">{{ t(getError({parameter: 'root'})) }}</p>
+        <p class="error-text" v-if="getError({parameter: 'root'}) !== null">{{ t(getError({parameter: 'root'}) ?? 'error.unknown') }}</p>
 
         <!-- Global options -->
         <template v-if="data.instance instanceof Generalization || data.instance instanceof Composition">
@@ -39,13 +39,13 @@
               <v-text-field label="x"
                             v-model.number="data.instance.nameOffset.x"
                             density="comfortable"
-                            :rules="[() => getError({parameter: 'nameOffset', child: {parameter: 'x'}})]"
+                            :rules="[() => getError({parameter: 'nameOffset', child: {parameter: 'x'}}) ?? true]"
                             type="number" />
 
               <v-text-field label="y"
                             v-model.number="data.instance.nameOffset.y"
                             density="comfortable"
-                            :rules="[() => getError({parameter: 'nameOffset', child: {parameter: 'y'}})]"
+                            :rules="[() => getError({parameter: 'nameOffset', child: {parameter: 'y'}}) ?? true]"
                             type="number" />
             </v-card-text>
           </v-card>
@@ -69,7 +69,7 @@
                 {{ t('start_point') }}
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'})) }}</p>
+                <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'})  ?? 'error.unknown' ) }}</p>
 
                 <v-text-field :label="t('name')"
                               v-model.trim="data.instance.startName"
@@ -82,13 +82,13 @@
                   <v-card-text>
                     <v-text-field label="x"
                                   v-model.number="data.instance.startNameOffset.x"
-                                  :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'x'}})]"
+                                  :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'x'}}) ?? true]"
                                   density="comfortable"
                                   type="number" />
 
                     <v-text-field label="y"
                                   v-model.number="data.instance.startNameOffset.y"
-                                  :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'y'}})]"
+                                  :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'y'}}) ?? true]"
                                   density="comfortable"
                                   type="number" />
                   </v-card-text>
@@ -130,7 +130,7 @@
                 {{ t('end_point') }}
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <p class="error-text" v-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'})) }}</p>
+                <p class="error-text" v-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'}) ?? 'error.unknown') }}</p>
 
                 <v-text-field :label="t('name')"
                               v-model.number="data.instance.endName"
@@ -143,13 +143,13 @@
                   <v-card-text>
                     <v-text-field label="x"
                                   v-model.number="data.instance.endNameOffset.x"
-                                  :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'x'}})]"
+                                  :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'x'}}) ?? true]"
                                   density="comfortable"
                                   type="number" />
 
                     <v-text-field label="y"
                                   v-model.number="data.instance.endNameOffset.y"
-                                  :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'x'}})]"
+                                  :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'x'}}) ?? true]"
                                   density="comfortable"
                                   type="number" />
                   </v-card-text>
@@ -187,8 +187,8 @@
         </template>
         <template v-else>
           <!-- NOTE: if multiple errors are added, this needs to be changed -->
-          <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'})) }}</p>
-          <p class="error-text" v-else-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'})) }}</p>
+          <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'}) ?? 'error.unknown') }}</p>
+          <p class="error-text" v-else-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'}) ?? 'error.unknown') }}</p>
         </template>
       </template>
       <template v-else-if="data.instance instanceof ConnectionPoint && (
@@ -196,7 +196,7 @@
         data.instance.parent instanceof Association ||
         data.instance.parent instanceof Composition)">
         <template v-if="data.instance.isStartPoint">
-          <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'})) }}</p>
+          <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'}) ?? 'error.unknown') }}</p>
 
           <v-text-field :label="t('name')"
                         v-model.trim="data.instance.parent.startName"
@@ -209,13 +209,13 @@
             <v-card-text>
               <v-text-field label="x"
                             v-model.number="data.instance.parent.startNameOffset.x"
-                            :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'x'}})]"
+                            :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'x'}}) ?? true]"
                             density="comfortable"
                             type="number" />
 
               <v-text-field label="y"
                             v-model.number="data.instance.parent.startNameOffset.y"
-                            :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'y'}})]"
+                            :rules="[() => getError({parameter: 'startNameOffset', child: {parameter: 'y'}}) ?? true]"
                             density="comfortable"
                             type="number" />
             </v-card-text>
@@ -249,7 +249,7 @@
           </v-card>
         </template>
         <template v-else-if="data.instance.isEndpoint">
-          <p class="error-text" v-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'})) }}</p>
+          <p class="error-text" v-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'}) ?? 'error.unknown') }}</p>
 
           <v-text-field :label="t('name')"
                         v-model.trim="data.instance.parent.endName"
@@ -262,13 +262,13 @@
             <v-card-text>
               <v-text-field label="x"
                             v-model.number="data.instance.parent.endNameOffset.x"
-                            :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'x'}})]"
+                            :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'x'}}) ?? true]"
                             density="comfortable"
                             type="number" />
 
               <v-text-field label="y"
                             v-model.number="data.instance.parent.endNameOffset.y"
-                            :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'y'}})]"
+                            :rules="[() => getError({parameter: 'endNameOffset', child: {parameter: 'y'}}) ?? true]"
                             density="comfortable"
                             type="number" />
             </v-card-text>
@@ -304,10 +304,10 @@
       </template>
       <template v-else-if="data.instance instanceof ConnectionPoint && data.instance.parent instanceof Generalization">
         <template v-if="data.instance.isStartPoint">
-          <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'})) }}</p>
+          <p class="error-text" v-if="getError({parameter: 'startPoint'})">{{ t(getError({parameter: 'startPoint'}) ?? 'error.unknown') }}</p>
         </template>
         <template v-else-if="data.instance.isEndpoint">
-          <p class="error-text" v-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'})) }}</p>
+          <p class="error-text" v-if="getError({parameter: 'endPoint'})">{{ t(getError({parameter: 'endPoint'}) ?? 'error.unknown') }}</p>
         </template>
       </template>
     </v-expansion-panel-text>
