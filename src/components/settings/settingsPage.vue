@@ -27,7 +27,7 @@ const { t } = useI18n();
         <v-checkbox :label="t('settings.options.show_invalidity')" v-model="settings.renderer.showInvalidity" />
 
         <v-text-field :label="t('settings.options.grid_size')"
-                      v-model="settings.renderer.options.gridSize"
+                      v-model.number="settings.renderer.options.gridSize"
                       type="number" />
 
       </v-card-text>
@@ -35,43 +35,43 @@ const { t } = useI18n();
     <v-card :title="t('settings.renderer.title')" :subtitle="t('settings.renderer.warning')">
       <v-card-text>
         <v-text-field :label="t('settings.renderer.text_size')"
-                      v-model="settings.renderer.textSize"
+                      v-model.number="settings.renderer.textSize"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.default_width')"
-                      v-model="settings.renderer.defaultWidth"
+                      v-model.number="settings.renderer.defaultWidth"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.line_height')"
-                      v-model="settings.renderer.lineHeight"
+                      v-model.number="settings.renderer.lineHeight"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.line_margin')"
-                      v-model="settings.renderer.lineMargin"
+                      v-model.number="settings.renderer.lineMargin"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.tab_size')"
-                      v-model="settings.renderer.tabSize"
+                      v-model.number="settings.renderer.tabSize"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.border_thickness')"
-                      v-model="settings.renderer.borderSize"
+                      v-model.number="settings.renderer.borderSize"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.underline_delta')"
-                      v-model="settings.renderer.underlineDelta"
+                      v-model.number="settings.renderer.underlineDelta"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.underline_thickness')"
-                      v-model="settings.renderer.underlineWidth"
+                      v-model.number="settings.renderer.underlineWidth"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.separate_object_parameters_width_limit')"
-                      v-model="settings.renderer.separateObjectParametersWidthLimit"
+                      v-model.number="settings.renderer.separateObjectParametersWidthLimit"
                       type="number" />
 
         <v-text-field :label="t('settings.renderer.dot_size')"
-                      v-model="settings.renderer.dotSize"
+                      v-model.number="settings.renderer.dotSize"
                       type="number" />
       </v-card-text>
       <v-card-actions>

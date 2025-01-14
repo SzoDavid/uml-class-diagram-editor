@@ -61,7 +61,7 @@
             <v-expansion-panel-text>
               <v-text-field
                 :label="t('scale')"
-                v-model="scale"
+                v-model.number="scale"
                 density="comfortable"
                 type="number" />
 

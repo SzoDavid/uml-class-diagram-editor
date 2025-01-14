@@ -101,6 +101,7 @@ export class UmlEditorService {
     public set scale(scale: number) {
         this._scale = Math.max(scale, 0.1);
         this.emitter.emit('scaleChange', this._scale);
+        this.render();
     }
 
     public get scale() {
