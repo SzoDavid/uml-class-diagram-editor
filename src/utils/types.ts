@@ -1,5 +1,5 @@
 import {Node} from './nodes/Node.ts';
-import {AddConfig, EditorConfig} from '../services/UmlEditorService.ts';
+import {AddConfig} from '../services/UmlEditorService.ts';
 
 export interface NodeData<T extends Node> {
     type: 'classifier'|'primitive'|'enumeration'|'comment'|'connection'
@@ -8,7 +8,6 @@ export interface NodeData<T extends Node> {
 
 export interface ConfigData {
     type: 'editor';
-    instance: EditorConfig
 }
 
 export interface AddOption {

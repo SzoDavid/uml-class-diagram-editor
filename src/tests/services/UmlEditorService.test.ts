@@ -8,6 +8,7 @@ import {DataTypeNode} from '../../utils/nodes/classifier/DataTypeNode.ts';
 import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
 import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
 import {CommentNode} from '../../utils/nodes/CommentNode.ts';
+import {useSettingsService} from '../../services/SettingsService.ts';
 
 describe('UCDE-UmlEditorService', () => {
     let canvas: HTMLCanvasElement;
@@ -19,8 +20,11 @@ describe('UCDE-UmlEditorService', () => {
         canvas.width = 500;
         canvas.height = 500;
 
+        const { settings } = useSettingsService();
+
         renderer = {
-            render: vi.fn()
+            render: vi.fn(),
+            renderConfiguration: settings.renderer
         } as unknown as Renderer;
 
         editorService = new UmlEditorService(canvas, renderer);

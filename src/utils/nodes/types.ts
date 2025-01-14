@@ -17,6 +17,11 @@ export interface InvalidNodeParameterCause {
     context?: InvalidNodeParameterCause[]
 }
 
+export interface PixelOffset {
+    x: number;
+    y: number;
+}
+
 export enum NodeType {
     CLASS,
     INTERFACE,

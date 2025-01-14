@@ -48,18 +48,18 @@ export class ClassifierNodeRenderer {
 
         this._nr.ctx.font = `bold ${this._nr.rc.textSize}px Arial`;
 
-        node.width = Math.max(
+        node.width = this._nr.roundUpToGridSize(Math.max(
             node.width,
             this._nr.ctx.measureText(node.name).width + 2 * this._nr.rc.lineMargin,
             node.header ? this._nr.ctx.measureText(`«${node.header}»`).width + 2 * this._nr.rc.lineMargin : 0,
             this._nr.rc.options.classAbstractionDisplayMode === ClassAbstractionDisplayMode.KEYWORD && node instanceof ClassNode && node.isAbstract
                 ? this._nr.ctx.measureText('{abstract}').width + 2 * this._nr.rc.lineMargin : 0
-        );
+        ));
 
         this._nr.ctx.font = `${this._nr.rc.textSize}px Arial`;
 
         [...node.properties, ...node.operations].forEach(feature =>
-            node.width = Math.max(node.width, this.calculateFeatureWidth(feature)));
+            node.width = Math.max(node.width, this._nr.roundUpToGridSize(this.calculateFeatureWidth(feature))));
     }
 
     private calculateFeatureWidth(feature: Feature): number {

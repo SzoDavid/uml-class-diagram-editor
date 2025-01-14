@@ -10,7 +10,8 @@ describe('UCDE-ConnectionPoint', () => {
     beforeEach(() => {
         const connection = new Generalization([
             {x: 0, y: 0},
-            {x: 5, y:5}
+            {x: 5, y:5},
+            {x: 10, y:5},
         ]);
 
         connectionPoint = connection.parts[0].endPoint;
@@ -42,11 +43,11 @@ describe('UCDE-ConnectionPoint', () => {
 
     describe('UCDE-CPO-0400-isEndPoint', () => {
         test('UCDE-CPO-0401 GIVEN ConnectionPoint that is the last of a connection WHEN isEndPoint THEN return true', () => {
-            expect(connectionPoint.isEndpoint).toBe(true);
+            expect(new Generalization([{x: 0, y: 0}, {x: 5, y:5}]).parts[0].endPoint.isEndpoint).toBe(true);
         });
 
         test('UCDE-CPO-0401 GIVEN ConnectionPoint that is not the last of a connection WHEN isEndPoint THEN return false', () => {
-            expect(new Generalization([{x: 0, y: 0}, {x: 5, y:5}]).parts[0].startPoint.isEndpoint).toBe(false);
+            expect(connectionPoint.isEndpoint).toBe(false);
         });
     });
 });

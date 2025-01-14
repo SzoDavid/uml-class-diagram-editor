@@ -24,6 +24,7 @@ export interface RenderConfiguration {
     separateObjectParametersWidthLimit: number, // When for example operation texts are very long, at what length to start to render them in multiple lines
     dotSize: number,        // When rendering connection points as selected, the radius of the dots appearing at these points
     options: {
-        classAbstractionDisplayMode: ClassAbstractionDisplayMode;
+        gridSize: number,
+        classAbstractionDisplayMode: ClassAbstractionDisplayMode
     }
 }

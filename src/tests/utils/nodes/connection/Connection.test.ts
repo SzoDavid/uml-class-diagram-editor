@@ -3,6 +3,7 @@ import {Connection} from '../../../../utils/nodes/connection/Connection.ts';
 import {Generalization} from '../../../../utils/nodes/connection/Generalization.ts';
 import {BasicConnectionPoint, LooseConnectionPoint} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
 import {MockPositionalNode} from '../mocks/MockPositionalNode.ts';
+import {validateStringKeys} from '../../../helpers.ts';
 
 describe('UCDE-Connection', () => {
     let connection: Connection;
@@ -25,8 +26,14 @@ describe('UCDE-Connection', () => {
     });
 
     describe('UCDE-C-0200-Validate', () => {
-        test('UCDE-C-0201 GIVEN valid connection WHEN validate() THEN return no validation errors', () => {
-            expect(connection.validate()).toHaveLength(0);
+        test('UCDE-C-0201 GIVEN standalone connection WHEN validate() THEN return correct validation errors', () => {
+            const expectedErrors = [
+                {parameter: 'startPoint', message: 'error.relationship.unconnected'},
+                {parameter: 'endPoint', message: 'error.relationship.unconnected'}
+            ];
+
+            expect(validateStringKeys(expectedErrors));
+            expect(connection.validate()).toEqual(expectedErrors);
         });
     });
 

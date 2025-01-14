@@ -25,6 +25,18 @@ canvas {
     cursor: crosshair;
 }
 
+.editor-panels {
+    overflow-y: auto;
+    max-height: calc(100% - 36px);
+}
+
+.save-btn {
+    position: absolute;
+    z-index: 100;
+    bottom: 0;
+    right: 0;
+}
+
 .editor-container {
     display: flex;
     padding-top: 48px;
@@ -62,7 +74,8 @@ canvas {
 }
 
 #editor {
-    overflow-y: auto;
+    position: relative;
+    overflow: hidden;
 }
 
 #tools {

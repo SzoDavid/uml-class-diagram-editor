@@ -31,7 +31,15 @@ export abstract class Connection extends Node implements Serializable {
     }
 
     validate(): InvalidNodeParameterCause[] {
-        return [];
+        const errors: InvalidNodeParameterCause[] = [];
+
+        if (this.startPoint instanceof BasicConnectionPoint) errors.push({parameter: 'startPoint', message: 'error.relationship.unconnected'});
+        if (this.endPoint instanceof BasicConnectionPoint) errors.push({parameter: 'endPoint', message: 'error.relationship.unconnected'});
+
+        if (this.startPoint instanceof LooseConnectionPoint && this.endPoint instanceof LooseConnectionPoint && this.startPoint.node === this.endPoint.node)
+            errors.push({parameter: 'root', message: 'error.relationship.loops'});
+
+        return errors;
     }
 
     copy(node: Connection): void {

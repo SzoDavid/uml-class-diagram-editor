@@ -56,12 +56,12 @@
       <div id="divider" @mousedown="startResize"></div>
 
       <div id="editor" :style="{ flex: editorWidth + 'px' }">
-        <v-expansion-panels variant="accordion" multiple>
+        <v-expansion-panels class="editor-panels" variant="accordion" multiple>
           <v-expansion-panel :title="t('navigation')">
             <v-expansion-panel-text>
               <v-text-field
                 :label="t('scale')"
-                v-model="scale"
+                v-model.number="scale"
                 density="comfortable"
                 type="number" />
 
@@ -74,26 +74,19 @@
 
           <template v-if="data !== null && 'instance' in data && 'type' in data">
             <template v-if="data.type==='classifier'">
-              <ClassifierEditorPanel :classifierData="data" @save="onSave" />
+              <ClassifierEditorPanel ref="childEditorPanel" :classifierData="data" @save="onSave" />
             </template>
             <template v-else-if="data.type==='primitive'">
-              <PrimitiveEditorPanel :primitiveData="data" @save="onSave" />
+              <PrimitiveEditorPanel ref="childEditorPanel" :primitiveData="data" @save="onSave" />
             </template>
             <template v-else-if="data.type==='enumeration'">
-              <EnumerationEditorPanel :enumerationData="data" @save="onSave" />
+              <EnumerationEditorPanel ref="childEditorPanel" :enumerationData="data" @save="onSave" />
             </template>
             <template v-else-if="data.type==='comment'">
-              <CommentEditorPanel :commentData="data" @save="onSave" />
+              <CommentEditorPanel ref="childEditorPanel" :commentData="data" @save="onSave" />
             </template>
             <template v-else-if="data.type==='connection'">
-              <ConnectionEditorPanel :connectionData="data" @save="onSave" @render="requestRender" />
-            </template>
-            <template v-else-if="data.type==='editor'">
-              <v-expansion-panel :title="t('option', 2)">
-                <v-expansion-panel-text>
-                  <v-select :label="t('grid_size')" v-model="data.instance.gridSize" density="comfortable" :items="[0, 25, 50]" />
-                </v-expansion-panel-text>
-              </v-expansion-panel>
+              <ConnectionEditorPanel ref="childEditorPanel" :connectionData="data" @save="onSave" @render="requestRender" />
             </template>
             <template v-else-if="data.type==='addOption'">
               <v-expansion-panel :title="t('option', 2)">
@@ -116,6 +109,7 @@
             </template>
           </template>
         </v-expansion-panels>
+        <v-btn class="save-btn" v-if="childEditorPanel" block @click="requestSave">{{ t("save") }}</v-btn>
       </div>
     </div>
   </div>

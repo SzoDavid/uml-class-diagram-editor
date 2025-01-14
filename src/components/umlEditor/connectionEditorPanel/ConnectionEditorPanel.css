@@ -10,3 +10,11 @@
     margin: 5px;
     background-color: #66F;
 }
+
+.error-text {
+    color: red;
+}
+
+.error-header {
+    background-color: darkred;
+}

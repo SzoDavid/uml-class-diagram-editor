@@ -92,7 +92,7 @@ function exportDiagram() {
       <template v-if="exportMethod === 'png'">
         <v-text-field
           :label="t('image_margin_size')"
-          v-model="imageMarginSize"
+          v-model.number="imageMarginSize"
           density="comfortable"
           type="number" />
       </template>

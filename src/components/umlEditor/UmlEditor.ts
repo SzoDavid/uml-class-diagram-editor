@@ -54,6 +54,11 @@ export default {
 
         const triggerService: TriggerService | undefined = inject('triggerService');
 
+        const childEditorPanel = ref<typeof ConnectionEditorPanel |
+                                                                        typeof CommentEditorPanel |
+                                                                        typeof EnumerationEditorPanel |
+                                                                        typeof ClassifierEditorPanel |
+                                                                        typeof PrimitiveEditorPanel | null>(null);
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
         const data = ref<DataContext<Node>>(null);
@@ -161,6 +166,11 @@ export default {
             window.addEventListener('mouseup', onMouseUp);
         };
 
+        const requestSave = () => {
+            if (!childEditorPanel.value) return;
+            childEditorPanel.value.onSave();
+        };
+
         const onSave = (data: DataContext<Node>) => {
             if (selectedNode.value === null || data === null) {
                 console.error('Cannot save: no selected node');
@@ -263,7 +273,7 @@ export default {
                     setSelectedNode(editor.selectedNode);
                     break;
                 case UmlEditorTool.MOVE:
-                    data.value = { type: 'editor', instance: editor.editorConfig };
+                    data.value = { type: 'editor' };
                     break;
                 case UmlEditorTool.ADD:
                     data.value = { type: 'addOption', instance: editor.addConfig };
@@ -316,7 +326,9 @@ export default {
             tool,
             canvasWidth,
             editorWidth,
+            childEditorPanel,
             startResize,
+            requestSave,
             onSave,
             onToolSelected,
             onScaleSet,

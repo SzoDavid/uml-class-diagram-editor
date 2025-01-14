@@ -64,6 +64,15 @@ export class NodeRenderer {
         this.ctx.stroke();
     }
 
+    public getColor(isAccent: boolean, isSelected: boolean = false, isInvalid: boolean = false): string {
+        if (isAccent) {
+            if (isSelected) return isInvalid ? this.rc.accentColorInvalidSelected : this.rc.accentColorSelected;
+            return isInvalid ? this.rc.accentColorInvalid : this.rc.accentColor;
+        }
+        if (isSelected) return isInvalid ? this.rc.fillColorInvalidSelected : this.rc.fillColorSelected;
+        return isInvalid ? this.rc.fillColorInvalid : this.rc.fillColorSelected;
+    }
+
     drawHeader(x: number, y: number, width: number, name: string, header: string, footer: string, isSelected: boolean, isInvalid: boolean, isItalic: boolean) {
         this.drawRect(x, y, width, this.rc.lineHeight * ((header ? 2 : 1) + (footer ? 1 : 0)), isSelected, isInvalid);
 
@@ -98,12 +107,10 @@ export class NodeRenderer {
         this.ctx.beginPath();
         this.ctx.rect(x, y, width, height);
 
-        this.ctx.fillStyle = isSelected ? (isInvalid ? this.rc.fillColorInvalidSelected : this.rc.fillColorSelected)
-            : (isInvalid ? this.rc.fillColorInvalid : this.rc.fillColor);
+        this.ctx.fillStyle = this.getColor(false, isSelected, isInvalid);
         this.ctx.fill();
         this.ctx.lineWidth = this.rc.borderSize;
-        this.ctx.strokeStyle = isSelected ? (isInvalid ? this.rc.accentColorInvalidSelected : this.rc.accentColorSelected)
-            : (isInvalid ? this.rc.accentColorInvalid : this.rc.accentColor);
+        this.ctx.strokeStyle = this.getColor(true, isSelected, isInvalid);
         this.ctx.stroke();
     }
 
@@ -121,8 +128,7 @@ export class NodeRenderer {
                  isTabbed = false,
              }: TextProperties = {}): void {
         this.ctx.beginPath();
-        this.ctx.fillStyle = isSelected ? (isInvalid ? this.rc.accentColorInvalidSelected : this.rc.accentColorSelected)
-            : (isInvalid ? this.rc.accentColorInvalid : this.rc.accentColor);
+        this.ctx.fillStyle = this.getColor(true, isSelected, isInvalid);
         this.ctx.font = `${italic ? 'italic ' : ''}${textWeight} ${this.rc.textSize}px Arial`;
         this.ctx.textAlign = textAlign;
         this.ctx.textBaseline = 'middle';
@@ -156,20 +162,23 @@ export class NodeRenderer {
                             y + (this.rc.lineHeight / 2) + (this.rc.textSize / 2) + this.rc.underlineDelta);
 
             this.ctx.lineWidth = this.rc.underlineWidth;
-            this.ctx.strokeStyle = isSelected ? (isInvalid ? this.rc.accentColorInvalidSelected : this.rc.accentColorSelected)
-                : (isInvalid ? this.rc.accentColorInvalid : this.rc.accentColor);
+            this.ctx.strokeStyle = this.getColor(true, isSelected, isInvalid);
             this.ctx.stroke();
         }
+    }
+
+    roundUpToGridSize(value: number): number {
+        return Math.ceil(value / (this.rc.options.gridSize * 2)) * (this.rc.options.gridSize * 2);
     }
 
     private renderPrimitiveType(node: PrimitiveTypeNode) {
         this.ctx.font = `bold ${this.rc.textSize}px Arial`;
 
-        node.width = Math.max(
+        node.width = this.roundUpToGridSize(Math.max(
             this.rc.defaultWidth,
             this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
             this.ctx.measureText('«Primitive»').width + 2 * this.rc.lineMargin,
-        );
+        ));
 
         this.drawHeader(node.x, node.y, node.width, node.name, 'Primitive', '',
                         node.isSelected, node.validate().length > 0, false);
@@ -181,11 +190,11 @@ export class NodeRenderer {
 
         const invalid = node.validate().length > 0;
 
-        node.width = Math.max(
+        node.width = this.roundUpToGridSize(Math.max(
             this.rc.defaultWidth,
             this.ctx.measureText(node.name).width + 2 * this.rc.lineMargin,
             this.ctx.measureText('«Enumeration»').width + 2 * this.rc.lineMargin,
-        );
+        ));
 
         this.ctx.font = `${this.rc.textSize}px Arial`;
 

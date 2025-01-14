@@ -34,4 +34,8 @@ export class Renderer {
 
         this._ctx.restore();
     }
+
+    get renderConfiguration(): RenderConfiguration {
+        return this._rc;
+    }
 }

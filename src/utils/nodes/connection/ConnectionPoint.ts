@@ -35,6 +35,9 @@ export abstract class ConnectionPoint extends PositionalNode implements Point, S
     }
 
     validate(): InvalidNodeParameterCause[] {
+        if (this.isStartPoint) return this.parent.validate().filter(cause => cause.parameter.startsWith('start'));
+        if (this.isEndpoint) return this.parent.validate().filter(cause => cause.parameter.startsWith('end'));
+
         return [];
     }
 
