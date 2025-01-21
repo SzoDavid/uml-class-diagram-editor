@@ -2,16 +2,16 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 import i18n from './i18n.ts';
 
 const routes: RouteRecordRaw[] = [
-    { path: '/', redirect: '/uml-class-diagram-editor' },
-    { path: '/uml-class-diagram-editor/:locale', children: [
+    { path: '/', redirect: '/en' },
+    { path: '/:locale', children: [
         { path: '', name: 'editor', component: () => import('./components/umlEditor/UmlEditor.vue') },
         { path: 'settings', name: 'settings', component: () => import('./components/settings/settingsPage.vue') },
     ]},
-    { path: '/:catchAll(.*)', redirect: '/' }
+    { path: '/:catchAll(.*)', redirect: '/en' }
 ];
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHashHistory('/uml-class-diagram-editor/'),
     routes
 });
 
@@ -22,7 +22,7 @@ router.beforeEach((to, _, next) => {
     if (typeof chosenLocale === 'string' && supportedLocales.includes(chosenLocale)) {
         i18n.global.locale.value = chosenLocale;
     } else {
-        return next({ path: '/uml-class-diagram-editor/en' });
+        return next({ path: '/en' });
     }
     next();
 });
