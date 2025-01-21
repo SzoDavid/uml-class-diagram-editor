@@ -26,6 +26,10 @@ const vuetify = createVuetify({
     }
 });
 
+window.addEventListener('error', (event) => {
+    console.error('Unhandled error:', event.error);
+});
+
 const app = createApp(App)
     .use(i18n)
     .use(router)
