@@ -1,8 +1,26 @@
 # UML Class Diagram Editor
 
-My degree thesis work
+UCDE is an online class diagram editor. It can be viewed at [szodavid.github.io/uml-class-diagram-editor](https://szodavid.github.io/uml-class-diagram-editor/).
 
-## Running the program
+For more information visit the [wiki](https://github.com/SzoDavid/uml-class-diagram-editor/wiki)!
+
+## Running the program locally
+
+### In development, using node
+
+Install dependencies.
+
+```bash
+npm ci
+```
+
+Run the dev server
+
+```bash
+npm run dev
+```
+
+### Using docker 
 
 Creating the docker image:
 
