@@ -1,5 +1,10 @@
 {
     "abstract": "Abstract",
+    "about": {
+        "created_by": "Created By",
+        "license": "License",
+        "title": "About"
+    },
     "add": "Add",
     "add_breakpoint": "Add breakpoint",
     "appearance": "Appearance",

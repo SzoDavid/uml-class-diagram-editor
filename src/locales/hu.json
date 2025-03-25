@@ -1,5 +1,10 @@
 {
     "abstract": "Absztrakt",
+    "about": {
+        "created_by": "Készítette",
+        "license": "Licensz",
+        "title": "Névjegy"
+    },
     "add": "Hozzáadás",
     "add_breakpoint": "Töréspont hozzáadása",
     "appearance": "Megjelenés",

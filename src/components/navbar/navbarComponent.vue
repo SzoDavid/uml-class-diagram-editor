@@ -2,12 +2,13 @@
 import {useRoute, useRouter} from 'vue-router';
 import { version } from '../../../package.json';
 import {useI18n} from 'vue-i18n';
-import RenameDialog from '../dialogs/renameDialog.vue';
-import ImportDialog from '../dialogs/importDialog.vue';
+import RenameDialog from '../../components/dialogs/renameDialog.vue';
+import ImportDialog from '../../components/dialogs/importDialog.vue';
 import {inject, ref} from 'vue';
 import {TriggerService} from '../../services/TriggerService.ts';
-import ExportDialog from '../dialogs/exportDialog.vue';
+import ExportDialog from '../../components/dialogs/exportDialog.vue';
 import {saveFile, importFile} from '../../utils/IOUtils.ts';
+import AboutDialog from '../../components/dialogs/aboutDialog.vue';
 
 const { t } = useI18n();
 const triggerService: TriggerService | undefined = inject('triggerService');
@@ -147,6 +148,15 @@ function newDiagram() {
           <v-btn icon="mdi-cog" @click="navigate" density="comfortable" />
         </template>
       </RouterLink>
+
+      <v-dialog max-width="340">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn icon="mdi-information-outline" density="comfortable" v-bind="activatorProps" />
+        </template>
+        <template v-slot:default="{ isActive }">
+          <about-dialog @cancel="() => { isActive.value = false; }" />
+        </template>
+      </v-dialog>
     </v-toolbar>
   </nav>
 </template>
