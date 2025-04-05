@@ -227,24 +227,38 @@
                             multiple
                             chips
                             :items="[
-                                { title: t('modifiers.id'), value: 'id' },
                                 {
-                                    title: t('modifiers.readonly'),
-                                    value: 'readonly',
+                                    title: t('modifiers_properties.id'),
+                                    value: 'id',
                                 },
                                 {
-                                    title: t('modifiers.unique'),
+                                    title: t('modifiers_properties.read_only'),
+                                    value: 'readOnly',
+                                },
+                                {
+                                    title: t('modifiers_properties.unique'),
                                     value: 'unique',
                                 },
                                 {
-                                    title: t('modifiers.nonunique'),
+                                    title: t('modifiers_properties.nonunique'),
                                     value: 'nonunique',
                                 },
                                 {
-                                    title: t('modifiers.sequence'),
+                                    title: t('modifiers_properties.ordered'),
+                                    value: 'ordered',
+                                },
+                                {
+                                    title: t('modifiers_properties.unordered'),
+                                    value: 'unordered',
+                                },
+                                {
+                                    title: t('modifiers_properties.sequence'),
                                     value: 'sequence',
                                 },
-                                { title: t('modifiers.union'), value: 'union' },
+                                {
+                                    title: t('modifiers_properties.union'),
+                                    value: 'union',
+                                },
                             ]"
                             :rules="[
                                 () =>
@@ -466,16 +480,28 @@
                             chips
                             :items="[
                                 {
-                                    title: t('properties.query'),
+                                    title: t('modifiers_properties.query'),
                                     value: 'query',
                                 },
                                 {
-                                    title: t('properties.ordered'),
+                                    title: t('modifiers_properties.ordered'),
                                     value: 'ordered',
                                 },
                                 {
-                                    title: t('properties.unique'),
+                                    title: t('modifiers_properties.unordered'),
+                                    value: 'unordered',
+                                },
+                                {
+                                    title: t('modifiers_properties.unique'),
                                     value: 'unique',
+                                },
+                                {
+                                    title: t('modifiers_properties.nonunique'),
+                                    value: 'nonunique',
+                                },
+                                {
+                                    title: t('modifiers_properties.sequence'),
+                                    value: 'sequence',
                                 },
                             ]"
                             :rules="[
@@ -655,27 +681,33 @@
                                         chips
                                         :items="[
                                             {
-                                                title: t('properties.ordered'),
+                                                title: t(
+                                                    'modifiers_properties.ordered',
+                                                ),
                                                 value: 'ordered',
                                             },
                                             {
                                                 title: t(
-                                                    'properties.unordered',
+                                                    'modifiers_properties.unordered',
                                                 ),
                                                 value: 'unordered',
                                             },
                                             {
-                                                title: t('properties.unique'),
+                                                title: t(
+                                                    'modifiers_properties.unique',
+                                                ),
                                                 value: 'unique',
                                             },
                                             {
                                                 title: t(
-                                                    'properties.nonunique',
+                                                    'modifiers_properties.nonunique',
                                                 ),
                                                 value: 'nonunique',
                                             },
                                             {
-                                                title: t('properties.sequence'),
+                                                title: t(
+                                                    'modifiers_properties.sequence',
+                                                ),
                                                 value: 'sequence',
                                             },
                                         ]"
