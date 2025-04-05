@@ -1,5 +1,5 @@
-import {Feature} from './Feature.ts';
-import {InvalidNodeParameterCause} from '../types.ts';
+import { Feature } from './Feature.ts';
+import { InvalidNodeParameterCause } from '../types.ts';
 
 /**
  * Member of Property and Parameter.
@@ -9,11 +9,10 @@ import {InvalidNodeParameterCause} from '../types.ts';
  *  [ <lower> ‘..’ ] <upper>
  */
 export class MultiplicityRange implements Feature {
-    lower: number|null;
-    upper: number|'*'|null;
+    lower: number | null;
+    upper: number | '*' | null;
 
-    constructor(upper: number|'*'|null,
-                lower: number|null = null) {
+    constructor(upper: number | '*' | null, lower: number | null = null) {
         this.lower = lower;
         this.upper = upper;
     }
@@ -31,16 +30,29 @@ export class MultiplicityRange implements Feature {
         }
 
         if (isNaN(+this.upper) && this.upper !== '*')
-            errors.push({parameter: 'upper', message: 'error.multiplicity_range.invalid_non_numeric_value'});
+            errors.push({
+                parameter: 'upper',
+                message: 'error.multiplicity_range.invalid_non_numeric_value',
+            });
 
         if (this.upper !== '*' && +this.upper <= 0)
-            errors.push({parameter: 'upper', message: 'error.multiplicity_range.upper_not_larger_than_zero'});
+            errors.push({
+                parameter: 'upper',
+                message: 'error.multiplicity_range.upper_not_larger_than_zero',
+            });
 
         if (this.lower !== null) {
             if (this.lower < 0)
-                errors.push({parameter: 'lower', message: 'error.multiplicity_range.lower_less_than_zero'});
+                errors.push({
+                    parameter: 'lower',
+                    message: 'error.multiplicity_range.lower_less_than_zero',
+                });
             if (this.upper !== '*' && this.lower >= +this.upper)
-                errors.push({parameter: 'lower', message: 'error.multiplicity_range.lower_not_less_than_upper'});
+                errors.push({
+                    parameter: 'lower',
+                    message:
+                        'error.multiplicity_range.lower_not_less_than_upper',
+                });
         }
 
         return errors;

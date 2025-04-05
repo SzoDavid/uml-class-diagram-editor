@@ -1,7 +1,7 @@
-import {Feature} from './Feature.ts';
-import {Visibility} from '../types.ts';
+import { Feature } from './Feature.ts';
+import { Visibility } from '../types.ts';
 
 export interface FeatureWithVisibility extends Feature {
-    visibility: Visibility|null;
+    visibility: Visibility | null;
     omitVisibility: boolean;
 }

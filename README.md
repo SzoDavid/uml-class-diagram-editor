@@ -20,7 +20,7 @@ Run the dev server
 npm run dev
 ```
 
-### Using docker 
+### Using docker
 
 Creating the docker image:
 
@@ -30,7 +30,7 @@ docker buildx build . -t class-diagram-editor:latest
 
 Running the container:
 
-```bash 
+```bash
 docker run --rm -p 80:80 class-diagram-editor
 ```
 

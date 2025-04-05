@@ -1,5 +1,5 @@
-import {describe, expect, test} from 'vitest';
-import {messages} from '../helpers.ts';
+import { describe, expect, test } from 'vitest';
+import { messages } from '../helpers.ts';
 
 function haveSameKeys(obj1: any, obj2: any): boolean {
     const keys1 = Object.keys(obj1);
@@ -27,7 +27,9 @@ function checkLocaleKeys(messages: Record<string, any>): string[] {
 
     for (const locale of locales) {
         if (!haveSameKeys(referenceLocale, messages[locale])) {
-            errors.push(`Locale ${locale} has different keys than the reference locale.`);
+            errors.push(
+                `Locale ${locale} has different keys than the reference locale.`,
+            );
         }
     }
 

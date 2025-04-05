@@ -1,5 +1,8 @@
-import {ClassAbstractionDisplayMode, RenderConfiguration} from './renderer/RenderConfiguration.ts';
-import {reactive} from 'vue';
+import {
+    ClassAbstractionDisplayMode,
+    RenderConfiguration,
+} from './renderer/RenderConfiguration.ts';
+import { reactive } from 'vue';
 
 const defaultRenderConfiguration: RenderConfiguration = {
     textSize: 20,
@@ -23,11 +26,13 @@ const defaultRenderConfiguration: RenderConfiguration = {
     dotSize: 4,
     options: {
         gridSize: 15,
-        classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
-    }
+        classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC,
+    },
 };
 
-export type SettingsType = { renderer: RenderConfiguration };
+export interface SettingsType {
+    renderer: RenderConfiguration;
+}
 
 const initConfig = () => {
     const savedSettings = localStorage.getItem('render-settings');
@@ -41,7 +46,7 @@ const initConfig = () => {
 };
 
 const settings: SettingsType = reactive({
-    renderer: initConfig()
+    renderer: initConfig(),
 });
 
 export const useSettingsService = () => {
@@ -69,8 +74,17 @@ export const useSettingsService = () => {
     };
 
     const saveRenderSettings = () => {
-        localStorage.setItem('render-settings', JSON.stringify(settings.renderer));
+        localStorage.setItem(
+            'render-settings',
+            JSON.stringify(settings.renderer),
+        );
     };
 
-    return { settings, updateSettings, updateRenderSettings, resetRenderSettings, saveRenderSettings };
+    return {
+        settings,
+        updateSettings,
+        updateRenderSettings,
+        resetRenderSettings,
+        saveRenderSettings,
+    };
 };

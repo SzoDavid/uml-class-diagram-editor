@@ -1,14 +1,17 @@
-import {beforeEach, describe, expect, test, vi} from 'vitest';
-import {Renderer} from '../../services/renderer/Renderer.ts';
-import {UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
-import {ClassNode} from '../../utils/nodes/classifier/ClassNode.ts';
-import {NodeType} from '../../utils/nodes/types.ts';
-import {InterfaceNode} from '../../utils/nodes/classifier/InterfaceNode.ts';
-import {DataTypeNode} from '../../utils/nodes/classifier/DataTypeNode.ts';
-import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
-import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
-import {CommentNode} from '../../utils/nodes/CommentNode.ts';
-import {useSettingsService} from '../../services/SettingsService.ts';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { Renderer } from '../../services/renderer/Renderer.ts';
+import {
+    UmlEditorService,
+    UmlEditorTool,
+} from '../../services/UmlEditorService.ts';
+import { ClassNode } from '../../utils/nodes/classifier/ClassNode.ts';
+import { NodeType } from '../../utils/nodes/types.ts';
+import { InterfaceNode } from '../../utils/nodes/classifier/InterfaceNode.ts';
+import { DataTypeNode } from '../../utils/nodes/classifier/DataTypeNode.ts';
+import { PrimitiveTypeNode } from '../../utils/nodes/PrimitiveTypeNode.ts';
+import { EnumerationNode } from '../../utils/nodes/EnumerationNode.ts';
+import { CommentNode } from '../../utils/nodes/CommentNode.ts';
+import { useSettingsService } from '../../services/SettingsService.ts';
 
 describe('UCDE-UmlEditorService', () => {
     let canvas: HTMLCanvasElement;
@@ -24,13 +27,17 @@ describe('UCDE-UmlEditorService', () => {
 
         renderer = {
             render: vi.fn(),
-            renderConfiguration: settings.renderer
+            renderConfiguration: settings.renderer,
         } as unknown as Renderer;
 
         editorService = new UmlEditorService(canvas, renderer);
     });
 
-    const simulateMouseEvent = (eventType: string, clientX: number, clientY: number) => {
+    const simulateMouseEvent = (
+        eventType: string,
+        clientX: number,
+        clientY: number,
+    ) => {
         const event = new MouseEvent(eventType, {
             clientX,
             clientY,
@@ -122,27 +129,48 @@ describe('UCDE-UmlEditorService', () => {
     describe('UCDE-UES-0700-onMouseDown', () => {
         describe('UCDE-UES-0701 GIVEN add tool is selected WHEN mouse is clicked THEN correct node is added', () => {
             test.each([
-                { addType: NodeType.CLASS, expectedType: ClassNode},
-                { addType: NodeType.INTERFACE, expectedType: InterfaceNode},
-                { addType: NodeType.DATATYPE, expectedType: DataTypeNode},
-                { addType: NodeType.PRIMITIVE, expectedType: PrimitiveTypeNode},
-                { addType: NodeType.ENUMERATION, expectedType: EnumerationNode},
-                { addType: NodeType.COMMENT, expectedType: CommentNode}
-            ])('UCDE-UES-0701, {addType: $addType}', ({addType, expectedType}) => {
-                editorService.tool = UmlEditorTool.ADD;
-                editorService.addConfig = {type: addType, keepAdding: true};
+                { addType: NodeType.CLASS, expectedType: ClassNode },
+                { addType: NodeType.INTERFACE, expectedType: InterfaceNode },
+                { addType: NodeType.DATATYPE, expectedType: DataTypeNode },
+                {
+                    addType: NodeType.PRIMITIVE,
+                    expectedType: PrimitiveTypeNode,
+                },
+                {
+                    addType: NodeType.ENUMERATION,
+                    expectedType: EnumerationNode,
+                },
+                { addType: NodeType.COMMENT, expectedType: CommentNode },
+            ])(
+                'UCDE-UES-0701, {addType: $addType}',
+                ({ addType, expectedType }) => {
+                    editorService.tool = UmlEditorTool.ADD;
+                    editorService.addConfig = {
+                        type: addType,
+                        keepAdding: true,
+                    };
 
-                const mouseDownEvent = simulateMouseEvent('mousedown', 100, 100);
-                canvas.dispatchEvent(mouseDownEvent);
+                    const mouseDownEvent = simulateMouseEvent(
+                        'mousedown',
+                        100,
+                        100,
+                    );
+                    canvas.dispatchEvent(mouseDownEvent);
 
-                expect(editorService['_nodes']).toHaveLength(1);
-                expect(editorService['_nodes'][0] instanceof expectedType).toBe(true);
-            });
+                    expect(editorService['_nodes']).toHaveLength(1);
+                    expect(
+                        editorService['_nodes'][0] instanceof expectedType,
+                    ).toBe(true);
+                },
+            );
         });
 
         test('UCDE-UES-0702 GIVEN add tool is selected and keepAdding is false WHEN adding new node THEN tool is set to edit', () => {
             editorService.tool = UmlEditorTool.ADD;
-            editorService.addConfig = {type: NodeType.CLASS, keepAdding: false};
+            editorService.addConfig = {
+                type: NodeType.CLASS,
+                keepAdding: false,
+            };
 
             const mouseDownEvent = simulateMouseEvent('mousedown', 100, 100);
             canvas.dispatchEvent(mouseDownEvent);
@@ -152,7 +180,10 @@ describe('UCDE-UmlEditorService', () => {
 
         test('UCDE-UES-0703 GIVEN add tool is selected and keepAdding is true WHEN adding new node THEN tool is set to stay on add', () => {
             editorService.tool = UmlEditorTool.ADD;
-            editorService.addConfig = {type: NodeType.CLASS, keepAdding: true};
+            editorService.addConfig = {
+                type: NodeType.CLASS,
+                keepAdding: true,
+            };
 
             const mouseDownEvent = simulateMouseEvent('mousedown', 100, 100);
             canvas.dispatchEvent(mouseDownEvent);

@@ -1,33 +1,39 @@
-import {Connection} from './Connection.ts';
-import {Point} from '../../types.ts';
-import {PositionalNode} from '../PositionalNode.ts';
-import {MultiplicityRange} from '../features/MultiplicityRange.ts';
-import {AssociationNavigability, InvalidNodeParameterCause, PixelOffset} from '../types.ts';
-import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
-import {ConnectionPoint} from './ConnectionPoint.ts';
-import {Node} from '../Node.ts';
-import {ConnectionPart} from './ConnectionPart.ts';
-import {validatePixelOffset} from '../../functions.ts';
+import { Connection } from './Connection.ts';
+import { Point } from '../../types.ts';
+import { PositionalNode } from '../PositionalNode.ts';
+import { MultiplicityRange } from '../features/MultiplicityRange.ts';
+import {
+    AssociationNavigability,
+    InvalidNodeParameterCause,
+    PixelOffset,
+} from '../types.ts';
+import { SerializationRegistryService } from '../../../services/SerializationRegistryService.ts';
+import { ConnectionPoint } from './ConnectionPoint.ts';
+import { Node } from '../Node.ts';
+import { ConnectionPart } from './ConnectionPart.ts';
+import { validatePixelOffset } from '../../functions.ts';
 
 const CLASS_TAG = 'Association';
 
 export class Association extends Connection {
-    public associationName: string = '';
+    public associationName = '';
     public nameOffset: PixelOffset = { x: 0, y: 0 };
-    public showOwnership: boolean = false;
-    public reversedOwnership: boolean = false;
+    public showOwnership = false;
+    public reversedOwnership = false;
 
-    public startName: string = '';
+    public startName = '';
     public startNameOffset: PixelOffset = { x: 0, y: 0 };
     public startMultiplicity: MultiplicityRange = new MultiplicityRange(null);
-    public startNavigability: AssociationNavigability = AssociationNavigability.UNSPECIFIED;
+    public startNavigability: AssociationNavigability =
+        AssociationNavigability.UNSPECIFIED;
 
-    public endName: string = '';
+    public endName = '';
     public endNameOffset: PixelOffset = { x: 0, y: 0 };
     public endMultiplicity: MultiplicityRange = new MultiplicityRange(null);
-    public endNavigability: AssociationNavigability = AssociationNavigability.UNSPECIFIED;
+    public endNavigability: AssociationNavigability =
+        AssociationNavigability.UNSPECIFIED;
 
-    constructor(points: (Point | PositionalNode)[]) {
+    public constructor(points: (Point | PositionalNode)[]) {
         super(points);
     }
 
@@ -62,12 +68,18 @@ export class Association extends Connection {
         this.reversedOwnership = node.reversedOwnership;
 
         this.startName = node.startName;
-        this.startNameOffset = { x: +node.startNameOffset.x, y: +node.startNameOffset.y };
+        this.startNameOffset = {
+            x: +node.startNameOffset.x,
+            y: +node.startNameOffset.y,
+        };
         this.startMultiplicity = node.startMultiplicity;
         this.startNavigability = node.startNavigability;
 
         this.endName = node.endName;
-        this.endNameOffset = { x: +node.endNameOffset.x, y: +node.endNameOffset.y };
+        this.endNameOffset = {
+            x: +node.endNameOffset.x,
+            y: +node.endNameOffset.y,
+        };
         this.endMultiplicity = node.endMultiplicity;
         this.endNavigability = node.endNavigability;
     }
@@ -75,21 +87,47 @@ export class Association extends Connection {
     validate(): InvalidNodeParameterCause[] {
         const errors = super.validate();
 
-        if (this.associationName !== '' && this.associationName.trim() === '') errors.push({parameter: 'associationName', message: 'error.value.whitespace_only'});
-        if (this.startName !== '' && this.startName.trim() === '') errors.push({parameter: 'startName', message: 'error.value.whitespace_only'});
-        if (this.endName !== '' && this.endName.trim() === '') errors.push({parameter: 'endName', message: 'error.value.whitespace_only'});
+        if (this.associationName !== '' && this.associationName.trim() === '')
+            errors.push({
+                parameter: 'associationName',
+                message: 'error.value.whitespace_only',
+            });
+        if (this.startName !== '' && this.startName.trim() === '')
+            errors.push({
+                parameter: 'startName',
+                message: 'error.value.whitespace_only',
+            });
+        if (this.endName !== '' && this.endName.trim() === '')
+            errors.push({
+                parameter: 'endName',
+                message: 'error.value.whitespace_only',
+            });
 
         errors.push(...validatePixelOffset(this.nameOffset, 'nameOffset'));
-        errors.push(...validatePixelOffset(this.startNameOffset, 'startNameOffset'));
-        errors.push(...validatePixelOffset(this.endNameOffset, 'endNameOffset'));
+        errors.push(
+            ...validatePixelOffset(this.startNameOffset, 'startNameOffset'),
+        );
+        errors.push(
+            ...validatePixelOffset(this.endNameOffset, 'endNameOffset'),
+        );
 
         if (this.startMultiplicity) {
             const multiErrors = this.startMultiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'startMultiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
+            if (multiErrors.length > 0)
+                errors.push({
+                    parameter: 'startMultiplicity',
+                    message: 'error.multiplicity_range.invalid',
+                    context: multiErrors,
+                });
         }
         if (this.endMultiplicity) {
             const multiErrors = this.endMultiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'endMultiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
+            if (multiErrors.length > 0)
+                errors.push({
+                    parameter: 'endMultiplicity',
+                    message: 'error.multiplicity_range.invalid',
+                    context: multiErrors,
+                });
         }
 
         return errors;
@@ -121,8 +159,16 @@ export class Association extends Connection {
 
     static fromSerializable(data: any, previousNodes: Node[]): Association {
         const deserialized = new Association([]);
-        deserialized.points = data.points.map((point: any) => ConnectionPoint.fromSerializable(point, deserialized, previousNodes));
-        deserialized.parts = data.parts.map((part: any) => ConnectionPart.fromSerializable(part, deserialized));
+        deserialized.points = data.points.map((point: any) =>
+            ConnectionPoint.fromSerializable(
+                point,
+                deserialized,
+                previousNodes,
+            ),
+        );
+        deserialized.parts = data.parts.map((part: any) =>
+            ConnectionPart.fromSerializable(part, deserialized),
+        );
 
         deserialized.associationName = data.associationName;
         deserialized.nameOffset = { ...data.nameOffset };
@@ -131,12 +177,16 @@ export class Association extends Connection {
 
         deserialized.startName = data.startName;
         deserialized.startNameOffset = { ...data.startNameOffset };
-        deserialized.startMultiplicity = MultiplicityRange.fromSerializable(data.startMultiplicity);
+        deserialized.startMultiplicity = MultiplicityRange.fromSerializable(
+            data.startMultiplicity,
+        );
         deserialized.startNavigability = data.startNavigability;
 
         deserialized.endName = data.endName;
         deserialized.endNameOffset = { ...data.endNameOffset };
-        deserialized.endMultiplicity = MultiplicityRange.fromSerializable(data.endMultiplicity);
+        deserialized.endMultiplicity = MultiplicityRange.fromSerializable(
+            data.endMultiplicity,
+        );
         deserialized.endNavigability = data.endNavigability;
 
         return deserialized;

@@ -1,7 +1,7 @@
-import {describe, test, expect} from 'vitest';
-import {InvalidNodeParameterCause} from '../../utils/nodes/types.ts';
-import {ErrorContext} from '../../utils/types.ts';
-import {findError} from '../../utils/functions.ts';
+import { describe, test, expect } from 'vitest';
+import { InvalidNodeParameterCause } from '../../utils/nodes/types.ts';
+import { ErrorContext } from '../../utils/types.ts';
+import { findError } from '../../utils/functions.ts';
 
 describe('UCDE-findError', () => {
     test('UCDE-FE-01 GIVEN a list of errors WHEN a matching parameter and index are provided THEN returns the correct error message', () => {
@@ -34,7 +34,11 @@ describe('UCDE-findError', () => {
                 parameter: 'param1',
                 message: 'Error 1',
                 context: [
-                    { parameter: 'childParam', message: 'Child Error', index: 0 },
+                    {
+                        parameter: 'childParam',
+                        message: 'Child Error',
+                        index: 0,
+                    },
                 ],
             },
         ];

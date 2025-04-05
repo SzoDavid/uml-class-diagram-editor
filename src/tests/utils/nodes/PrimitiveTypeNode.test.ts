@@ -1,6 +1,6 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {PrimitiveTypeNode} from '../../../utils/nodes/PrimitiveTypeNode.ts';
-import {validateStringKeys} from '../../helpers.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { PrimitiveTypeNode } from '../../../utils/nodes/PrimitiveTypeNode.ts';
+import { validateStringKeys } from '../../helpers.ts';
 
 describe('UCDE-PrimitiveTypeNode', () => {
     let primitiveTypeNode: PrimitiveTypeNode;
@@ -44,8 +44,21 @@ describe('UCDE-PrimitiveTypeNode', () => {
 
         describe('UCDE-PTN-0402 GIVEN invalid name WHEN validate() THEN expected valid error should be returned', () => {
             test.each([
-                { name: '', expectedErrors: [{parameter: 'name', message: 'error.name.required' }]},
-                { name: 'Invalid name!', expectedErrors: [{parameter: 'name', message: 'error.name.alphanumeric' }]}
+                {
+                    name: '',
+                    expectedErrors: [
+                        { parameter: 'name', message: 'error.name.required' },
+                    ],
+                },
+                {
+                    name: 'Invalid name!',
+                    expectedErrors: [
+                        {
+                            parameter: 'name',
+                            message: 'error.name.alphanumeric',
+                        },
+                    ],
+                },
             ])('UCDE-PTN-0402 {name: $name}', ({ name, expectedErrors }) => {
                 expect(validateStringKeys(expectedErrors)).toBe(true);
 

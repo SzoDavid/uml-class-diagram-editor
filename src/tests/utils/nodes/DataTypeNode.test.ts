@@ -1,7 +1,7 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {MockProperty} from './features/mocks/MockProperty.ts';
-import {MockOperation} from './features/mocks/MockOperation.ts';
-import {DataTypeNode} from '../../../utils/nodes/classifier/DataTypeNode.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { MockProperty } from './features/mocks/MockProperty.ts';
+import { MockOperation } from './features/mocks/MockOperation.ts';
+import { DataTypeNode } from '../../../utils/nodes/classifier/DataTypeNode.ts';
 
 describe('UCDE-DataTypeNode', () => {
     let dataTypeNode: DataTypeNode;
@@ -40,7 +40,13 @@ describe('UCDE-DataTypeNode', () => {
 
     describe('UCDE-DTN-0300-copy', () => {
         test('UCDE-DTN-0301 GIVEN another DataTypeNode WHEN copy() THEN copy values correctly', () => {
-            const anotherNode = new DataTypeNode('AnotherDataType', 30, 40, [new MockProperty('prop2')], [new MockOperation('op2')]);
+            const anotherNode = new DataTypeNode(
+                'AnotherDataType',
+                30,
+                40,
+                [new MockProperty('prop2')],
+                [new MockOperation('op2')],
+            );
             dataTypeNode.copy(anotherNode);
             expect(dataTypeNode.name).toBe('AnotherDataType');
             expect(dataTypeNode.x).toBe(30);

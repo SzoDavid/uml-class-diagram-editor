@@ -1,28 +1,28 @@
-import {Connection} from './Connection.ts';
-import {MultiplicityRange} from '../features/MultiplicityRange.ts';
-import {PositionalNode} from '../PositionalNode.ts';
-import {Point} from '../../types.ts';
-import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
-import {ConnectionPart} from './ConnectionPart.ts';
-import {Node} from '../Node.ts';
-import {ConnectionPoint} from './ConnectionPoint.ts';
-import {InvalidNodeParameterCause, PixelOffset} from '../types.ts';
-import {validatePixelOffset} from '../../functions.ts';
+import { Connection } from './Connection.ts';
+import { MultiplicityRange } from '../features/MultiplicityRange.ts';
+import { SerializationRegistryService } from '../../../services/SerializationRegistryService.ts';
+import { ConnectionPart } from './ConnectionPart.ts';
+import { Node } from '../Node.ts';
+import { ConnectionPoint } from './ConnectionPoint.ts';
+import { InvalidNodeParameterCause, PixelOffset } from '../types.ts';
+import { validatePixelOffset } from '../../functions.ts';
+import { Point } from '../../types.ts';
+import { PositionalNode } from '../PositionalNode.ts';
 
 const CLASS_TAG = 'Aggregation';
 
 export class Aggregation extends Connection {
-    public startName: string = '';
+    public startName = '';
     public startNameOffset: PixelOffset = { x: 0, y: 0 };
-    public isStartShared: boolean = false;
+    public isStartShared = false;
     public startMultiplicity: MultiplicityRange = new MultiplicityRange(null);
 
-    public endName: string = '';
+    public endName = '';
     public endNameOffset: PixelOffset = { x: 0, y: 0 };
-    public isEndShared: boolean = true;
+    public isEndShared = true;
     public endMultiplicity: MultiplicityRange = new MultiplicityRange(null);
 
-    constructor(points: (Point | PositionalNode)[]) {
+    public constructor(points: (Point | PositionalNode)[]) {
         super(points);
     }
 
@@ -47,12 +47,18 @@ export class Aggregation extends Connection {
         super.copy(node);
 
         this.startName = node.startName;
-        this.startNameOffset = { x: +node.startNameOffset.x, y: +node.startNameOffset.y };
+        this.startNameOffset = {
+            x: +node.startNameOffset.x,
+            y: +node.startNameOffset.y,
+        };
         this.isStartShared = node.isStartShared;
         this.startMultiplicity = node.startMultiplicity;
 
         this.endName = node.endName;
-        this.endNameOffset = { x: +node.endNameOffset.x, y: +node.endNameOffset.y };
+        this.endNameOffset = {
+            x: +node.endNameOffset.x,
+            y: +node.endNameOffset.y,
+        };
         this.isEndShared = node.isEndShared;
         this.endMultiplicity = node.endMultiplicity;
     }
@@ -60,19 +66,41 @@ export class Aggregation extends Connection {
     validate(): InvalidNodeParameterCause[] {
         const errors = super.validate();
 
-        if (this.startName !== '' && this.startName.trim() === '') errors.push({parameter: 'startName', message: 'error.value.whitespace_only'});
-        if (this.endName !== '' && this.endName.trim() === '') errors.push({parameter: 'endName', message: 'error.value.whitespace_only'});
+        if (this.startName !== '' && this.startName.trim() === '')
+            errors.push({
+                parameter: 'startName',
+                message: 'error.value.whitespace_only',
+            });
+        if (this.endName !== '' && this.endName.trim() === '')
+            errors.push({
+                parameter: 'endName',
+                message: 'error.value.whitespace_only',
+            });
 
-        errors.push(...validatePixelOffset(this.startNameOffset, 'startNameOffset'));
-        errors.push(...validatePixelOffset(this.endNameOffset, 'endNameOffset'));
+        errors.push(
+            ...validatePixelOffset(this.startNameOffset, 'startNameOffset'),
+        );
+        errors.push(
+            ...validatePixelOffset(this.endNameOffset, 'endNameOffset'),
+        );
 
         if (this.startMultiplicity) {
             const multiErrors = this.startMultiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'startMultiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
+            if (multiErrors.length > 0)
+                errors.push({
+                    parameter: 'startMultiplicity',
+                    message: 'error.multiplicity_range.invalid',
+                    context: multiErrors,
+                });
         }
         if (this.endMultiplicity) {
             const multiErrors = this.endMultiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'endMultiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
+            if (multiErrors.length > 0)
+                errors.push({
+                    parameter: 'endMultiplicity',
+                    message: 'error.multiplicity_range.invalid',
+                    context: multiErrors,
+                });
         }
 
         return errors;
@@ -99,18 +127,30 @@ export class Aggregation extends Connection {
 
     static fromSerializable(data: any, previousNodes: Node[]): Aggregation {
         const deserialized = new Aggregation([]);
-        deserialized.points = data.points.map((point: any) => ConnectionPoint.fromSerializable(point, deserialized, previousNodes));
-        deserialized.parts = data.parts.map((part: any) => ConnectionPart.fromSerializable(part, deserialized));
+        deserialized.points = data.points.map((point: any) =>
+            ConnectionPoint.fromSerializable(
+                point,
+                deserialized,
+                previousNodes,
+            ),
+        );
+        deserialized.parts = data.parts.map((part: any) =>
+            ConnectionPart.fromSerializable(part, deserialized),
+        );
 
         deserialized.startName = data.startName;
         deserialized.startNameOffset = { ...data.startNameOffset };
         deserialized.isStartShared = data.isStartShared;
-        deserialized.startMultiplicity = MultiplicityRange.fromSerializable(data.startMultiplicity);
+        deserialized.startMultiplicity = MultiplicityRange.fromSerializable(
+            data.startMultiplicity,
+        );
 
         deserialized.endName = data.endName;
         deserialized.endNameOffset = { ...data.endNameOffset };
         deserialized.isEndShared = data.isEndShared;
-        deserialized.endMultiplicity = MultiplicityRange.fromSerializable(data.endMultiplicity);
+        deserialized.endMultiplicity = MultiplicityRange.fromSerializable(
+            data.endMultiplicity,
+        );
 
         return deserialized;
     }

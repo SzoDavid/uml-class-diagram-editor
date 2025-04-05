@@ -35,7 +35,6 @@
     "error": {
         "comment_empty": "A megjegyzés nem lehet üres",
         "default_value_alphanumeric": "Az alapértelmezett értéknek alfanumerikusnak kell lennie",
-        "invalid_class_property": "Invalid attribútum",
         "invalid_end_point": "Invalid végső pont",
         "invalid_start_point": "Invalid start pont",
         "label_offset": {
@@ -56,6 +55,8 @@
         "nothing_to_save": "Nincs mit menteni",
         "operation": {
             "invalid": "Invalid operáció",
+            "ordered_unordered": "Az operáció nem lehet rendezett és nem rendezett egyszerre (ordered-unordered)",
+            "unique_nonunique": "Az operáció nem lehet egyedi és nem egyedi egyszerre (unique-nonunique)",
             "static_and_abstract": "Az operáció nem lehet egyszerre statikus és absztrakt"
         },
         "parameter": {
@@ -63,6 +64,11 @@
             "ordered_unordered": "A paraméter nem lehet rendezett és nem rendezett egyszerre (ordered-unordered)",
             "unique_nonunique": "A paraméter nem lehet egyedi és nem egyedi egyszerre (unique-nonunique)",
             "unique_ordered_needs_multiplicity": "Multiplicitás beállítása szükséges \"unique\" és \"ordered\" alkalmazhatóságához"
+        },
+        "class_property": {
+            "invalid": "Invalid attribútum",
+            "ordered_unordered": "Az attribútum nem lehet rendezett és nem rendezett egyszerre (ordered-unordered)",
+            "unique_nonunique": "Az attribútum nem lehet egyedi és nem egyedi egyszerre (unique-nonunique)"
         },
         "relationship": {
             "unconnected": "A kapcsolat végpontjai nem kapcsolódik sehova",
@@ -85,13 +91,16 @@
     "keep_adding": "Hozzáadás folytatása",
     "label_offset": "C1mke eltolás",
     "modifier": "Módosító | Módosítók",
-    "modifiers": {
+    "modifiers_properties": {
         "id": "Id",
         "nonunique": "Nonunique",
-        "readonly": "Readonly",
+        "ordered": "Ordered",
+        "query": "Query",
+        "read_only": "Read Only",
         "sequence": "Sequence",
         "union": "Union",
-        "unique": "Unique"
+        "unique": "Unique",
+        "unordered": "Unordered"
     },
     "move": "Mozgatás",
     "multiplicity": "Multiplicitás",
@@ -113,7 +122,8 @@
             "aggregation": "Aggregáció",
             "association": "Asszociáció",
             "composition": "Kompozíció",
-            "generalization": "Öröklődés"
+            "generalization": "Öröklődés",
+            "realization": "Realizáció"
         },
         "datatype": "Adattípus",
         "enumeration": "Enumeration",
@@ -126,14 +136,6 @@
     "option": "Opció | Opciók",
     "parameter": "Paraméter | Paraméterek",
     "property": "Tulajdonság | Tulajdonságok",
-    "properties": {
-        "nonunique": "Nonunique",
-        "ordered": "Ordered",
-        "query": "Query",
-        "sequence": "Sequence",
-        "unique": "Unique",
-        "unordered": "Unordered"
-    },
     "redefines": "Újradefiniálja",
     "remove": "Törlés",
     "rename": "Átnevezés",

@@ -1,10 +1,10 @@
-import {beforeEach, describe, vi, test, expect} from 'vitest';
-import {Renderer} from '../../../services/renderer/Renderer.ts';
-import {RenderConfiguration} from '../../../services/renderer/RenderConfiguration.ts';
-import {ClassNode} from '../../../utils/nodes/classifier/ClassNode.ts';
-import {NodeRenderer} from '../../../services/renderer/NodeRenderer.ts';
-import {useSettingsService} from '../../../services/SettingsService.ts';
-import {PositionalNode} from '../../../utils/nodes/PositionalNode.ts';
+import { beforeEach, describe, vi, test, expect } from 'vitest';
+import { Renderer } from '../../../services/renderer/Renderer.ts';
+import { RenderConfiguration } from '../../../services/renderer/RenderConfiguration.ts';
+import { ClassNode } from '../../../utils/nodes/classifier/ClassNode.ts';
+import { NodeRenderer } from '../../../services/renderer/NodeRenderer.ts';
+import { useSettingsService } from '../../../services/SettingsService.ts';
+import { PositionalNode } from '../../../utils/nodes/PositionalNode.ts';
 
 describe('UCDE-Renderer', () => {
     let canvas: HTMLCanvasElement;
@@ -12,7 +12,7 @@ describe('UCDE-Renderer', () => {
     let renderConf: RenderConfiguration;
     let nodeRenderer: NodeRenderer;
     let renderer: Renderer;
-    
+
     beforeEach(() => {
         const { settings } = useSettingsService();
 
@@ -34,7 +34,7 @@ describe('UCDE-Renderer', () => {
             measureText: vi.fn().mockImplementation((text: string) => ({
                 width: text.length * 7, // Mocking width based on text length
             })),
-            fillText: vi.fn()
+            fillText: vi.fn(),
         } as unknown as CanvasRenderingContext2D;
 
         vi.spyOn(canvas, 'getContext').mockReturnValue(context2D);
@@ -67,10 +67,17 @@ describe('UCDE-Renderer', () => {
     });
 
     test('UCDE-R-03 GIVEN a non-ClassNode node WHEN render is called THEN ClassNodeRenderer.render should not be called', () => {
-        const aNode = { x: 100, y: 100, width: 50, height: 50 } as PositionalNode;
+        const aNode = {
+            x: 100,
+            y: 100,
+            width: 50,
+            height: 50,
+        } as PositionalNode;
         renderer.render([aNode], 1, 0, 0);
 
-        expect(nodeRenderer['_classifierRenderer'].render).not.toHaveBeenCalled();
+        expect(
+            nodeRenderer['_classifierRenderer'].render,
+        ).not.toHaveBeenCalled();
     });
 
     test('UCDE-R-04 GIVEN a scale and offsets WHEN render is called THEN transformations should be applied correctly', () => {

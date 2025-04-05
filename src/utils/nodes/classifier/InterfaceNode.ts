@@ -1,19 +1,31 @@
-import {ClassifierNode} from './ClassifierNode.ts';
-import {Property} from '../features/Property.ts';
-import {Operation} from '../features/Operation.ts';
-import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
+import { ClassifierNode } from './ClassifierNode.ts';
+import { Property } from '../features/Property.ts';
+import { Operation } from '../features/Operation.ts';
+import { SerializationRegistryService } from '../../../services/SerializationRegistryService.ts';
 
 const CLASS_TAG = 'InterfaceNode';
 
 export class InterfaceNode extends ClassifierNode {
-    constructor(name: string,
-                x: number,
-                y: number,
-                properties: Property[]=[],
-                operations: Operation[]=[],
-                isNotShownPropertiesExist: boolean=false,
-                isNotShownOperationsExist: boolean=false) {
-        super(name, x, y, properties, operations, isNotShownPropertiesExist, isNotShownOperationsExist);
+    public readonly header = 'Interface';
+
+    constructor(
+        name: string,
+        x: number,
+        y: number,
+        properties: Property[] = [],
+        operations: Operation[] = [],
+        isNotShownPropertiesExist = false,
+        isNotShownOperationsExist = false,
+    ) {
+        super(
+            name,
+            x,
+            y,
+            properties,
+            operations,
+            isNotShownPropertiesExist,
+            isNotShownOperationsExist,
+        );
     }
 
     public clone(): InterfaceNode {
@@ -21,10 +33,10 @@ export class InterfaceNode extends ClassifierNode {
             this.name,
             this.x,
             this.y,
-            this.properties.map(prop => prop.clone()),
-            this.operations.map(operation => operation.clone()),
+            this.properties.map((prop) => prop.clone()),
+            this.operations.map((operation) => operation.clone()),
             this.isNotShownPropertiesExist,
-            this.isNotShownOperationsExist
+            this.isNotShownOperationsExist,
         );
 
         clone.isSelected = this.isSelected;
@@ -37,10 +49,6 @@ export class InterfaceNode extends ClassifierNode {
 
     public copy(node: InterfaceNode) {
         super.copy(node);
-    }
-
-    public get header(): string {
-        return 'Interface';
     }
 
     //region Serializable members
@@ -58,9 +66,11 @@ export class InterfaceNode extends ClassifierNode {
             data.x,
             data.y,
             data.properties.map((prop: any) => Property.fromSerializable(prop)),
-            data.operations.map((operation: any) => Operation.fromSerializable(operation)),
+            data.operations.map((operation: any) =>
+                Operation.fromSerializable(operation),
+            ),
             data.isNotShownPropertiesExist,
-            data.isNotShownOperationsExist
+            data.isNotShownOperationsExist,
         );
 
         node.width = data.width;

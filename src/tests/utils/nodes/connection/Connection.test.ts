@@ -1,35 +1,46 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {Connection} from '../../../../utils/nodes/connection/Connection.ts';
-import {Generalization} from '../../../../utils/nodes/connection/Generalization.ts';
-import {BasicConnectionPoint, LooseConnectionPoint} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
-import {MockPositionalNode} from '../mocks/MockPositionalNode.ts';
-import {validateStringKeys} from '../../../helpers.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { Connection } from '../../../../utils/nodes/connection/Connection.ts';
+import { Generalization } from '../../../../utils/nodes/connection/Generalization.ts';
+import {
+    BasicConnectionPoint,
+    LooseConnectionPoint,
+} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
+import { MockPositionalNode } from '../mocks/MockPositionalNode.ts';
+import { validateStringKeys } from '../../../helpers.ts';
 
 describe('UCDE-Connection', () => {
     let connection: Connection;
-    
+
     beforeEach(() => {
         connection = new Generalization([
-            {x: 0, y: 0},
-            {x: 0, y: 5},
-            {x:5, y: 5}
-        ]); 
+            { x: 0, y: 0 },
+            { x: 0, y: 5 },
+            { x: 5, y: 5 },
+        ]);
     });
-    
+
     describe('UCDE-C-0100-Constructor', () => {
         test('UCDE-C-0101 GIVEN valid inputs WHEN creating Connection THEN properties should be set correctly', () => {
             expect(connection.parts).toHaveLength(2);
             expect(connection.parts[0].startPoint.x).toBe(0);
             expect(connection.parts[0].startPoint.y).toBe(0);
-            expect(connection.parts[0].endPoint).toBe(connection.parts[1].startPoint);
+            expect(connection.parts[0].endPoint).toBe(
+                connection.parts[1].startPoint,
+            );
         });
     });
 
     describe('UCDE-C-0200-Validate', () => {
         test('UCDE-C-0201 GIVEN standalone connection WHEN validate() THEN return correct validation errors', () => {
             const expectedErrors = [
-                {parameter: 'startPoint', message: 'error.relationship.unconnected'},
-                {parameter: 'endPoint', message: 'error.relationship.unconnected'}
+                {
+                    parameter: 'startPoint',
+                    message: 'error.relationship.unconnected',
+                },
+                {
+                    parameter: 'endPoint',
+                    message: 'error.relationship.unconnected',
+                },
             ];
 
             expect(validateStringKeys(expectedErrors));
@@ -40,20 +51,22 @@ describe('UCDE-Connection', () => {
     describe('UCDE-C-0300-Copy', () => {
         test('UCDE-C-0301 GIVEN another connection WHEN copy() THEN copy values correctly', () => {
             const anotherConnection = new Generalization([
-                {x: 1, y: 1},
-                {x: 1, y: 2},
-                {x: 2, y: 2},
-                {x: 3, y: 3}
+                { x: 1, y: 1 },
+                { x: 1, y: 2 },
+                { x: 2, y: 2 },
+                { x: 3, y: 3 },
             ]);
 
             connection.copy(anotherConnection);
             expect(connection.parts).toHaveLength(3);
             expect(connection.parts[0].startPoint.x).toBe(1);
             expect(connection.parts[0].startPoint.y).toBe(1);
-            expect(connection.parts[0].endPoint).toBe(connection.parts[1].startPoint);
+            expect(connection.parts[0].endPoint).toBe(
+                connection.parts[1].startPoint,
+            );
         });
     });
-    
+
     describe('UCDE-C-0400-ContainsDot', () => {
         test('UCDE-C-0401 GIVEN point on connection WHEN containsDot() is called THEN return true', () => {
             expect(connection.containsDot(0, 2)).toBe(true);
@@ -75,7 +88,7 @@ describe('UCDE-Connection', () => {
 
             expect(connection.isSelected).toBe(false);
 
-            connection.parts.forEach(part => {
+            connection.parts.forEach((part) => {
                 expect(part.isSelected).toBe(false);
                 expect(part.startPoint.isSelected).toBe(false);
                 expect(part.endPoint.isSelected).toBe(false);
@@ -93,7 +106,9 @@ describe('UCDE-Connection', () => {
 
     describe('UCDE-C-0700-EndPoint', () => {
         test('UCDE-C-0701 GIVEN valid connection WHEN get endPoint THEN the correct point is returned', () => {
-            expect(connection.endPoint).toBe(connection.parts[connection.parts.length - 1].endPoint);
+            expect(connection.endPoint).toBe(
+                connection.parts[connection.parts.length - 1].endPoint,
+            );
             expect(connection.endPoint.x).toBe(5);
             expect(connection.endPoint.y).toBe(5);
         });
@@ -112,11 +127,13 @@ describe('UCDE-Connection', () => {
             const parsedPoint = connection['parsePoint'](positionalNode);
 
             expect(parsedPoint).toBeInstanceOf(LooseConnectionPoint);
-            expect((parsedPoint as LooseConnectionPoint).node).toBe(positionalNode);
+            expect((parsedPoint as LooseConnectionPoint).node).toBe(
+                positionalNode,
+            );
         });
 
         test('UCDE-C-0803 GIVEN Point WHEN parsePoint is called THEN return BasicConnectionPoint with Point coordinates', () => {
-            const point = {x: 6, y: 7};
+            const point = { x: 6, y: 7 };
             const parsedPoint = connection['parsePoint'](point);
 
             expect(parsedPoint).toBeInstanceOf(BasicConnectionPoint);

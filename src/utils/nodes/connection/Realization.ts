@@ -1,29 +1,29 @@
 import { Connection } from './Connection.ts';
 import { PositionalNode } from '../PositionalNode.ts';
 import { Point } from '../../types.ts';
-import { SerializationRegistryService } from '../../../services/SerializationRegistryService.ts';
 import { ConnectionPoint } from './ConnectionPoint.ts';
 import { ConnectionPart } from './ConnectionPart.ts';
 import { Node } from '../Node.ts';
+import { SerializationRegistryService } from '../../../services/SerializationRegistryService.ts';
 
-const CLASS_TAG = 'Generalization';
+const CLASS_TAG = 'Realization';
 
-export class Generalization extends Connection {
+export class Realization extends Connection {
     public reversed = false;
 
     public constructor(points: (Point | PositionalNode)[]) {
         super(points);
     }
 
-    clone(): Generalization {
-        const clone = new Generalization([]);
+    clone(): Realization {
+        const clone = new Realization([]);
         this.basicClone(clone);
         clone.reversed = this.reversed;
 
         return clone;
     }
 
-    copy(node: Generalization) {
+    copy(node: Realization) {
         super.copy(node);
         this.reversed = node.reversed;
     }
@@ -38,8 +38,8 @@ export class Generalization extends Connection {
         return obj;
     }
 
-    static fromSerializable(data: any, previousNodes: Node[]): Generalization {
-        const deserialized = new Generalization([]);
+    static fromSerializable(data: any, previousNodes: Node[]): Realization {
+        const deserialized = new Realization([]);
         deserialized.points = data.points.map((point: any) =>
             ConnectionPoint.fromSerializable(
                 point,
@@ -59,4 +59,4 @@ export class Generalization extends Connection {
     //endregion
 }
 
-SerializationRegistryService.register(CLASS_TAG, Generalization);
+SerializationRegistryService.register(CLASS_TAG, Realization);

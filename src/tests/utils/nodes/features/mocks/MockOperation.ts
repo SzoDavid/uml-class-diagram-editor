@@ -1,8 +1,16 @@
-import {Operation} from '../../../../../utils/nodes/features/Operation.ts';
+import { Operation } from '../../../../../utils/nodes/features/Operation.ts';
 
 export class MockOperation extends Operation {
-    constructor(name: string, isAbstract: boolean = false) {
-        super(name, undefined, undefined, undefined, undefined, undefined, isAbstract);
+    constructor(name: string, isAbstract = false) {
+        super(
+            name,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            isAbstract,
+        );
     }
 
     validate() {

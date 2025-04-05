@@ -1,31 +1,40 @@
-import {PositionalNode} from '../PositionalNode.ts';
-import {InvalidNodeParameterCause} from '../types.ts';
-import {EditorConstants} from '../../constants.ts';
-import {GeometryUtils} from '../../GeometryUtils.ts';
-import {Point} from '../../types.ts';
-import {Connection} from './Connection.ts';
-import {Serializable} from '../Serializable.ts';
-import {Node} from '../Node.ts';
-import {DeserializationError} from '../../../services/SerializationRegistryService.ts';
+import { PositionalNode } from '../PositionalNode.ts';
+import { InvalidNodeParameterCause } from '../types.ts';
+import { EditorConstants } from '../../constants.ts';
+import { GeometryUtils } from '../../GeometryUtils.ts';
+import { Point } from '../../types.ts';
+import { Connection } from './Connection.ts';
+import { Serializable } from '../Serializable.ts';
+import { Node } from '../Node.ts';
+import { DeserializationError } from '../../../services/SerializationRegistryService.ts';
 
 const BASIC_CLASS_TAG = 'BasicConnectionPoint';
 const LOOSE_CLASS_TAG = 'LooseConnectionPoint';
 
-export abstract class ConnectionPoint extends PositionalNode implements Point, Serializable {
+export abstract class ConnectionPoint
+    extends PositionalNode
+    implements Point, Serializable
+{
     constructor(
         x: number,
         y: number,
-        public parent: Connection
+        public parent: Connection,
     ) {
         super(x, y);
     }
 
     get isStartPoint(): boolean {
-        return this.parent.startPoint.x === this.x && this.parent.startPoint.y === this.y;
+        return (
+            this.parent.startPoint.x === this.x &&
+            this.parent.startPoint.y === this.y
+        );
     }
 
     get isEndpoint(): boolean {
-        return this.parent.endPoint.x === this.x && this.parent.endPoint.y === this.y;
+        return (
+            this.parent.endPoint.x === this.x &&
+            this.parent.endPoint.y === this.y
+        );
     }
 
     copy(node: ConnectionPoint): void {
@@ -35,14 +44,26 @@ export abstract class ConnectionPoint extends PositionalNode implements Point, S
     }
 
     validate(): InvalidNodeParameterCause[] {
-        if (this.isStartPoint) return this.parent.validate().filter(cause => cause.parameter.startsWith('start'));
-        if (this.isEndpoint) return this.parent.validate().filter(cause => cause.parameter.startsWith('end'));
+        if (this.isStartPoint)
+            return this.parent
+                .validate()
+                .filter((cause) => cause.parameter.startsWith('start'));
+        if (this.isEndpoint)
+            return this.parent
+                .validate()
+                .filter((cause) => cause.parameter.startsWith('end'));
 
         return [];
     }
 
     containsDot(x: number, y: number): boolean {
-        return GeometryUtils.isPointWithinRadius(x, y, this.x, this.y, EditorConstants.maxClickDistance);
+        return GeometryUtils.isPointWithinRadius(
+            x,
+            y,
+            this.x,
+            this.y,
+            EditorConstants.maxClickDistance,
+        );
     }
 
     remove(): void {
@@ -88,16 +109,24 @@ export abstract class ConnectionPoint extends PositionalNode implements Point, S
     toSerializable(): object {
         return {
             x: this.x,
-            y: this.y
+            y: this.y,
         };
     }
 
-    static fromSerializable(data: any, parent: Connection, previousNodes: Node[]): ConnectionPoint {
+    static fromSerializable(
+        data: any,
+        parent: Connection,
+        previousNodes: Node[],
+    ): ConnectionPoint {
         if (data.tag === BASIC_CLASS_TAG) {
             return BasicConnectionPoint.fromSerializable(data, parent);
         }
 
-        return LooseConnectionPoint.fromSerializable(data, parent, previousNodes);
+        return LooseConnectionPoint.fromSerializable(
+            data,
+            parent,
+            previousNodes,
+        );
     }
 
     //endregion
@@ -137,7 +166,10 @@ export class BasicConnectionPoint extends ConnectionPoint {
         return obj;
     }
 
-    static fromSerializable(data: any, parent: Connection): BasicConnectionPoint {
+    static fromSerializable(
+        data: any,
+        parent: Connection,
+    ): BasicConnectionPoint {
         return new BasicConnectionPoint(data.x, data.y, parent);
     }
 
@@ -147,9 +179,9 @@ export class BasicConnectionPoint extends ConnectionPoint {
 export class LooseConnectionPoint extends ConnectionPoint implements Point {
     constructor(
         public node: PositionalNode,
-        parent: Connection
+        parent: Connection,
     ) {
-        super(node.x + (node.width / 2), node.y + (node.height / 2), parent);
+        super(node.x + node.width / 2, node.y + node.height / 2, parent);
     }
 
     get x(): number {
@@ -157,7 +189,9 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
             ? this.parent.parts[0].endPoint
             : this.parent.parts[this.parent.parts.length - 1].startPoint;
 
-        return GeometryUtils.findIntersectionPoint(otherPoint, this.node)?.x ?? NaN;
+        return (
+            GeometryUtils.findIntersectionPoint(otherPoint, this.node)?.x ?? NaN
+        );
     }
 
     get y(): number {
@@ -165,26 +199,32 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
             ? this.parent.parts[0].endPoint
             : this.parent.parts[this.parent.parts.length - 1].startPoint;
 
-        return GeometryUtils.findIntersectionPoint(otherPoint, this.node)?.y ?? NaN;
+        return (
+            GeometryUtils.findIntersectionPoint(otherPoint, this.node)?.y ?? NaN
+        );
     }
 
     get snappingPoint(): Point {
         return {
-            x: this.node.x + (this.node.width / 2),
-            y: this.node.y + (this.node.height / 2)
+            x: this.node.x + this.node.width / 2,
+            y: this.node.y + this.node.height / 2,
         };
     }
 
     get isStartPoint(): boolean {
-        return this.parent.startPoint instanceof LooseConnectionPoint
-            && this.parent.startPoint.snappingPoint.x === this.snappingPoint.x
-            && this.parent.startPoint.snappingPoint.y === this.snappingPoint.y;
+        return (
+            this.parent.startPoint instanceof LooseConnectionPoint &&
+            this.parent.startPoint.snappingPoint.x === this.snappingPoint.x &&
+            this.parent.startPoint.snappingPoint.y === this.snappingPoint.y
+        );
     }
 
     get isEndpoint(): boolean {
-        return this.parent.endPoint instanceof LooseConnectionPoint
-            && this.parent.endPoint.snappingPoint.x === this.snappingPoint.x
-            && this.parent.endPoint.snappingPoint.y === this.snappingPoint.y;
+        return (
+            this.parent.endPoint instanceof LooseConnectionPoint &&
+            this.parent.endPoint.snappingPoint.x === this.snappingPoint.x &&
+            this.parent.endPoint.snappingPoint.y === this.snappingPoint.y
+        );
     }
 
     clone(): LooseConnectionPoint {
@@ -201,7 +241,13 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
     }
 
     containsDot(x: number, y: number): boolean {
-        return GeometryUtils.isPointWithinRadius(x, y, this.x, this.y, EditorConstants.maxClickDistance);
+        return GeometryUtils.isPointWithinRadius(
+            x,
+            y,
+            this.x,
+            this.y,
+            EditorConstants.maxClickDistance,
+        );
     }
 
     convertToBasicPoint(x: number, y: number): BasicConnectionPoint {
@@ -222,20 +268,28 @@ export class LooseConnectionPoint extends ConnectionPoint implements Point {
             node: {
                 x: this.node.x,
                 y: this.node.y,
-            }
+            },
         };
     }
 
-    static fromSerializable(data: any, parent: Connection, previousNodes: Node[]): LooseConnectionPoint {
-        const node = previousNodes.find(node => {
-            return (node instanceof PositionalNode)
-                && node.x === data.node.x
-                && node.y === data.node.y;
+    static fromSerializable(
+        data: any,
+        parent: Connection,
+        previousNodes: Node[],
+    ): LooseConnectionPoint {
+        const node = previousNodes.find((node) => {
+            return (
+                node instanceof PositionalNode &&
+                node.x === data.node.x &&
+                node.y === data.node.y
+            );
         });
 
         // The second part of this test is just for type safety it should never not be a positional node
         if (!node || !(node instanceof PositionalNode)) {
-            throw new DeserializationError(`Could not find positional node with coordinates (${data.node.x};${data.node.y})`);
+            throw new DeserializationError(
+                `Could not find positional node with coordinates (${data.node.x};${data.node.y})`,
+            );
         }
 
         return new LooseConnectionPoint(node, parent);

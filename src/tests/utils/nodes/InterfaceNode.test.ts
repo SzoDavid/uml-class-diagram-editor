@@ -1,7 +1,7 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {InterfaceNode} from '../../../utils/nodes/classifier/InterfaceNode.ts';
-import {MockProperty} from './features/mocks/MockProperty.ts';
-import {MockOperation} from './features/mocks/MockOperation.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { InterfaceNode } from '../../../utils/nodes/classifier/InterfaceNode.ts';
+import { MockProperty } from './features/mocks/MockProperty.ts';
+import { MockOperation } from './features/mocks/MockOperation.ts';
 
 describe('UCDE-InterfaceNode', () => {
     let interfaceNode: InterfaceNode;
@@ -40,7 +40,13 @@ describe('UCDE-InterfaceNode', () => {
 
     describe('UCDE-IN-0300-copy', () => {
         test('UCDE-IN-0301 GIVEN another InterfaceNode WHEN copy() THEN copy values correctly', () => {
-            const anotherNode = new InterfaceNode('AnotherInterface', 30, 40, [new MockProperty('prop2')], [new MockOperation('op2')]);
+            const anotherNode = new InterfaceNode(
+                'AnotherInterface',
+                30,
+                40,
+                [new MockProperty('prop2')],
+                [new MockOperation('op2')],
+            );
             interfaceNode.copy(anotherNode);
             expect(interfaceNode.name).toBe('AnotherInterface');
             expect(interfaceNode.x).toBe(30);
