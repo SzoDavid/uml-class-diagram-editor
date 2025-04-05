@@ -198,6 +198,8 @@ export class UmlEditorService {
 
                 if (this._selectedNode) {
                     this._selectedNode.isSelected = true;
+                } else {
+                    this.handlePanning(offsetX, offsetY);
                 }
 
                 this._emitter.emit('mouseDown', this._selectedNode);
