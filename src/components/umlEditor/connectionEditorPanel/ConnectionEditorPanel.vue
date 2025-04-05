@@ -32,7 +32,8 @@
                     data.instance instanceof Association ||
                     data.instance instanceof Aggregation ||
                     data.instance instanceof Generalization ||
-                    data.instance instanceof Composition
+                    data.instance instanceof Composition ||
+                    data.instance instanceof Realization
                 "
             >
                 <p
@@ -46,7 +47,8 @@
                 <template
                     v-if="
                         data.instance instanceof Generalization ||
-                        data.instance instanceof Composition
+                        data.instance instanceof Composition ||
+                        data.instance instanceof Realization
                     "
                 >
                     <v-checkbox
@@ -806,7 +808,8 @@
             <template
                 v-else-if="
                     data.instance instanceof ConnectionPoint &&
-                    data.instance.parent instanceof Generalization
+                    (data.instance.parent instanceof Generalization ||
+                        data.instance.parent instanceof Realization)
                 "
             >
                 <template v-if="data.instance.isStartPoint">

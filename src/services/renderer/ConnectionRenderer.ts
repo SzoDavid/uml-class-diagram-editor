@@ -12,6 +12,7 @@ import { Aggregation } from '../../utils/nodes/connection/Aggregation.ts';
 import { Composition } from '../../utils/nodes/connection/Composition.ts';
 import { LooseConnectionPoint } from '../../utils/nodes/connection/ConnectionPoint.ts';
 import { GeometryUtils } from '../../utils/GeometryUtils.ts';
+import { Realization } from '../../utils/nodes/connection/Realization.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -30,6 +31,10 @@ export class ConnectionRenderer {
                 errors: nodeErrors,
             });
             if (this._nr.rc.showInvalidity) invalid = true;
+        }
+
+        if (node instanceof Realization) {
+            this._nr.ctx.setLineDash([10, 5]);
         }
 
         this._nr.ctx.lineWidth = this._nr.rc.borderSize;
@@ -68,6 +73,8 @@ export class ConnectionRenderer {
         );
         this._nr.ctx.stroke();
 
+        this._nr.ctx.setLineDash([]);
+
         this.renderEndDecorations(node, startPart, endPart, invalid);
 
         for (const point of node.points) {
@@ -100,8 +107,11 @@ export class ConnectionRenderer {
             this.handleAggregation(connection, startPart, endPart, isInvalid);
         } else if (connection instanceof Composition) {
             this.handleComposition(connection, startPart, endPart, isInvalid);
-        } else if (connection instanceof Generalization) {
-            this.handleGeneralization(
+        } else if (
+            connection instanceof Generalization ||
+            connection instanceof Realization
+        ) {
+            this.handleGeneralizationAndRealization(
                 connection,
                 startPart,
                 endPart,
@@ -282,8 +292,8 @@ export class ConnectionRenderer {
         this.renderEndTexts(connection, startPart, endPart, isInvalid);
     }
 
-    private handleGeneralization(
-        connection: Generalization,
+    private handleGeneralizationAndRealization(
+        connection: Generalization | Realization,
         startPart: ConnectionPart,
         endPart: ConnectionPart,
         isInvalid: boolean,

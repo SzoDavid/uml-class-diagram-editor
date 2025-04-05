@@ -116,7 +116,8 @@
             "aggregation": "Aggregáció",
             "association": "Asszociáció",
             "composition": "Kompozíció",
-            "generalization": "Öröklődés"
+            "generalization": "Öröklődés",
+            "realization": "Realizáció"
         },
         "datatype": "Adattípus",
         "enumeration": "Enumeration",
