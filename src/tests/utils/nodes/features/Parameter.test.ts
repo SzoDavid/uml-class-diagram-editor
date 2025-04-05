@@ -76,7 +76,7 @@ describe('UCDE-Parameter', () => {
                     name: 'param1',
                     type: 'int',
                     direction: 'in' as Direction,
-                    multiplicity: new MultiplicityRange(5, 1),
+                    multiplicity: new MultiplicityRange(null),
                     defaultValue: 'value',
                     properties: [] as ParameterProperty[],
                 },
@@ -84,7 +84,7 @@ describe('UCDE-Parameter', () => {
                     name: 'param2',
                     type: 'string',
                     direction: null,
-                    multiplicity: new MultiplicityRange(null),
+                    multiplicity: new MultiplicityRange(5, 1),
                     defaultValue: '',
                     properties: ['unique'] as ParameterProperty[],
                 },
@@ -164,6 +164,11 @@ describe('UCDE-Parameter', () => {
                     properties: ['unique', 'nonunique'] as ParameterProperty[],
                     expectedErrors: [
                         {
+                            message:
+                                'error.parameter.unique_ordered_needs_multiplicity',
+                            parameter: 'properties',
+                        },
+                        {
                             parameter: 'properties',
                             message: 'error.parameter.unique_nonunique',
                         },
@@ -172,6 +177,11 @@ describe('UCDE-Parameter', () => {
                 {
                     properties: ['ordered', 'unordered'] as ParameterProperty[],
                     expectedErrors: [
+                        {
+                            message:
+                                'error.parameter.unique_ordered_needs_multiplicity',
+                            parameter: 'properties',
+                        },
                         {
                             parameter: 'properties',
                             message: 'error.parameter.ordered_unordered',
