@@ -58,13 +58,14 @@ export class Parameter implements Feature {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '')
+        if (this.name === '') {
             errors.push({ parameter: 'name', message: 'error.name.required' });
-        else if (!Validator.isAlphanumeric(this.name))
+        } else if (!Validator.isAlphanumeric(this.name)) {
             errors.push({
                 parameter: 'name',
                 message: 'error.name.alphanumeric',
             });
+        }
 
         if (this.type && !Validator.isAlphanumericWithBrackets(this.type)) {
             errors.push({
@@ -80,6 +81,19 @@ export class Parameter implements Feature {
             errors.push({
                 parameter: 'defaultValue',
                 message: 'error.default_value_alphanumeric',
+            });
+        }
+
+        if (
+            (this.properties.includes('unique') ||
+                this.properties.includes('nonunique') ||
+                this.properties.includes('ordered') ||
+                this.properties.includes('unordered')) &&
+            !this.multiplicity.upper
+        ) {
+            errors.push({
+                parameter: 'properties',
+                message: 'error.parameter.unique_ordered_needs_multiplicity',
             });
         }
 
