@@ -1,10 +1,10 @@
-import {Connection} from './Connection.ts';
-import {PositionalNode} from '../PositionalNode.ts';
-import {Point} from '../../types.ts';
-import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
-import {ConnectionPoint} from './ConnectionPoint.ts';
-import {ConnectionPart} from './ConnectionPart.ts';
-import {Node} from '../Node.ts';
+import { Connection } from './Connection.ts';
+import { PositionalNode } from '../PositionalNode.ts';
+import { Point } from '../../types.ts';
+import { SerializationRegistryService } from '../../../services/SerializationRegistryService.ts';
+import { ConnectionPoint } from './ConnectionPoint.ts';
+import { ConnectionPart } from './ConnectionPart.ts';
+import { Node } from '../Node.ts';
 
 const CLASS_TAG = 'Generalization';
 
@@ -40,9 +40,16 @@ export class Generalization extends Connection {
 
     static fromSerializable(data: any, previousNodes: Node[]): Generalization {
         const deserialized = new Generalization([]);
-        deserialized.points = data.points.map((point: any) => ConnectionPoint.fromSerializable(point, deserialized, previousNodes));
-        deserialized.parts = data.parts.map((part: any) => ConnectionPart.fromSerializable(part, deserialized));
-
+        deserialized.points = data.points.map((point: any) =>
+            ConnectionPoint.fromSerializable(
+                point,
+                deserialized,
+                previousNodes,
+            ),
+        );
+        deserialized.parts = data.parts.map((part: any) =>
+            ConnectionPart.fromSerializable(part, deserialized),
+        );
 
         deserialized.reversed = data.reversed;
 

@@ -1,12 +1,12 @@
-import {defineComponent, ref, watch} from 'vue';
-import {ErrorContext, NodeData} from '../../../utils/types.ts';
-import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
-import {CommentNode} from '../../../utils/nodes/CommentNode.ts';
-import {findError} from '../../../utils/functions.ts';
+import { defineComponent, ref, watch } from 'vue';
+import { ErrorContext, NodeData } from '../../../utils/types.ts';
+import { useI18n } from 'vue-i18n';
+import { InvalidNodeParameterCause } from '../../../utils/nodes/types.ts';
+import { CommentNode } from '../../../utils/nodes/CommentNode.ts';
+import { findError } from '../../../utils/functions.ts';
 
 interface CommentEditorPanelProperties {
-    commentData: NodeData<CommentNode>
+    commentData: NodeData<CommentNode>;
 }
 
 type CommentEditorPanelEmits = (e: 'save', data: NodeData<CommentNode>) => void;
@@ -15,11 +15,14 @@ export default defineComponent({
     props: {
         commentData: {
             type: Object as () => NodeData<CommentNode>,
-            required: true
-        }
+            required: true,
+        },
     },
     emits: ['save'],
-    setup(props: CommentEditorPanelProperties, { emit }: { emit: CommentEditorPanelEmits }) {
+    setup(
+        props: CommentEditorPanelProperties,
+        { emit }: { emit: CommentEditorPanelEmits },
+    ) {
         const { t } = useI18n();
 
         const data = ref<NodeData<CommentNode>>(props.commentData);
@@ -31,7 +34,7 @@ export default defineComponent({
             (newData) => {
                 data.value = newData;
             },
-            { immediate: true }
+            { immediate: true },
         );
 
         watch(
@@ -40,11 +43,12 @@ export default defineComponent({
                 if (!value) return;
                 errors = value.instance.validate();
             },
-            { immediate: true, deep: true }
+            { immediate: true, deep: true },
         );
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'comment') return null;
+            if (data.value === null || data.value.type !== 'comment')
+                return null;
 
             const error = findError(errors, context);
 
@@ -57,7 +61,10 @@ export default defineComponent({
         };
 
         return {
-            t, data, onSave, getError
+            t,
+            data,
+            onSave,
+            getError,
         };
-    }
+    },
 });

@@ -1,7 +1,10 @@
-import {describe, expect, test} from 'vitest';
-import {Parameter} from '../../../../utils/nodes/features/Parameter.ts';
-import {IsMultilineFeature, MultilineFeature} from '../../../../utils/nodes/features/MultilineFeature.ts';
-import {Feature} from '../../../../utils/nodes/features/Feature.ts';
+import { describe, expect, test } from 'vitest';
+import { Parameter } from '../../../../utils/nodes/features/Parameter.ts';
+import {
+    IsMultilineFeature,
+    MultilineFeature,
+} from '../../../../utils/nodes/features/MultilineFeature.ts';
+import { Feature } from '../../../../utils/nodes/features/Feature.ts';
 
 describe('UCDE-IsMultilineFeature', () => {
     test('UCDE-IMF-01 GIVEN a feature object WHEN the object has all MultilineFeature properties THEN it should return true', () => {

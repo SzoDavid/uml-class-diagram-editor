@@ -7,17 +7,17 @@ export default defineConfig({
     plugins: [vue()],
     base: '/uml-class-diagram-editor/',
     server: {
-        port: 5173 // Development server port
+        port: 5173, // Development server port
     },
     resolve: {
         alias: {
-            '@': resolve(__dirname, 'src') // Alias for src directory
-        }
+            '@': resolve(__dirname, 'src'), // Alias for src directory
+        },
     },
     build: {
         outDir: 'dist',
         rollupOptions: {
-            input: resolve(__dirname, 'index.html') // Entry point for the build
-        }
-    }
+            input: resolve(__dirname, 'index.html'), // Entry point for the build
+        },
+    },
 });

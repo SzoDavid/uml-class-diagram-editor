@@ -1,45 +1,45 @@
 {
-  "name": "uml-class-diagram-editor",
-  "private": true,
-  "version": "1.2.1",
-  "type": "module",
-  "homepage": "https://szodavid.github.io/uml-class-diagram-editor",
-  "main": "src/main.ts",
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview",
-    "vitest-ui": "vitest --ui",
-    "test": "vitest",
-    "lint": "eslint && prettier -c ."
-  },
-  "dependencies": {
-    "@mdi/font": "^7.4.47",
-    "file-saver": "^2.0.5",
-    "mitt": "^3.0.1",
-    "vue": "^3.4.37",
-    "vue-i18n": "^9.14.1",
-    "vue-router": "^4.4.5",
-    "vuetify": "^3.7.4"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.24.0",
-    "@types/file-saver": "^2.0.7",
-    "@types/node": "^22.10.7",
-    "@vitejs/plugin-vue": "^5.1.4",
-    "@vitest/coverage-v8": "^2.1.1",
-    "@vitest/ui": "^2.1.1",
-    "eslint": "^9.24.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.6",
-    "eslint-plugin-vue": "^9.28.0",
-    "globals": "^15.9.0",
-    "jsdom": "^25.0.1",
-    "prettier": "3.5.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.29.0",
-    "vite": "^5.4.1",
-    "vitest": "^2.1.1",
-    "vue-tsc": "^2.1.6"
-  }
+    "name": "uml-class-diagram-editor",
+    "private": true,
+    "version": "1.2.1",
+    "type": "module",
+    "homepage": "https://szodavid.github.io/uml-class-diagram-editor",
+    "main": "src/main.ts",
+    "scripts": {
+        "dev": "vite",
+        "build": "vue-tsc -b && vite build",
+        "preview": "vite preview",
+        "vitest-ui": "vitest --ui",
+        "test": "vitest",
+        "lint": "eslint && prettier -c ."
+    },
+    "dependencies": {
+        "@mdi/font": "^7.4.47",
+        "file-saver": "^2.0.5",
+        "mitt": "^3.0.1",
+        "vue": "^3.4.37",
+        "vue-i18n": "^9.14.1",
+        "vue-router": "^4.4.5",
+        "vuetify": "^3.7.4"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.24.0",
+        "@types/file-saver": "^2.0.7",
+        "@types/node": "^22.10.7",
+        "@vitejs/plugin-vue": "^5.1.4",
+        "@vitest/coverage-v8": "^2.1.1",
+        "@vitest/ui": "^2.1.1",
+        "eslint": "^9.24.0",
+        "eslint-config-prettier": "^10.1.1",
+        "eslint-plugin-prettier": "^5.2.6",
+        "eslint-plugin-vue": "^9.28.0",
+        "globals": "^15.9.0",
+        "jsdom": "^25.0.1",
+        "prettier": "3.5.3",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.29.0",
+        "vite": "^5.4.1",
+        "vitest": "^2.1.1",
+        "vue-tsc": "^2.1.6"
+    }
 }

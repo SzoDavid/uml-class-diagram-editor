@@ -1,4 +1,4 @@
-import {InvalidNodeParameterCause} from '../types.ts';
+import { InvalidNodeParameterCause } from '../types.ts';
 
 export interface Feature {
     toString(): string;

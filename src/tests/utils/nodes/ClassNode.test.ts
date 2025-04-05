@@ -1,8 +1,11 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {ClassNode, ClassStereotype} from '../../../utils/nodes/classifier/ClassNode.ts';
-import {MockOperation} from './features/mocks/MockOperation.ts';
-import {MockProperty} from './features/mocks/MockProperty.ts';
-import {validateStringKeys} from '../../helpers.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import {
+    ClassNode,
+    ClassStereotype,
+} from '../../../utils/nodes/classifier/ClassNode.ts';
+import { MockOperation } from './features/mocks/MockOperation.ts';
+import { MockProperty } from './features/mocks/MockProperty.ts';
+import { validateStringKeys } from '../../helpers.ts';
 
 describe('UCDE-ClassNode', () => {
     let classNode: ClassNode;
@@ -44,9 +47,22 @@ describe('UCDE-ClassNode', () => {
     describe('UCDE-CLN-0300-validate', () => {
         describe('UCDE-CLN-0301 GIVEN an invalid name WHEN validate() THEN return valid error for name', () => {
             test.each([
-                { name: '', expectedError: [{ parameter: 'name', message: 'error.name.required' }] },
-                { name: 'invalid name!', expectedError: [{ parameter: 'name', message: 'error.name.alphanumeric' }] }
-            ])('UCDE-CLN-0301 {name: $name}', ({name, expectedError}) => {
+                {
+                    name: '',
+                    expectedError: [
+                        { parameter: 'name', message: 'error.name.required' },
+                    ],
+                },
+                {
+                    name: 'invalid name!',
+                    expectedError: [
+                        {
+                            parameter: 'name',
+                            message: 'error.name.alphanumeric',
+                        },
+                    ],
+                },
+            ])('UCDE-CLN-0301 {name: $name}', ({ name, expectedError }) => {
                 expect(validateStringKeys(expectedError)).toBe(true);
                 classNode.name = name;
                 expect(classNode.validate()).toEqual(expectedError);
@@ -55,35 +71,78 @@ describe('UCDE-ClassNode', () => {
 
         describe('UCDE-CLN-0302 GIVEN an invalid property or operation WHEN validate() THEN validate both', () => {
             test.each([
-                { property: 'validProperty', operation: 'invalid', expectedErrors: [{
-                    parameter: 'operations',
-                    index: 0,
-                    message: 'error.operation.invalid',
-                    context: [{ parameter: 'name', message: 'Invalid operation name' }]}] },
-                { property: 'invalid', operation: 'validOperation', expectedErrors: [{
-                    parameter: 'properties',
-                    index: 0,
-                    message: 'error.invalid_class_property',
-                    context: [{ parameter: 'name', message: 'Invalid property name' }]}] },
-                { property: 'invalid', operation: 'invalid', expectedErrors: [
-                    {
-                        parameter: 'properties',
-                        index: 0,
-                        message: 'error.invalid_class_property',
-                        context: [{ parameter: 'name', message: 'Invalid property name' }]},
-                    {
-                        parameter: 'operations',
-                        index: 0,
-                        message: 'error.operation.invalid',
-                        context: [{ parameter: 'name', message: 'Invalid operation name' }]},
-                ]},
-            ])('UCDE-CLN-0302 {property: $property, operation: $operation}', ({property, operation, expectedErrors})=> {
-                expect(validateStringKeys(expectedErrors)).toBe(true);
+                {
+                    property: 'validProperty',
+                    operation: 'invalid',
+                    expectedErrors: [
+                        {
+                            parameter: 'operations',
+                            index: 0,
+                            message: 'error.operation.invalid',
+                            context: [
+                                {
+                                    parameter: 'name',
+                                    message: 'Invalid operation name',
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    property: 'invalid',
+                    operation: 'validOperation',
+                    expectedErrors: [
+                        {
+                            parameter: 'properties',
+                            index: 0,
+                            message: 'error.invalid_class_property',
+                            context: [
+                                {
+                                    parameter: 'name',
+                                    message: 'Invalid property name',
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    property: 'invalid',
+                    operation: 'invalid',
+                    expectedErrors: [
+                        {
+                            parameter: 'properties',
+                            index: 0,
+                            message: 'error.invalid_class_property',
+                            context: [
+                                {
+                                    parameter: 'name',
+                                    message: 'Invalid property name',
+                                },
+                            ],
+                        },
+                        {
+                            parameter: 'operations',
+                            index: 0,
+                            message: 'error.operation.invalid',
+                            context: [
+                                {
+                                    parameter: 'name',
+                                    message: 'Invalid operation name',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ])(
+                'UCDE-CLN-0302 {property: $property, operation: $operation}',
+                ({ property, operation, expectedErrors }) => {
+                    expect(validateStringKeys(expectedErrors)).toBe(true);
 
-                classNode.properties.push(new MockProperty(property));
-                classNode.operations.push(new MockOperation(operation));
-                expect(classNode.validate()).toEqual(expectedErrors);
-            });
+                    classNode.properties.push(new MockProperty(property));
+                    classNode.operations.push(new MockOperation(operation));
+                    expect(classNode.validate()).toEqual(expectedErrors);
+                },
+            );
         });
     });
 
@@ -105,7 +164,13 @@ describe('UCDE-ClassNode', () => {
 
     describe('UCDE-CLN-0500-copy', () => {
         test('UCDE-CLN-0501 GIVEN another ClassNode WHEN copy() THEN copy values correctly', () => {
-            const anotherNode = new ClassNode('AnotherClass', 30, 40, [new MockProperty('prop2')], [new MockOperation('op2')]);
+            const anotherNode = new ClassNode(
+                'AnotherClass',
+                30,
+                40,
+                [new MockProperty('prop2')],
+                [new MockOperation('op2')],
+            );
             classNode.copy(anotherNode);
             expect(classNode.name).toBe('AnotherClass');
             expect(classNode.x).toBe(30);
@@ -115,7 +180,7 @@ describe('UCDE-ClassNode', () => {
         });
     });
 
-    describe ('UCDE-CLN-0600-set stereotype', () => {
+    describe('UCDE-CLN-0600-set stereotype', () => {
         test('UCDE-CLN-0601 GIVEN utility WHEN setting stereotype for class with non-static properties and operations THEN props and operations are set to static', () => {
             classNode.properties.push(new MockProperty('prop1'));
             classNode.operations.push(new MockOperation('op1'));

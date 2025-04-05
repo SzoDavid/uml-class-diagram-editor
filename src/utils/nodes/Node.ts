@@ -1,5 +1,5 @@
-import {InvalidNodeParameterCause} from './types.ts';
-import {Serializable} from './Serializable.ts';
+import { InvalidNodeParameterCause } from './types.ts';
+import { Serializable } from './Serializable.ts';
 
 export abstract class Node implements Serializable {
     isSelected = false;

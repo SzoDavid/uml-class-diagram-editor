@@ -1,14 +1,14 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {Aggregation} from '../../../../utils/nodes/connection/Aggregation.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { Aggregation } from '../../../../utils/nodes/connection/Aggregation.ts';
 
 describe('UCDE-Aggregation', () => {
     let aggregation: Aggregation;
 
     beforeEach(() => {
         aggregation = new Aggregation([
-            {x: 0, y: 0},
-            {x: 0, y: 5},
-            {x:5, y: 5}
+            { x: 0, y: 0 },
+            { x: 0, y: 5 },
+            { x: 5, y: 5 },
         ]);
     });
 
@@ -35,10 +35,10 @@ describe('UCDE-Aggregation', () => {
     describe('UCDE-AG-0200-Copy', () => {
         test('UCDE-AG-0201 GIVEN another aggregation WHEN copy() THEN copy values correctly', () => {
             const anotherAggregation = new Aggregation([
-                {x: 1, y: 1},
-                {x: 1, y: 2},
-                {x: 2, y: 2},
-                {x: 3, y: 3}
+                { x: 1, y: 1 },
+                { x: 1, y: 2 },
+                { x: 2, y: 2 },
+                { x: 3, y: 3 },
             ]);
 
             anotherAggregation.startName = 'startName';
@@ -50,7 +50,9 @@ describe('UCDE-Aggregation', () => {
             expect(aggregation.parts).toHaveLength(3);
             expect(aggregation.parts[0].startPoint.x).toBe(1);
             expect(aggregation.parts[0].startPoint.y).toBe(1);
-            expect(aggregation.parts[0].endPoint).toBe(aggregation.parts[1].startPoint);
+            expect(aggregation.parts[0].endPoint).toBe(
+                aggregation.parts[1].startPoint,
+            );
             expect(aggregation.startName).toBe('startName');
             expect(aggregation.isStartShared).toBe(true);
             expect(aggregation.endName).toBe('endName');

@@ -1,14 +1,19 @@
-import {Serializable} from '../utils/nodes/Serializable.ts';
+import { Serializable } from '../utils/nodes/Serializable.ts';
 
-interface SerializableClass<T, K> { new (...args: any[]): T; fromSerializable(data: any, previousNodes: K[]): T }
+interface SerializableClass<T, K> {
+    new (...args: any[]): T;
+    fromSerializable(data: any, previousNodes: K[]): T;
+}
 
 export class DeserializationError extends Error {}
 
 const registry = new Map<string, SerializableClass<any, any>>();
 
-
 export const SerializationRegistryService = {
-    register<T extends Serializable>(tag: string, cls: SerializableClass<T, any>):void {
+    register<T extends Serializable>(
+        tag: string,
+        cls: SerializableClass<T, any>,
+    ): void {
         registry.set(tag, cls);
     },
 
@@ -47,5 +52,5 @@ export const SerializationRegistryService = {
         }
 
         return result;
-    }
+    },
 };

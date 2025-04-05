@@ -1,4 +1,4 @@
-import {Node} from './Node.ts';
+import { Node } from './Node.ts';
 
 export abstract class PositionalNode extends Node {
     height = 0;
@@ -30,9 +30,11 @@ export abstract class PositionalNode extends Node {
     }
 
     containsDot(x: number, y: number): boolean {
-        return x >= this.x &&
-        x <= this.x + this.width &&
-        y >= this.y &&
-        y <= this.y + this.height;
+        return (
+            x >= this.x &&
+            x <= this.x + this.width &&
+            y >= this.y &&
+            y <= this.y + this.height
+        );
     }
 }

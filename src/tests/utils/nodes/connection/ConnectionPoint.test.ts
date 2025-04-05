@@ -1,17 +1,17 @@
-import {beforeEach, describe, expect, test, vi} from 'vitest';
-import {GeometryUtils} from '../../../../utils/GeometryUtils.ts';
-import {EditorConstants} from '../../../../utils/constants.ts';
-import {ConnectionPoint} from '../../../../utils/nodes/connection/ConnectionPoint.ts';
-import {Generalization} from '../../../../utils/nodes/connection/Generalization.ts';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { GeometryUtils } from '../../../../utils/GeometryUtils.ts';
+import { EditorConstants } from '../../../../utils/constants.ts';
+import { ConnectionPoint } from '../../../../utils/nodes/connection/ConnectionPoint.ts';
+import { Generalization } from '../../../../utils/nodes/connection/Generalization.ts';
 
 describe('UCDE-ConnectionPoint', () => {
     let connectionPoint: ConnectionPoint;
 
     beforeEach(() => {
         const connection = new Generalization([
-            {x: 0, y: 0},
-            {x: 5, y:5},
-            {x: 10, y:5},
+            { x: 0, y: 0 },
+            { x: 5, y: 5 },
+            { x: 10, y: 5 },
         ]);
 
         connectionPoint = connection.parts[0].endPoint;
@@ -27,13 +27,24 @@ describe('UCDE-ConnectionPoint', () => {
         test('UCDE-CPO-0201 GIVEN valid ConnectionPoint WHEN containsDot() THEN GeometryUtils.isPointWithinRadius is called with the correct parameters', () => {
             vi.spyOn(GeometryUtils, 'isPointWithinRadius');
             connectionPoint.containsDot(4, 4);
-            expect(GeometryUtils.isPointWithinRadius).toHaveBeenCalledWith(4, 4, connectionPoint.x, connectionPoint.y, EditorConstants.maxClickDistance);
+            expect(GeometryUtils.isPointWithinRadius).toHaveBeenCalledWith(
+                4,
+                4,
+                connectionPoint.x,
+                connectionPoint.y,
+                EditorConstants.maxClickDistance,
+            );
         });
     });
 
     describe('UCDE-CPO-0300-isStartPoint', () => {
         test('UCDE-CPO-0301 GIVEN ConnectionPoint that is the first of a connection WHEN isStartPoint THEN return true', () => {
-            expect(new Generalization([{x: 0, y: 0}, {x: 5, y:5}]).parts[0].startPoint.isStartPoint).toBe(true);
+            expect(
+                new Generalization([
+                    { x: 0, y: 0 },
+                    { x: 5, y: 5 },
+                ]).parts[0].startPoint.isStartPoint,
+            ).toBe(true);
         });
 
         test('UCDE-CPO-0302 GIVEN ConnectionPoint that is not the first of a connection WHEN isStartPoint THEN return false', () => {
@@ -43,7 +54,12 @@ describe('UCDE-ConnectionPoint', () => {
 
     describe('UCDE-CPO-0400-isEndPoint', () => {
         test('UCDE-CPO-0401 GIVEN ConnectionPoint that is the last of a connection WHEN isEndPoint THEN return true', () => {
-            expect(new Generalization([{x: 0, y: 0}, {x: 5, y:5}]).parts[0].endPoint.isEndpoint).toBe(true);
+            expect(
+                new Generalization([
+                    { x: 0, y: 0 },
+                    { x: 5, y: 5 },
+                ]).parts[0].endPoint.isEndpoint,
+            ).toBe(true);
         });
 
         test('UCDE-CPO-0401 GIVEN ConnectionPoint that is not the last of a connection WHEN isEndPoint THEN return false', () => {

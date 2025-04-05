@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'vitest';
-import { IsDecoratedFeature, DecoratedFeature } from '../../../../utils/nodes/features/DecoratedFeature';
+import {
+    IsDecoratedFeature,
+    DecoratedFeature,
+} from '../../../../utils/nodes/features/DecoratedFeature';
 import { Feature } from '../../../../utils/nodes/features/Feature';
-import {Parameter} from '../../../../utils/nodes/features/Parameter.ts';
+import { Parameter } from '../../../../utils/nodes/features/Parameter.ts';
 
 describe('UCDE-IsDecoratedFeature', () => {
     test('UCDE-IDF-01 GIVEN a feature object WHEN the object has all DecoratedFeature properties THEN it should return true', () => {

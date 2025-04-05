@@ -1,6 +1,9 @@
-import {describe, expect, test} from 'vitest';
-import {ClassAbstractionDisplayMode, RenderConfiguration} from '../../services/renderer/RenderConfiguration.ts';
-import {useSettingsService} from '../../services/SettingsService.ts';
+import { describe, expect, test } from 'vitest';
+import {
+    ClassAbstractionDisplayMode,
+    RenderConfiguration,
+} from '../../services/renderer/RenderConfiguration.ts';
+import { useSettingsService } from '../../services/SettingsService.ts';
 
 describe('UCDE-SettingsService', () => {
     test('UCDE-SS-01 GIVEN default settings WHEN the settings are initialized THEN they should have the correct default values', () => {
@@ -27,8 +30,8 @@ describe('UCDE-SettingsService', () => {
             dotSize: 4,
             options: {
                 gridSize: 15,
-                classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC
-            }
+                classAbstractionDisplayMode: ClassAbstractionDisplayMode.ITALIC,
+            },
         };
 
         expect(settings.renderer).toEqual(defaultConfig);

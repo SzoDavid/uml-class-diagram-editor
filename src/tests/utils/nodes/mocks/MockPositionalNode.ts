@@ -1,5 +1,5 @@
-import {PositionalNode} from '../../../../utils/nodes/PositionalNode.ts';
-import {InvalidNodeParameterCause} from '../../../../utils/nodes/types.ts';
+import { PositionalNode } from '../../../../utils/nodes/PositionalNode.ts';
+import { InvalidNodeParameterCause } from '../../../../utils/nodes/types.ts';
 
 export class MockPositionalNode extends PositionalNode {
     constructor(x: number, y: number, width: number, height: number) {
@@ -15,8 +15,7 @@ export class MockPositionalNode extends PositionalNode {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    copy(node: MockPositionalNode): void {
-    }
+    copy(node: MockPositionalNode): void {}
 
     validate(): InvalidNodeParameterCause[] {
         return [];

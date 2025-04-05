@@ -15,7 +15,7 @@ export class TriggerService {
         if (listeners) {
             this.triggers.set(
                 triggerName,
-                listeners.filter((l) => l !== listener)
+                listeners.filter((l) => l !== listener),
             );
         }
     }

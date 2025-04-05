@@ -1,14 +1,14 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {Generalization} from '../../../../utils/nodes/connection/Generalization.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { Generalization } from '../../../../utils/nodes/connection/Generalization.ts';
 
 describe('UCDE-Generalization', () => {
     let generalization: Generalization;
 
     beforeEach(() => {
         generalization = new Generalization([
-            {x: 0, y: 0},
-            {x: 0, y: 5},
-            {x:5, y: 5}
+            { x: 0, y: 0 },
+            { x: 0, y: 5 },
+            { x: 5, y: 5 },
         ]);
     });
 

@@ -4,37 +4,37 @@
 name: Node.js CI
 
 on:
-  pull_request:
-  merge_group:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-      - develop
+    pull_request:
+    merge_group:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+            - develop
 
 jobs:
-  validate-branch:
-    name: Validate Branch
-    runs-on: ubuntu-latest
+    validate-branch:
+        name: Validate Branch
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: 'npm'
+            - name: Setup node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20.x
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Build
-        run: npm run build --if-present
+            - name: Build
+              run: npm run build --if-present
 
-      - name: Test
-        run: npm test
+            - name: Test
+              run: npm test
 
-      - name: Static analysis
-        run: npm run lint
+            - name: Static analysis
+              run: npm run lint
