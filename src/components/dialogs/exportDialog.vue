@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n';
 import {ref} from 'vue';
-import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
-import {Node} from '../../utils/nodes/Node.ts';
-import {PositionalNode} from '../../utils/nodes/PositionalNode.ts';
-import {useSettingsService} from '../../services/SettingsService.ts';
-import {UmlEditorService} from '../../services/UmlEditorService.ts';
-import {Renderer} from '../../services/renderer/Renderer.ts';
-import {Connection} from '../../utils/nodes/connection/Connection.ts';
-import {BasicConnectionPoint} from '../../utils/nodes/connection/ConnectionPoint.ts';
+import {SerializationRegistryService} from '@/services/SerializationRegistryService';
+import {Node} from '@/utils/nodes/Node';
+import {PositionalNode} from '@/utils/nodes/PositionalNode';
+import {useSettingsService} from '@/services/SettingsService';
+import {UmlEditorService} from '@/services/UmlEditorService';
+import {Renderer} from '@/services/renderer/Renderer';
+import {Connection} from '@/utils/nodes/connection/Connection';
+import {BasicConnectionPoint} from '@/utils/nodes/connection/ConnectionPoint';
 
 const { t } = useI18n();
 const emit = defineEmits(['cancel']);

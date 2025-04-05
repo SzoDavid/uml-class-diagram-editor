@@ -9,9 +9,7 @@ interface EnumerationEditorPanelProperties {
     enumerationData: NodeData<EnumerationNode>
 }
 
-interface EnumerationEditorPanelEmits {
-    (e: 'save', data: NodeData<EnumerationNode>): void;
-}
+type EnumerationEditorPanelEmits = (e: 'save', data: NodeData<EnumerationNode>) => void;
 
 export default defineComponent({
     props: {

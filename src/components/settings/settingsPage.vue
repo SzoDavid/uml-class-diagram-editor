@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {useSettingsService} from '../../services/SettingsService.ts';
+import {useSettingsService} from '@/services/SettingsService';
 import {useI18n} from 'vue-i18n';
-import {ClassAbstractionDisplayMode} from '../../services/renderer/RenderConfiguration.ts';
+import {ClassAbstractionDisplayMode} from '@/services/renderer/RenderConfiguration';
 
 const { settings, resetRenderSettings, saveRenderSettings } = useSettingsService();
 const { t } = useI18n();

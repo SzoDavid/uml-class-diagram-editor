@@ -6,14 +6,15 @@ import {SerializationRegistryService} from '../../../services/SerializationRegis
 const CLASS_TAG = 'DataTypeNode';
 
 export class DataTypeNode extends ClassifierNode {
+    public readonly header = 'DataType';
 
     constructor(name: string,
                 x: number,
                 y: number,
                 properties: Property[]=[],
                 operations: Operation[]=[],
-                isNotShownPropertiesExist: boolean=false,
-                isNotShownOperationsExist: boolean=false) {
+                isNotShownPropertiesExist=false,
+                isNotShownOperationsExist=false) {
         super(name, x, y, properties, operations, isNotShownPropertiesExist, isNotShownOperationsExist);
     }
 
@@ -38,10 +39,6 @@ export class DataTypeNode extends ClassifierNode {
 
     public copy(node: DataTypeNode) {
         super.copy(node);
-    }
-
-    public get header(): string {
-        return 'DataType';
     }
 
     //region Serializable members

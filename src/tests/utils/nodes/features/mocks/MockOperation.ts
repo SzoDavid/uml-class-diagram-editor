@@ -1,7 +1,7 @@
 import {Operation} from '../../../../../utils/nodes/features/Operation.ts';
 
 export class MockOperation extends Operation {
-    constructor(name: string, isAbstract: boolean = false) {
+    constructor(name: string, isAbstract = false) {
         super(name, undefined, undefined, undefined, undefined, undefined, isAbstract);
     }
 

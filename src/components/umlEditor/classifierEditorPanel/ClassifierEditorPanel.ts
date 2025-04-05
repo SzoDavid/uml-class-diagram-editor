@@ -15,9 +15,7 @@ interface ClassifierEditorPanelProperties {
     classifierData: NodeData<ClassifierNode>
 }
 
-interface ClassifierEditorPanelEmits {
-    (e: 'save', data: NodeData<ClassifierNode>): void;
-}
+type ClassifierEditorPanelEmits = (e: 'save', data: NodeData<ClassifierNode>) => void;
 
 export default defineComponent({
     props: {

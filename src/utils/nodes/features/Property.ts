@@ -22,18 +22,18 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     redefines: string;
     subsets: string;
 
-    omitVisibility: boolean = true;
+    omitVisibility = true;
 
     constructor(name: string,
-                type: string = '',
+                type = '',
                 visibility: Visibility|null = null,
-                isDerived: boolean = false,
+                isDerived = false,
                 multiplicity: MultiplicityRange = new MultiplicityRange(null, null),
-                defaultValue: string = '',
-                isStatic: boolean = false,
+                defaultValue = '',
+                isStatic = false,
                 modifiers: PropertyModifier[] = [],
-                redefines: string = '',
-                subsets: string = '') {
+                redefines = '',
+                subsets = '') {
         this.visibility = visibility;
         this.name = name;
         this.type = type;

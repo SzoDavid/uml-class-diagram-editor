@@ -9,9 +9,7 @@ interface PrimitiveEditorPanelProperties {
     primitiveData: NodeData<PrimitiveTypeNode>
 }
 
-interface PrimitiveEditorPanelEmits {
-    (e: 'save', data: NodeData<PrimitiveTypeNode>): void;
-}
+type PrimitiveEditorPanelEmits = (e: 'save', data: NodeData<PrimitiveTypeNode>) => void;
 
 export default defineComponent({
     props: {

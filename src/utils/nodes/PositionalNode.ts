@@ -1,8 +1,8 @@
 import {Node} from './Node.ts';
 
 export abstract class PositionalNode extends Node {
-    height: number = 0;
-    width: number = 0;
+    height = 0;
+    width = 0;
 
     private _x: number;
     private _y: number;

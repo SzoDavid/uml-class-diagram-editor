@@ -5,9 +5,9 @@ import {useI18n} from 'vue-i18n';
 import RenameDialog from '../../components/dialogs/renameDialog.vue';
 import ImportDialog from '../../components/dialogs/importDialog.vue';
 import {inject, ref} from 'vue';
-import {TriggerService} from '../../services/TriggerService.ts';
+import {TriggerService} from '@/services/TriggerService';
 import ExportDialog from '../../components/dialogs/exportDialog.vue';
-import {saveFile, importFile} from '../../utils/IOUtils.ts';
+import {saveFile, importFile} from '@/utils/IOUtils';
 import AboutDialog from '../../components/dialogs/aboutDialog.vue';
 
 const { t } = useI18n();

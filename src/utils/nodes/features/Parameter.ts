@@ -20,10 +20,10 @@ export class Parameter implements Feature {
     properties: ParameterProperty[];
 
     constructor(name: string,
-                type: string = '',
+                type = '',
                 direction: Direction|null = null,
                 multiplicity: MultiplicityRange = new MultiplicityRange(null),
-                defaultValue: string = '',
+                defaultValue = '',
                 properties: ParameterProperty[] = []) {
         this.direction = direction;
         this.name = name;

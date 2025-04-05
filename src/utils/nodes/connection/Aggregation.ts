@@ -1,28 +1,28 @@
 import {Connection} from './Connection.ts';
 import {MultiplicityRange} from '../features/MultiplicityRange.ts';
-import {PositionalNode} from '../PositionalNode.ts';
-import {Point} from '../../types.ts';
 import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
 import {ConnectionPart} from './ConnectionPart.ts';
 import {Node} from '../Node.ts';
 import {ConnectionPoint} from './ConnectionPoint.ts';
 import {InvalidNodeParameterCause, PixelOffset} from '../types.ts';
 import {validatePixelOffset} from '../../functions.ts';
+import {Point} from '../../types.ts';
+import {PositionalNode} from '../PositionalNode.ts';
 
 const CLASS_TAG = 'Aggregation';
 
 export class Aggregation extends Connection {
-    public startName: string = '';
+    public startName = '';
     public startNameOffset: PixelOffset = { x: 0, y: 0 };
-    public isStartShared: boolean = false;
+    public isStartShared = false;
     public startMultiplicity: MultiplicityRange = new MultiplicityRange(null);
 
-    public endName: string = '';
+    public endName = '';
     public endNameOffset: PixelOffset = { x: 0, y: 0 };
-    public isEndShared: boolean = true;
+    public isEndShared = true;
     public endMultiplicity: MultiplicityRange = new MultiplicityRange(null);
 
-    constructor(points: (Point | PositionalNode)[]) {
+    public constructor(points: (Point | PositionalNode)[]) {
         super(points);
     }
 

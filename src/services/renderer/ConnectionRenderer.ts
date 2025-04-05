@@ -233,7 +233,7 @@ export class ConnectionRenderer {
     }
 
     // TODO: move constants to settings
-    private renderFilledTriangle(point: Point, angle: number, isSelected: boolean = false, isInvalid: boolean = false): void {
+    private renderFilledTriangle(point: Point, angle: number, isSelected = false, isInvalid = false): void {
         this._nr.ctx.beginPath();
         this._nr.ctx.moveTo(point.x, point.y);
         this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle + (Math.PI / 8)), point.y + 20 * Math.sin(angle + (Math.PI / 8)));
@@ -247,7 +247,7 @@ export class ConnectionRenderer {
         this._nr.ctx.stroke();
     }
 
-    private renderTriangle(point: Point, angle: number, isSelected: boolean = false, isInvalid: boolean = false): void {
+    private renderTriangle(point: Point, angle: number, isSelected = false, isInvalid = false): void {
         this._nr.ctx.beginPath();
         this._nr.ctx.moveTo(point.x, point.y);
         this._nr.ctx.lineTo(point.x + 20 * Math.cos(angle + (Math.PI / 8)), point.y + 20 * Math.sin(angle + (Math.PI / 8)));
@@ -258,7 +258,7 @@ export class ConnectionRenderer {
         this._nr.ctx.stroke();
     }
 
-    private renderCross(point: Point, angle: number, isSelected: boolean = false, isInvalid: boolean = false): void {
+    private renderCross(point: Point, angle: number, isSelected = false, isInvalid = false): void {
         const startX = point.x + 20 * Math.cos(angle);
         const startY = point.y + 20 * Math.sin(angle);
 
@@ -273,7 +273,7 @@ export class ConnectionRenderer {
         this._nr.ctx.stroke();
     }
 
-    private renderDiamond(point: Point, angle: number, isSelected: boolean = false, isFilled: boolean = false, isInvalid = false): void {
+    private renderDiamond(point: Point, angle: number, isSelected = false, isFilled = false, isInvalid = false): void {
         this._nr.ctx.beginPath();
         this._nr.ctx.moveTo(point.x, point.y);
         this._nr.ctx.lineTo(point.x + 15 * Math.cos(angle + (Math.PI / 8)), point.y + 15 * Math.sin(angle + (Math.PI / 8)));
@@ -310,7 +310,7 @@ export class ConnectionRenderer {
         );
     }
 
-    private renderEndText(point: Point, offset: PixelOffset, textA: string, textB: string, angle: number, isSelected: boolean = false, isInvalid: boolean = false): void {
+    private renderEndText(point: Point, offset: PixelOffset, textA: string, textB: string, angle: number, isSelected = false, isInvalid = false): void {
         if (!textA && !textB) return;
 
         const len = this._nr.rc.lineHeight * Math.sqrt(2);
@@ -343,7 +343,7 @@ export class ConnectionRenderer {
         if (bottomText) this._nr.drawText(bottomText, point.x, point.y - (this._nr.rc.lineHeight / 2) - (distance / 2), -1, {isSelected: isSelected, textAlign: alignLeft ? 'left' : 'right', isInvalid: isInvalid});
     }
 
-    private renderEndTextHorizontally(point: Point, distance: number, rightText: string, leftText: string, isSelected: boolean = false, isInvalid: boolean = false): void {
+    private renderEndTextHorizontally(point: Point, distance: number, rightText: string, leftText: string, isSelected = false, isInvalid = false): void {
         if (leftText) this._nr.drawText(leftText, point.x - (distance / 2), point.y - (this._nr.rc.lineHeight / 2), -1, {isSelected: isSelected, textAlign: 'right', isInvalid: isInvalid});
         if (rightText) this._nr.drawText(rightText, point.x + (distance / 2), point.y - (this._nr.rc.lineHeight / 2), -1, {isSelected: isSelected, textAlign: 'left', isInvalid: isInvalid});
     }

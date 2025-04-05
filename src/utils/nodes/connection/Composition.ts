@@ -12,17 +12,17 @@ import {validatePixelOffset} from '../../functions.ts';
 const CLASS_TAG = 'Composition';
 
 export class Composition extends Connection {
-    public reversed: boolean = false;
+    public reversed = false;
 
-    public startName: string = '';
+    public startName = '';
     public startNameOffset: PixelOffset = { x: 0, y: 0 };
     public startMultiplicity: MultiplicityRange = new MultiplicityRange(null);
 
-    public endName: string = '';
+    public endName = '';
     public endNameOffset: PixelOffset = { x: 0, y: 0 };
     public endMultiplicity: MultiplicityRange = new MultiplicityRange(null);
 
-    constructor(points: (Point | PositionalNode)[]) {
+    public constructor(points: (Point | PositionalNode)[]) {
         super(points);
     }
 

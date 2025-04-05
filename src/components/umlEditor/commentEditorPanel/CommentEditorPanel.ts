@@ -9,9 +9,7 @@ interface CommentEditorPanelProperties {
     commentData: NodeData<CommentNode>
 }
 
-interface CommentEditorPanelEmits {
-    (e: 'save', data: NodeData<CommentNode>): void;
-}
+type CommentEditorPanelEmits = (e: 'save', data: NodeData<CommentNode>) => void;
 
 export default defineComponent({
     props: {
