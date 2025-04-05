@@ -85,13 +85,16 @@
     "keep_adding": "Keep adding",
     "label_offset": "Label offset",
     "modifier": "Modifier | Modifiers",
-    "modifiers": {
+    "modifiers_properties": {
         "id": "Id",
         "nonunique": "Nonunique",
-        "readonly": "Readonly",
+        "ordered": "Ordered",
+        "query": "Query",
+        "read_only": "Read only",
         "sequence": "Sequence",
         "union": "Union",
-        "unique": "Unique"
+        "unique": "Unique",
+        "unordered": "Unordered"
     },
     "move": "Move",
     "multiplicity": "Multiplicity",
@@ -126,14 +129,6 @@
     "option": "Option | Options",
     "parameter": "Parameter | Parameters",
     "property": "Property | Properties",
-    "properties": {
-        "nonunique": "Nonunique",
-        "ordered": "Ordered",
-        "query": "Query",
-        "sequence": "Sequence",
-        "unique": "Unique",
-        "unordered": "Unordered"
-    },
     "redefines": "Redefines",
     "remove": "Remove",
     "rename": "Rename",

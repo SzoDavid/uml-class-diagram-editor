@@ -12,11 +12,18 @@ export type ParameterProperty =
     | 'unique'
     | 'nonunique'
     | 'sequence';
-export type OperationProperty = 'query' | 'ordered' | 'unique';
+export type OperationProperty =
+    | 'query'
+    | 'ordered'
+    | 'unordered'
+    | 'unique'
+    | 'nonunique'
+    | 'sequence';
 export type PropertyModifier =
     | 'id'
-    | 'readonly'
+    | 'readOnly'
     | 'ordered'
+    | 'unordered'
     | 'unique'
     | 'nonunique'
     | 'sequence'

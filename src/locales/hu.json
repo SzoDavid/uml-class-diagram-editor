@@ -85,13 +85,16 @@
     "keep_adding": "Hozzáadás folytatása",
     "label_offset": "C1mke eltolás",
     "modifier": "Módosító | Módosítók",
-    "modifiers": {
+    "modifiers_properties": {
         "id": "Id",
         "nonunique": "Nonunique",
-        "readonly": "Readonly",
+        "ordered": "Ordered",
+        "query": "Query",
+        "read_only": "Read Only",
         "sequence": "Sequence",
         "union": "Union",
-        "unique": "Unique"
+        "unique": "Unique",
+        "unordered": "Unordered"
     },
     "move": "Mozgatás",
     "multiplicity": "Multiplicitás",
@@ -126,14 +129,6 @@
     "option": "Opció | Opciók",
     "parameter": "Paraméter | Paraméterek",
     "property": "Tulajdonság | Tulajdonságok",
-    "properties": {
-        "nonunique": "Nonunique",
-        "ordered": "Ordered",
-        "query": "Query",
-        "sequence": "Sequence",
-        "unique": "Unique",
-        "unordered": "Unordered"
-    },
     "redefines": "Újradefiniálja",
     "remove": "Törlés",
     "rename": "Átnevezés",
