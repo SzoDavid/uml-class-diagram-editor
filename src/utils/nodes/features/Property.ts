@@ -90,13 +90,14 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '')
+        if (this.name === '') {
             errors.push({ parameter: 'name', message: 'error.name.required' });
-        else if (!Validator.isAlphanumeric(this.name))
+        } else if (!Validator.isAlphanumeric(this.name)) {
             errors.push({
                 parameter: 'name',
                 message: 'error.name.alphanumeric',
             });
+        }
 
         if (this.type && !Validator.isAlphanumericWithBrackets(this.type)) {
             errors.push({
@@ -122,6 +123,38 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
                     parameter: 'multiplicity',
                     message: 'error.multiplicity_range.invalid',
                     context: multiErrors,
+                });
+        }
+
+        if (
+            (this.modifiers.includes('unique') ||
+                this.modifiers.includes('nonunique') ||
+                this.modifiers.includes('ordered') ||
+                this.modifiers.includes('unordered')) &&
+            !this.multiplicity.upper
+        ) {
+            errors.push({
+                parameter: 'modifiers',
+                message: 'error.parameter.unique_ordered_needs_multiplicity',
+            });
+        }
+
+        if (this.modifiers.length > 1) {
+            if (
+                this.modifiers.includes('unique') &&
+                this.modifiers.includes('nonunique')
+            )
+                errors.push({
+                    parameter: 'modifiers',
+                    message: 'error.class_property.unique_nonunique',
+                });
+            if (
+                this.modifiers.includes('ordered') &&
+                this.modifiers.includes('unordered')
+            )
+                errors.push({
+                    parameter: 'modifiers',
+                    message: 'error.class_property.ordered_unordered',
                 });
         }
 

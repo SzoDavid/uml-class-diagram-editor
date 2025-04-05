@@ -100,13 +100,14 @@ export class Operation
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '')
+        if (this.name === '') {
             errors.push({ parameter: 'name', message: 'error.name.required' });
-        else if (!Validator.isAlphanumeric(this.name))
+        } else if (!Validator.isAlphanumeric(this.name)) {
             errors.push({
                 parameter: 'name',
                 message: 'error.name.alphanumeric',
             });
+        }
 
         if (
             this.returnType &&
@@ -141,19 +142,42 @@ export class Operation
 
         if (
             (this.properties.includes('unique') ||
-                this.properties.includes('ordered')) &&
+                this.properties.includes('nonunique') ||
+                this.properties.includes('ordered') ||
+                this.properties.includes('unordered')) &&
             !this.returnMultiplicity.upper
-        )
+        ) {
             errors.push({
                 parameter: 'properties',
                 message: 'error.parameter.unique_ordered_needs_multiplicity',
             });
+        }
 
-        if (this.isStatic && this.isAbstract)
+        if (this.isStatic && this.isAbstract) {
             errors.push({
                 parameter: 'isAbstract',
                 message: 'error.operation.static_and_abstract',
             });
+        }
+
+        if (this.properties.length > 1) {
+            if (
+                this.properties.includes('unique') &&
+                this.properties.includes('nonunique')
+            )
+                errors.push({
+                    parameter: 'properties',
+                    message: 'error.operation.unique_nonunique',
+                });
+            if (
+                this.properties.includes('ordered') &&
+                this.properties.includes('unordered')
+            )
+                errors.push({
+                    parameter: 'properties',
+                    message: 'error.operation.ordered_unordered',
+                });
+        }
 
         return errors;
     }

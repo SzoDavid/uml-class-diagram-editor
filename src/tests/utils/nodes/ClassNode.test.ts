@@ -95,7 +95,7 @@ describe('UCDE-ClassNode', () => {
                         {
                             parameter: 'properties',
                             index: 0,
-                            message: 'error.invalid_class_property',
+                            message: 'error.class_property.invalid',
                             context: [
                                 {
                                     parameter: 'name',
@@ -112,7 +112,7 @@ describe('UCDE-ClassNode', () => {
                         {
                             parameter: 'properties',
                             index: 0,
-                            message: 'error.invalid_class_property',
+                            message: 'error.class_property.invalid',
                             context: [
                                 {
                                     parameter: 'name',

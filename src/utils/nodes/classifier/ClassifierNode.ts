@@ -51,7 +51,7 @@ export abstract class ClassifierNode
                 errors.push({
                     parameter: 'properties',
                     index: i,
-                    message: 'error.invalid_class_property',
+                    message: 'error.class_property.invalid',
                     context: propErrors,
                 });
         });

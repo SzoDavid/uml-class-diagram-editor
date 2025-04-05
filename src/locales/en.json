@@ -35,7 +35,6 @@
     "error": {
         "comment_empty": "Comment cannot be empty",
         "default_value_alphanumeric": "Default value must be alphanumeric",
-        "invalid_class_property": "Property is invalid",
         "invalid_end_point": "Invalid end point",
         "invalid_start_point": "Invalid start point",
         "label_offset": {
@@ -56,13 +55,20 @@
         "nothing_to_save": "There is nothing to save",
         "operation": {
             "invalid": "Operation is invalid",
+            "ordered_unordered": "Operation cannot be ordered and unordered in the same time",
+            "unique_nonunique": "Operation cannot be unique and nonunique in the same time",
             "static_and_abstract": "Operation cannot be both static and abstract"
         },
         "parameter": {
             "invalid": "Parameter is invalid",
             "ordered_unordered": "Parameter cannot be ordered and unordered in the same time",
             "unique_nonunique": "Parameter cannot be unique and nonunique in the same time",
-            "unique_ordered_needs_multiplicity": "Properties \"unique\" and \"ordered\" requires multiplicity to be set"
+            "unique_ordered_needs_multiplicity": "Properties \"unique\" and \"ordered\" require multiplicity to be set"
+        },
+        "class_property": {
+            "invalid": "Invalid property",
+            "ordered_unordered": "Property cannot be ordered and unordered in the same time",
+            "unique_nonunique": "Property cannot be unique and nonunique in the same time"
         },
         "relationship": {
             "unconnected": "Relationship endpoint is unconnected",
