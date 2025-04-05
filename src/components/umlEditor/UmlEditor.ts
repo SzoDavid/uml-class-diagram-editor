@@ -120,7 +120,11 @@ export default {
         });
 
         const resizeCanvas = (canvas: HTMLCanvasElement) => {
-            const container = canvas.parentElement!;
+            if (!canvas.parentElement) {
+                throw new Error('Parent element for canvas is missing');
+            }
+
+            const container = canvas.parentElement;
             const { width, height } = container.getBoundingClientRect();
             const scale = window.devicePixelRatio || 1;
 

@@ -23,17 +23,17 @@ export class Operation implements DecoratedFeature, FeatureWithVisibility, Multi
     properties: OperationProperty[];
     redefines: string;
 
-    omitVisibility: boolean = true;
+    omitVisibility = true;
 
     constructor(name: string,
                 params: Parameter[] = [],
                 visibility: Visibility|null = null,
-                returnType: string = '',
+                returnType = '',
                 returnMultiplicity: MultiplicityRange = new MultiplicityRange(null),
-                isStatic: boolean = false,
-                isAbstract: boolean = false,
+                isStatic = false,
+                isAbstract = false,
                 properties: OperationProperty[] = [],
-                redefines: string = '') {
+                redefines = '') {
         this.name = name;
         this.params = params;
         this.visibility = visibility;

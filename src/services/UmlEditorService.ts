@@ -45,20 +45,20 @@ export class UmlEditorService {
 
     private readonly _emitter: Emitter<Record<EmitReason, EmitType>> = mitt();
 
-    private _isAddingConnection: boolean = false;
+    private _isAddingConnection = false;
 
-    private _dragOffsetX: number = 0;
-    private _dragOffsetY: number = 0;
+    private _dragOffsetX = 0;
+    private _dragOffsetY = 0;
 
-    private _secondaryDragOffsetX: number = 0;
-    private _secondaryDragOffsetY: number = 0;
+    private _secondaryDragOffsetX = 0;
+    private _secondaryDragOffsetY = 0;
 
-    private _scale: number = 1;
-    private _isPanning: boolean = false;
-    private _panOffsetX: number = 0;
-    private _panOffsetY: number = 0;
-    private _lastPanX: number = 0;
-    private _lastPanY: number = 0;
+    private _scale = 1;
+    private _isPanning = false;
+    private _panOffsetX = 0;
+    private _panOffsetY = 0;
+    private _lastPanX = 0;
+    private _lastPanY = 0;
 
     addConfig: AddConfig = {
         type: NodeType.CLASS,
@@ -575,7 +575,7 @@ export class UmlEditorService {
      * @param ignoreConnections - If set to true, only returns non collection nodes.
      * @returns The node or connection part under the given coordinates, or `null` if none is found.
      */
-    private getNodeAtPosition(x: number, y: number, ignoreConnections: boolean = false): Node | null {
+    private getNodeAtPosition(x: number, y: number, ignoreConnections = false): Node | null {
         const transformedX = (x - this._panOffsetX) / this._scale;
         const transformedY = (y - this._panOffsetY) / this._scale;
 

@@ -9,8 +9,13 @@ export class Renderer {
     private readonly _nodeRenderer: NodeRenderer;
 
     constructor(canvas: HTMLCanvasElement, renderConf: RenderConfiguration) {
+        const context = canvas.getContext('2d');
+        if (!context) {
+            throw new Error('Failed to lead canvas context');
+        }
+
         this._canvas = canvas;
-        this._ctx = this._canvas.getContext('2d')!;
+        this._ctx = context;
         this._rc = renderConf;
         this._nodeRenderer = new NodeRenderer(this._ctx, this._rc);
     }

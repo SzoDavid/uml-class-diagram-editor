@@ -64,7 +64,7 @@ export class NodeRenderer {
         this.ctx.stroke();
     }
 
-    public getColor(isAccent: boolean, isSelected: boolean = false, isInvalid: boolean = false): string {
+    public getColor(isAccent: boolean, isSelected = false, isInvalid = false): string {
         if (isAccent) {
             if (isSelected) return isInvalid ? this.rc.accentColorInvalidSelected : this.rc.accentColorSelected;
             return isInvalid ? this.rc.accentColorInvalid : this.rc.accentColor;

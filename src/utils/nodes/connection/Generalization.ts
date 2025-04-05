@@ -9,9 +9,9 @@ import {Node} from '../Node.ts';
 const CLASS_TAG = 'Generalization';
 
 export class Generalization extends Connection {
-    public reversed: boolean = false;
+    public reversed = false;
 
-    constructor(points: (Point | PositionalNode)[]) {
+    public constructor(points: (Point | PositionalNode)[]) {
         super(points);
     }
 

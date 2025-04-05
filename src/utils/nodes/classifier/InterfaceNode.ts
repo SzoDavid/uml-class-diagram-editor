@@ -6,13 +6,15 @@ import {SerializationRegistryService} from '../../../services/SerializationRegis
 const CLASS_TAG = 'InterfaceNode';
 
 export class InterfaceNode extends ClassifierNode {
+    public readonly header = 'Interface';
+
     constructor(name: string,
                 x: number,
                 y: number,
                 properties: Property[]=[],
                 operations: Operation[]=[],
-                isNotShownPropertiesExist: boolean=false,
-                isNotShownOperationsExist: boolean=false) {
+                isNotShownPropertiesExist=false,
+                isNotShownOperationsExist=false) {
         super(name, x, y, properties, operations, isNotShownPropertiesExist, isNotShownOperationsExist);
     }
 
@@ -37,10 +39,6 @@ export class InterfaceNode extends ClassifierNode {
 
     public copy(node: InterfaceNode) {
         super.copy(node);
-    }
-
-    public get header(): string {
-        return 'Interface';
     }
 
     //region Serializable members

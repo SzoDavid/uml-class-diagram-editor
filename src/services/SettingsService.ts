@@ -27,7 +27,7 @@ const defaultRenderConfiguration: RenderConfiguration = {
     }
 };
 
-export type SettingsType = { renderer: RenderConfiguration };
+export interface SettingsType { renderer: RenderConfiguration }
 
 const initConfig = () => {
     const savedSettings = localStorage.getItem('render-settings');

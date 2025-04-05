@@ -2,13 +2,13 @@ import {Point} from './types.ts';
 import {PositionalNode} from './nodes/PositionalNode.ts';
 import {LooseConnectionPoint} from './nodes/connection/ConnectionPoint.ts';
 
-export class GeometryUtils {
-    static isPointWithinRadius(x: number, y: number, centerX: number, centerY: number, radius: number): boolean {
+export const GeometryUtils = {
+    isPointWithinRadius(x: number, y: number, centerX: number, centerY: number, radius: number): boolean {
         return (x >= centerX - radius && x <= centerX + radius &&
             y >= centerY - radius && y <= centerY + radius);
-    }
+    },
 
-    static isPointOnLine(x: number, y: number, startX: number, startY: number, endX: number, endY: number, tolerance: number): boolean {
+    isPointOnLine(x: number, y: number, startX: number, startY: number, endX: number, endY: number, tolerance: number): boolean {
         const isVertical = startX === endX;
         const isHorizontal = startY === endY;
 
@@ -33,9 +33,9 @@ export class GeometryUtils {
         // Check if the point is within the bounding box of the line segment
         return x >= Math.min(startX, endX) && x <= Math.max(startX, endX) &&
             y >= Math.min(startY, endY) && y <= Math.max(startY, endY);
-    }
+    },
 
-    static findIntersectionPoint(point: Point, node: PositionalNode): Point | null {
+    findIntersectionPoint(point: Point, node: PositionalNode): Point | null {
         const pointX = (point instanceof LooseConnectionPoint) ? point.snappingPoint.x : point.x;
         const pointY = (point instanceof LooseConnectionPoint) ? point.snappingPoint.y : point.y;
 
@@ -96,15 +96,15 @@ export class GeometryUtils {
         });
 
         return closestPoint;
-    }
+    },
 
-    static calculateAngleBetweenPoints(origin: Point, secondary: Point): number {
+    calculateAngleBetweenPoints(origin: Point, secondary: Point): number {
         // translate secondary to be relative to `origin` and get theta by converting to polar coordinate
         return Math.atan2(secondary.y - origin.y, secondary.x - origin.x);
-    }
+    },
 
-    static normalizeRadians(radians: number): number {
+    normalizeRadians(radians: number): number {
         const twoPi = 2 * Math.PI;
         return ((radians % twoPi) + twoPi) % twoPi;
-    }
-}
+    },
+};

@@ -10,7 +10,8 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "vitest-ui": "vitest --ui",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint && prettier -c ."
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -22,18 +23,21 @@
     "vuetify": "^3.7.4"
   },
   "devDependencies": {
-    "@eslint/js": "^9.11.1",
+    "@eslint/js": "^9.24.0",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^22.10.7",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vitest/coverage-v8": "^2.1.1",
     "@vitest/ui": "^2.1.1",
-    "eslint": "^9.11.1",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-vue": "^9.28.0",
     "globals": "^15.9.0",
     "jsdom": "^25.0.1",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.7.0",
+    "prettier": "3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.29.0",
     "vite": "^5.4.1",
     "vitest": "^2.1.1",
     "vue-tsc": "^2.1.6"

@@ -12,22 +12,22 @@ import {validatePixelOffset} from '../../functions.ts';
 const CLASS_TAG = 'Association';
 
 export class Association extends Connection {
-    public associationName: string = '';
+    public associationName = '';
     public nameOffset: PixelOffset = { x: 0, y: 0 };
-    public showOwnership: boolean = false;
-    public reversedOwnership: boolean = false;
+    public showOwnership = false;
+    public reversedOwnership = false;
 
-    public startName: string = '';
+    public startName = '';
     public startNameOffset: PixelOffset = { x: 0, y: 0 };
     public startMultiplicity: MultiplicityRange = new MultiplicityRange(null);
     public startNavigability: AssociationNavigability = AssociationNavigability.UNSPECIFIED;
 
-    public endName: string = '';
+    public endName = '';
     public endNameOffset: PixelOffset = { x: 0, y: 0 };
     public endMultiplicity: MultiplicityRange = new MultiplicityRange(null);
     public endNavigability: AssociationNavigability = AssociationNavigability.UNSPECIFIED;
 
-    constructor(points: (Point | PositionalNode)[]) {
+    public constructor(points: (Point | PositionalNode)[]) {
         super(points);
     }
 

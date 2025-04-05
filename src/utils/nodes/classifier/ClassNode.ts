@@ -23,9 +23,9 @@ export class ClassNode extends ClassifierNode {
                 y: number,
                 properties: Property[]=[],
                 operations: Operation[]=[],
-                isNotShownPropertiesExist: boolean = false,
-                isNotShownOperationsExist: boolean = false,
-                isAbstract: boolean = false,
+                isNotShownPropertiesExist = false,
+                isNotShownOperationsExist = false,
+                isAbstract = false,
                 stereotype?: ClassStereotype) {
         super(name, x, y, properties, operations, isNotShownPropertiesExist, isNotShownOperationsExist);
         this.hasAbstractFlag = isAbstract;
