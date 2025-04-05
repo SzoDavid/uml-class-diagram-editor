@@ -1,7 +1,7 @@
-import {describe, test, expect} from 'vitest';
-import {GeometryUtils} from '../../utils/GeometryUtils.ts';
-import {Point} from '../../utils/types.ts';
-import {MockPositionalNode} from './nodes/mocks/MockPositionalNode.ts';
+import { describe, test, expect } from 'vitest';
+import { GeometryUtils } from '../../utils/GeometryUtils.ts';
+import { Point } from '../../utils/types.ts';
+import { MockPositionalNode } from './nodes/mocks/MockPositionalNode.ts';
 
 describe('UCDE-GeometryUtils', () => {
     describe('UCDE-GU-0100-isPointWithinRadius', () => {
@@ -33,7 +33,15 @@ describe('UCDE-GeometryUtils', () => {
         });
 
         test('UCDE-GU-0202 GIVEN a point very close to the line within tolerance WHEN isPointOnLine is called THEN return true', () => {
-            const result = GeometryUtils.isPointOnLine(1, 1.05, 0, 0, 2, 2, 0.1);
+            const result = GeometryUtils.isPointOnLine(
+                1,
+                1.05,
+                0,
+                0,
+                2,
+                2,
+                0.1,
+            );
             expect(result).toBe(true);
         });
 
@@ -109,56 +117,80 @@ describe('UCDE-GeometryUtils', () => {
         test('UCDE-GU-0401 GIVEN points in the first quadrant WHEN calculateAngleBetweenPoints is called THEN return correct angle in radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: 1, y: 1 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
-            expect(result).toBeCloseTo(Math.PI / 4, 5);  // approximately 0.785 radians
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
+            expect(result).toBeCloseTo(Math.PI / 4, 5); // approximately 0.785 radians
         });
 
         test('UCDE-GU-0402 GIVEN points in the second quadrant WHEN calculateAngleBetweenPoints is called THEN return correct angle in radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: -1, y: 1 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
-            expect(result).toBeCloseTo((3 * Math.PI) / 4, 5);  // approximately 2.356 radians
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
+            expect(result).toBeCloseTo((3 * Math.PI) / 4, 5); // approximately 2.356 radians
         });
 
         test('UCDE-GU-0403 GIVEN points in the third quadrant WHEN calculateAngleBetweenPoints is called THEN return correct angle in radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: -1, y: -1 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
-            expect(result).toBeCloseTo(-(3 * Math.PI) / 4, 5);  // approximately -2.356 radians
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
+            expect(result).toBeCloseTo(-(3 * Math.PI) / 4, 5); // approximately -2.356 radians
         });
 
         test('UCDE-GU-0404 GIVEN points in the fourth quadrant WHEN calculateAngleBetweenPoints is called THEN return correct angle in radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: 1, y: -1 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
-            expect(result).toBeCloseTo(-Math.PI / 4, 5);  // approximately -0.785 radians
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
+            expect(result).toBeCloseTo(-Math.PI / 4, 5); // approximately -0.785 radians
         });
 
         test('UCDE-GU-0405 GIVEN points on the positive X-axis WHEN calculateAngleBetweenPoints is called THEN return zero radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: 1, y: 0 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
             expect(result).toBeCloseTo(0, 5);
         });
 
         test('UCDE-GU-0406 GIVEN points on the positive Y-axis WHEN calculateAngleBetweenPoints is called THEN return Pi/2 radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: 0, y: 1 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
             expect(result).toBeCloseTo(Math.PI / 2, 5);
         });
 
         test('UCDE-GU-0407 GIVEN points on the negative X-axis WHEN calculateAngleBetweenPoints is called THEN return Pi radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: -1, y: 0 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
             expect(result).toBeCloseTo(Math.PI, 5);
         });
 
         test('UCDE-GU-0408 GIVEN points on the negative Y-axis WHEN calculateAngleBetweenPoints is called THEN return -Pi/2 radians', () => {
             const origin: Point = { x: 0, y: 0 };
             const secondary: Point = { x: 0, y: -1 };
-            const result = GeometryUtils.calculateAngleBetweenPoints(origin, secondary);
+            const result = GeometryUtils.calculateAngleBetweenPoints(
+                origin,
+                secondary,
+            );
             expect(result).toBeCloseTo(-Math.PI / 2, 5);
         });
     });

@@ -1,40 +1,43 @@
 /**
  * This code is responsible for managing the state of nodes on the canvas
  */
-import mitt, {Emitter} from 'mitt';
-import {Node} from '../utils/nodes/Node.ts';
-import {Renderer} from './renderer/Renderer.ts';
-import {ClassNode} from '../utils/nodes/classifier/ClassNode.ts';
-import {InterfaceNode} from '../utils/nodes/classifier/InterfaceNode.ts';
-import {DataTypeNode} from '../utils/nodes/classifier/DataTypeNode.ts';
-import {NodeType} from '../utils/nodes/types.ts';
-import {PrimitiveTypeNode} from '../utils/nodes/PrimitiveTypeNode.ts';
-import {EnumerationNode} from '../utils/nodes/EnumerationNode.ts';
-import {CommentNode} from '../utils/nodes/CommentNode.ts';
-import {PositionalNode} from '../utils/nodes/PositionalNode.ts';
-import {Connection} from '../utils/nodes/connection/Connection.ts';
-import {ConnectionPart} from '../utils/nodes/connection/ConnectionPart.ts';
-import {EditorConstants} from '../utils/constants.ts';
-import {Point} from '../utils/types.ts';
-import {BasicConnectionPoint, LooseConnectionPoint} from '../utils/nodes/connection/ConnectionPoint.ts';
-import {Generalization} from '../utils/nodes/connection/Generalization.ts';
-import {Association} from '../utils/nodes/connection/Association.ts';
-import {Aggregation} from '../utils/nodes/connection/Aggregation.ts';
-import {Composition} from '../utils/nodes/connection/Composition.ts';
+import mitt, { Emitter } from 'mitt';
+import { Node } from '../utils/nodes/Node.ts';
+import { Renderer } from './renderer/Renderer.ts';
+import { ClassNode } from '../utils/nodes/classifier/ClassNode.ts';
+import { InterfaceNode } from '../utils/nodes/classifier/InterfaceNode.ts';
+import { DataTypeNode } from '../utils/nodes/classifier/DataTypeNode.ts';
+import { NodeType } from '../utils/nodes/types.ts';
+import { PrimitiveTypeNode } from '../utils/nodes/PrimitiveTypeNode.ts';
+import { EnumerationNode } from '../utils/nodes/EnumerationNode.ts';
+import { CommentNode } from '../utils/nodes/CommentNode.ts';
+import { PositionalNode } from '../utils/nodes/PositionalNode.ts';
+import { Connection } from '../utils/nodes/connection/Connection.ts';
+import { ConnectionPart } from '../utils/nodes/connection/ConnectionPart.ts';
+import { EditorConstants } from '../utils/constants.ts';
+import { Point } from '../utils/types.ts';
+import {
+    BasicConnectionPoint,
+    LooseConnectionPoint,
+} from '../utils/nodes/connection/ConnectionPoint.ts';
+import { Generalization } from '../utils/nodes/connection/Generalization.ts';
+import { Association } from '../utils/nodes/connection/Association.ts';
+import { Aggregation } from '../utils/nodes/connection/Aggregation.ts';
+import { Composition } from '../utils/nodes/connection/Composition.ts';
 
 export enum UmlEditorTool {
     EDIT,
     MOVE,
     ADD,
-    REMOVE
+    REMOVE,
 }
 
-export type EmitReason = 'toolChange'|'scaleChange'|'mouseDown';
+export type EmitReason = 'toolChange' | 'scaleChange' | 'mouseDown';
 export type EmitType = Node | UmlEditorTool | number | null;
 
 export interface AddConfig {
     type: NodeType;
-    keepAdding: boolean
+    keepAdding: boolean;
 }
 
 export class UmlEditorService {
@@ -45,27 +48,31 @@ export class UmlEditorService {
 
     private readonly _emitter: Emitter<Record<EmitReason, EmitType>> = mitt();
 
-    private _isAddingConnection: boolean = false;
+    private _isAddingConnection = false;
 
-    private _dragOffsetX: number = 0;
-    private _dragOffsetY: number = 0;
+    private _dragOffsetX = 0;
+    private _dragOffsetY = 0;
 
-    private _secondaryDragOffsetX: number = 0;
-    private _secondaryDragOffsetY: number = 0;
+    private _secondaryDragOffsetX = 0;
+    private _secondaryDragOffsetY = 0;
 
-    private _scale: number = 1;
-    private _isPanning: boolean = false;
-    private _panOffsetX: number = 0;
-    private _panOffsetY: number = 0;
-    private _lastPanX: number = 0;
-    private _lastPanY: number = 0;
+    private _scale = 1;
+    private _isPanning = false;
+    private _panOffsetX = 0;
+    private _panOffsetY = 0;
+    private _lastPanX = 0;
+    private _lastPanY = 0;
 
     addConfig: AddConfig = {
         type: NodeType.CLASS,
-        keepAdding: false
+        keepAdding: false,
     };
 
-    constructor(canvas: HTMLCanvasElement, renderer: Renderer, private virtual = false) {
+    constructor(
+        canvas: HTMLCanvasElement,
+        renderer: Renderer,
+        private virtual = false,
+    ) {
         this._renderer = renderer;
 
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
@@ -108,8 +115,8 @@ export class UmlEditorService {
         return this._scale;
     }
 
-    public get offset(): {x: number, y: number} {
-        return {x: this._panOffsetX, y: this._panOffsetY};
+    public get offset(): { x: number; y: number } {
+        return { x: this._panOffsetX, y: this._panOffsetY };
     }
 
     public set nodes(nodes: Node[]) {
@@ -120,13 +127,28 @@ export class UmlEditorService {
     public render(): void {
         // If adding a connection is in progress, render its ghost
         if (this._isAddingConnection) {
-            this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY, {
-                start: {x: this._dragOffsetX, y: this._dragOffsetY},
-                end: {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY} });
+            this._renderer.render(
+                this._nodes,
+                this._scale,
+                this._panOffsetX,
+                this._panOffsetY,
+                {
+                    start: { x: this._dragOffsetX, y: this._dragOffsetY },
+                    end: {
+                        x: this._secondaryDragOffsetX,
+                        y: this._secondaryDragOffsetY,
+                    },
+                },
+            );
             return;
         }
 
-        this._renderer.render(this._nodes, this._scale, this._panOffsetX, this._panOffsetY);
+        this._renderer.render(
+            this._nodes,
+            this._scale,
+            this._panOffsetX,
+            this._panOffsetY,
+        );
 
         this.saveChangesToLocalStorage();
     }
@@ -181,14 +203,16 @@ export class UmlEditorService {
                 this._emitter.emit('mouseDown', this._selectedNode);
                 break;
             case UmlEditorTool.MOVE:
-                this._selectedNode = this.getNodeAtPositionForMoving(offsetX, offsetY);
+                this._selectedNode = this.getNodeAtPositionForMoving(
+                    offsetX,
+                    offsetY,
+                );
 
                 if (this._selectedNode) {
                     this.deselectAll();
                     this._selectedNode.isSelected = true;
                     this.handleMoveNode(offsetX, offsetY);
-                }
-                else {
+                } else {
                     this.handlePanning(offsetX, offsetY);
                 }
                 break;
@@ -213,12 +237,40 @@ export class UmlEditorService {
             this._isAddingConnection = false;
 
             // Only add connection if its length is larger than the given constant
-            if (Math.abs(Math.sqrt(Math.pow(this._secondaryDragOffsetX - this._dragOffsetX, 2) + Math.pow(this._secondaryDragOffsetY - this._dragOffsetY, 2))) > EditorConstants.minConnectionLength) {
-                const nodeAtStart = this.getNodeAtPosition(this._dragOffsetX, this._dragOffsetY);
-                const nodeAtEnd = this.getNodeAtPosition(this._secondaryDragOffsetX, this._secondaryDragOffsetY);
+            if (
+                Math.abs(
+                    Math.sqrt(
+                        Math.pow(
+                            this._secondaryDragOffsetX - this._dragOffsetX,
+                            2,
+                        ) +
+                            Math.pow(
+                                this._secondaryDragOffsetY - this._dragOffsetY,
+                                2,
+                            ),
+                    ),
+                ) > EditorConstants.minConnectionLength
+            ) {
+                const nodeAtStart = this.getNodeAtPosition(
+                    this._dragOffsetX,
+                    this._dragOffsetY,
+                );
+                const nodeAtEnd = this.getNodeAtPosition(
+                    this._secondaryDragOffsetX,
+                    this._secondaryDragOffsetY,
+                );
 
-                const startPoint: PositionalNode|Point = nodeAtStart instanceof PositionalNode ? nodeAtStart : {x: this._dragOffsetX, y: this._dragOffsetY};
-                const endPoint: PositionalNode|Point = nodeAtEnd instanceof PositionalNode ? nodeAtEnd : {x: this._secondaryDragOffsetX, y: this._secondaryDragOffsetY};
+                const startPoint: PositionalNode | Point =
+                    nodeAtStart instanceof PositionalNode
+                        ? nodeAtStart
+                        : { x: this._dragOffsetX, y: this._dragOffsetY };
+                const endPoint: PositionalNode | Point =
+                    nodeAtEnd instanceof PositionalNode
+                        ? nodeAtEnd
+                        : {
+                              x: this._secondaryDragOffsetX,
+                              y: this._secondaryDragOffsetY,
+                          };
 
                 switch (this.addConfig.type) {
                     case NodeType.AGGREGATION:
@@ -231,10 +283,14 @@ export class UmlEditorService {
                         this.addNode(new Composition([startPoint, endPoint]));
                         break;
                     case NodeType.GENERALIZATION:
-                        this.addNode(new Generalization([startPoint, endPoint]));
+                        this.addNode(
+                            new Generalization([startPoint, endPoint]),
+                        );
                         break;
                     default:
-                        console.error('trying to add a connection but type selected is not one');
+                        console.error(
+                            'trying to add a connection but type selected is not one',
+                        );
                 }
 
                 if (!this.addConfig.keepAdding) {
@@ -245,13 +301,19 @@ export class UmlEditorService {
             this._selectedNode.isDragging = false;
 
             if (
-                this._selectedNode instanceof BasicConnectionPoint
-                && (this._selectedNode.isStartPoint || this._selectedNode.isEndpoint)
+                this._selectedNode instanceof BasicConnectionPoint &&
+                (this._selectedNode.isStartPoint ||
+                    this._selectedNode.isEndpoint)
             ) {
-                const nodeAtPosition = this.getNodeAtPosition(offsetX, offsetY, true);
+                const nodeAtPosition = this.getNodeAtPosition(
+                    offsetX,
+                    offsetY,
+                    true,
+                );
 
                 if (nodeAtPosition instanceof PositionalNode) {
-                    this._selectedNode = this._selectedNode.convertToLoosePoint(nodeAtPosition);
+                    this._selectedNode =
+                        this._selectedNode.convertToLoosePoint(nodeAtPosition);
                 }
             }
         }
@@ -286,16 +348,44 @@ export class UmlEditorService {
 
         if (this._selectedNode && this._selectedNode.isDragging) {
             if (this._selectedNode instanceof PositionalNode) {
-                this._selectedNode.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, gridSize);
-                this._selectedNode.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, gridSize);
+                this._selectedNode.x = this.roundToNearest(
+                    offsetX / this._scale - this._dragOffsetX,
+                    gridSize,
+                );
+                this._selectedNode.y = this.roundToNearest(
+                    offsetY / this._scale - this._dragOffsetY,
+                    gridSize,
+                );
             } else if (this._selectedNode instanceof ConnectionPart) {
-                if (!(this._selectedNode.startPoint instanceof LooseConnectionPoint)) {
-                    this._selectedNode.startPoint.x = this.roundToNearest(offsetX / this._scale - this._dragOffsetX, gridSize);
-                    this._selectedNode.startPoint.y = this.roundToNearest(offsetY / this._scale - this._dragOffsetY, gridSize);
+                if (
+                    !(
+                        this._selectedNode.startPoint instanceof
+                        LooseConnectionPoint
+                    )
+                ) {
+                    this._selectedNode.startPoint.x = this.roundToNearest(
+                        offsetX / this._scale - this._dragOffsetX,
+                        gridSize,
+                    );
+                    this._selectedNode.startPoint.y = this.roundToNearest(
+                        offsetY / this._scale - this._dragOffsetY,
+                        gridSize,
+                    );
                 }
-                if (!(this._selectedNode.endPoint instanceof LooseConnectionPoint)) {
-                    this._selectedNode.endPoint.x = this.roundToNearest(offsetX / this._scale - this._secondaryDragOffsetX, gridSize);
-                    this._selectedNode.endPoint.y = this.roundToNearest(offsetY / this._scale - this._secondaryDragOffsetY, gridSize);
+                if (
+                    !(
+                        this._selectedNode.endPoint instanceof
+                        LooseConnectionPoint
+                    )
+                ) {
+                    this._selectedNode.endPoint.x = this.roundToNearest(
+                        offsetX / this._scale - this._secondaryDragOffsetX,
+                        gridSize,
+                    );
+                    this._selectedNode.endPoint.y = this.roundToNearest(
+                        offsetY / this._scale - this._secondaryDragOffsetY,
+                        gridSize,
+                    );
                 }
             }
             this.render();
@@ -303,8 +393,14 @@ export class UmlEditorService {
         }
 
         if (this._isAddingConnection) {
-            this._secondaryDragOffsetX = this.roundToNearest((offsetX - this._panOffsetX) / this._scale, gridSize);
-            this._secondaryDragOffsetY = this.roundToNearest((offsetY - this._panOffsetY) / this._scale, gridSize);
+            this._secondaryDragOffsetX = this.roundToNearest(
+                (offsetX - this._panOffsetX) / this._scale,
+                gridSize,
+            );
+            this._secondaryDragOffsetY = this.roundToNearest(
+                (offsetY - this._panOffsetY) / this._scale,
+                gridSize,
+            );
             this.render();
             return;
         }
@@ -366,8 +462,8 @@ export class UmlEditorService {
         const worldX = (offsetX - this._panOffsetX) / this._scale;
         const worldY = (offsetY - this._panOffsetY) / this._scale;
 
-        this._panOffsetX -= (worldX * (newZoomLevel - this._scale));
-        this._panOffsetY -= (worldY * (newZoomLevel - this._scale));
+        this._panOffsetX -= worldX * (newZoomLevel - this._scale);
+        this._panOffsetY -= worldY * (newZoomLevel - this._scale);
 
         this._scale = newZoomLevel;
         this._emitter.emit('scaleChange', this._scale);
@@ -408,8 +504,14 @@ export class UmlEditorService {
      * @param y - The y-coordinate (in screen space) where the node should be added.
      */
     private handleAddNode(x: number, y: number): void {
-        const transformedX = this.roundToNearest((x - this._panOffsetX) / this._scale, this._renderer.renderConfiguration.options.gridSize);
-        const transformedY = this.roundToNearest((y - this._panOffsetY) / this._scale, this._renderer.renderConfiguration.options.gridSize);
+        const transformedX = this.roundToNearest(
+            (x - this._panOffsetX) / this._scale,
+            this._renderer.renderConfiguration.options.gridSize,
+        );
+        const transformedY = this.roundToNearest(
+            (y - this._panOffsetY) / this._scale,
+            this._renderer.renderConfiguration.options.gridSize,
+        );
 
         let node: Node;
         switch (this.addConfig.type) {
@@ -417,16 +519,28 @@ export class UmlEditorService {
                 node = new ClassNode('Class', transformedX, transformedY);
                 break;
             case NodeType.INTERFACE:
-                node = new InterfaceNode('Interface', transformedX, transformedY);
+                node = new InterfaceNode(
+                    'Interface',
+                    transformedX,
+                    transformedY,
+                );
                 break;
             case NodeType.DATATYPE:
                 node = new DataTypeNode('DataType', transformedX, transformedY);
                 break;
             case NodeType.PRIMITIVE:
-                node = new PrimitiveTypeNode('Primitive', transformedX, transformedY);
+                node = new PrimitiveTypeNode(
+                    'Primitive',
+                    transformedX,
+                    transformedY,
+                );
                 break;
             case NodeType.ENUMERATION:
-                node = new EnumerationNode('Enumeration', transformedX, transformedY);
+                node = new EnumerationNode(
+                    'Enumeration',
+                    transformedX,
+                    transformedY,
+                );
                 break;
             case NodeType.COMMENT:
                 node = new CommentNode('...', transformedX, transformedY);
@@ -483,7 +597,10 @@ export class UmlEditorService {
         const transformedY = y / this._scale;
 
         if (this._selectedNode instanceof LooseConnectionPoint) {
-            this._selectedNode = this._selectedNode.convertToBasicPoint(this._selectedNode.x, this._selectedNode.y);
+            this._selectedNode = this._selectedNode.convertToBasicPoint(
+                this._selectedNode.x,
+                this._selectedNode.y,
+            );
         }
 
         if (this._selectedNode instanceof PositionalNode) {
@@ -494,8 +611,10 @@ export class UmlEditorService {
             this._selectedNode.isDragging = true;
             this._dragOffsetX = transformedX - this._selectedNode.startPoint.x;
             this._dragOffsetY = transformedY - this._selectedNode.startPoint.y;
-            this._secondaryDragOffsetX = transformedX - this._selectedNode.endPoint.x;
-            this._secondaryDragOffsetY = transformedY - this._selectedNode.endPoint.y;
+            this._secondaryDragOffsetX =
+                transformedX - this._selectedNode.endPoint.x;
+            this._secondaryDragOffsetY =
+                transformedY - this._selectedNode.endPoint.y;
         }
     }
 
@@ -575,7 +694,11 @@ export class UmlEditorService {
      * @param ignoreConnections - If set to true, only returns non collection nodes.
      * @returns The node or connection part under the given coordinates, or `null` if none is found.
      */
-    private getNodeAtPosition(x: number, y: number, ignoreConnections: boolean = false): Node | null {
+    private getNodeAtPosition(
+        x: number,
+        y: number,
+        ignoreConnections = false,
+    ): Node | null {
         const transformedX = (x - this._panOffsetX) / this._scale;
         const transformedY = (y - this._panOffsetY) / this._scale;
 
@@ -648,12 +771,15 @@ export class UmlEditorService {
     }
 
     private deselectAll() {
-        this._nodes.forEach(node => node.deselect());
+        this._nodes.forEach((node) => node.deselect());
         this.render();
     }
 
     private saveChangesToLocalStorage(): void {
         if (this.virtual) return;
-        localStorage.setItem('file', JSON.stringify(this._nodes.map(node => node.toSerializable())));
+        localStorage.setItem(
+            'file',
+            JSON.stringify(this._nodes.map((node) => node.toSerializable())),
+        );
     }
 }

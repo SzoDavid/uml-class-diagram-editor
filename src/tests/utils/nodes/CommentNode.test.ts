@@ -1,6 +1,6 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {validateStringKeys} from '../../helpers.ts';
-import {CommentNode} from '../../../utils/nodes/CommentNode.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { validateStringKeys } from '../../helpers.ts';
+import { CommentNode } from '../../../utils/nodes/CommentNode.ts';
 
 describe('UCDE-CommentNode', () => {
     let commentNode: CommentNode;
@@ -46,7 +46,12 @@ describe('UCDE-CommentNode', () => {
 
         describe('UCDE-CON-0402 GIVEN invalid name WHEN validate() THEN expected valid error should be returned', () => {
             test.each([
-                { text: '', expectedErrors: [{parameter: 'text', message: 'error.comment_empty' }]},
+                {
+                    text: '',
+                    expectedErrors: [
+                        { parameter: 'text', message: 'error.comment_empty' },
+                    ],
+                },
             ])('UCDE-CON-0402 {text: $text}', ({ text, expectedErrors }) => {
                 expect(validateStringKeys(expectedErrors)).toBe(true);
 

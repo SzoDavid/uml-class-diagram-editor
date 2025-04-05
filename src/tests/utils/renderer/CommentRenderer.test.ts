@@ -1,9 +1,9 @@
-import {beforeEach, describe, vi, test, expect} from 'vitest';
-import {RenderConfiguration} from '../../../services/renderer/RenderConfiguration.ts';
-import {useSettingsService} from '../../../services/SettingsService.ts';
-import {NodeRenderer} from '../../../services/renderer/NodeRenderer.ts';
-import {CommentRenderer} from '../../../services/renderer/CommentRenderer.ts';
-import {CommentNode} from '../../../utils/nodes/CommentNode.ts';
+import { beforeEach, describe, vi, test, expect } from 'vitest';
+import { RenderConfiguration } from '../../../services/renderer/RenderConfiguration.ts';
+import { useSettingsService } from '../../../services/SettingsService.ts';
+import { NodeRenderer } from '../../../services/renderer/NodeRenderer.ts';
+import { CommentRenderer } from '../../../services/renderer/CommentRenderer.ts';
+import { CommentNode } from '../../../utils/nodes/CommentNode.ts';
 
 describe('UCDE-CommentRenderer', () => {
     let canvas: HTMLCanvasElement;
@@ -32,13 +32,15 @@ describe('UCDE-CommentRenderer', () => {
             lineTo: vi.fn(),
             closePath: vi.fn(),
             measureText: vi.fn().mockImplementation((text: string) => ({
-                width: text.includes('wide') ? 1000 : text.length * 7 // Mocking width based on text length
+                width: text.includes('wide') ? 1000 : text.length * 7, // Mocking width based on text length
             })),
             fillText: vi.fn(),
         } as unknown as CanvasRenderingContext2D;
 
         renderConf = settings.renderer;
-        commentRenderer = new NodeRenderer(context2D, renderConf)['_commentRenderer'];
+        commentRenderer = new NodeRenderer(context2D, renderConf)[
+            '_commentRenderer'
+        ];
 
         vi.spyOn(commentRenderer['_nr'], 'drawText');
     });
@@ -47,7 +49,9 @@ describe('UCDE-CommentRenderer', () => {
         const commentNode = new CommentNode('comment', 10, 20);
         commentRenderer.render(commentNode);
 
-        expect(commentNode.width).toBeGreaterThanOrEqual(renderConf.defaultWidth);
+        expect(commentNode.width).toBeGreaterThanOrEqual(
+            renderConf.defaultWidth,
+        );
         expect(commentNode.height).toBeGreaterThan(0);
 
         expect(context2D.beginPath).toHaveBeenCalled();
@@ -59,7 +63,11 @@ describe('UCDE-CommentRenderer', () => {
     });
 
     test('UCDE-CR-02 GIVEN text with new lines WHEN rendering THEN it should correctly split the text into lines', () => {
-        const commentNode = new CommentNode('This is a comment\nwith multiple lines', 10, 20);
+        const commentNode = new CommentNode(
+            'This is a comment\nwith multiple lines',
+            10,
+            20,
+        );
         commentNode.width = 500;
 
         commentRenderer.render(commentNode);

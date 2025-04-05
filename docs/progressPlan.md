@@ -12,7 +12,7 @@
     - Osztály absztrakció jelzése kulcsszóval
     - Mozgatáskor rácshoz illeszkedés
     - Beállítások
-    - Operációk paraméterei több sorban 
+    - Operációk paraméterei több sorban
 3. Október 24. - November 6.
     - Összekötések elemek között
     - Generalizáció

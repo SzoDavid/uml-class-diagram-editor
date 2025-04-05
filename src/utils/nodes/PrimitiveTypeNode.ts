@@ -1,8 +1,8 @@
-import {InvalidNodeParameterCause} from './types.ts';
-import {Validator} from '../Validator.ts';
-import {PositionalNode} from './PositionalNode.ts';
-import {Serializable} from './Serializable.ts';
-import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
+import { InvalidNodeParameterCause } from './types.ts';
+import { Validator } from '../Validator.ts';
+import { PositionalNode } from './PositionalNode.ts';
+import { Serializable } from './Serializable.ts';
+import { SerializationRegistryService } from '../../services/SerializationRegistryService.ts';
 
 const CLASS_TAG = 'PrimitiveTypeNode';
 
@@ -15,11 +15,7 @@ export class PrimitiveTypeNode extends PositionalNode implements Serializable {
     }
 
     clone(): PrimitiveTypeNode {
-        const clone = new PrimitiveTypeNode(
-            this.name,
-            this.x,
-            this.y,
-        );
+        const clone = new PrimitiveTypeNode(this.name, this.x, this.y);
 
         clone.isSelected = this.isSelected;
         clone.isDragging = this.isDragging;
@@ -38,8 +34,13 @@ export class PrimitiveTypeNode extends PositionalNode implements Serializable {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '') errors.push({parameter: 'name', message: 'error.name.required'});
-        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
+        if (this.name === '')
+            errors.push({ parameter: 'name', message: 'error.name.required' });
+        else if (!Validator.isAlphanumeric(this.name))
+            errors.push({
+                parameter: 'name',
+                message: 'error.name.alphanumeric',
+            });
 
         return errors;
     }
@@ -53,7 +54,7 @@ export class PrimitiveTypeNode extends PositionalNode implements Serializable {
             x: this.x,
             y: this.y,
             width: this.width,
-            height: this.height
+            height: this.height,
         };
     }
 

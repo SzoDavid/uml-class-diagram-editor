@@ -1,9 +1,9 @@
-import {InvalidNodeParameterCause} from './types.ts';
-import {Serializable} from './Serializable.ts';
+import { InvalidNodeParameterCause } from './types.ts';
+import { Serializable } from './Serializable.ts';
 
 export abstract class Node implements Serializable {
-    isSelected: boolean = false;
-    isDragging: boolean = false;
+    isSelected = false;
+    isDragging = false;
 
     abstract validate(): InvalidNodeParameterCause[];
     abstract clone(): Node;

@@ -1,28 +1,34 @@
-import {Serializable} from '../utils/nodes/Serializable.ts';
+import { Serializable } from '../utils/nodes/Serializable.ts';
 
-type SerializableClass<T, K> = { new (...args: any[]): T; fromSerializable(data: any, previousNodes: K[]): T };
+interface SerializableClass<T, K> {
+    new (...args: any[]): T;
+    fromSerializable(data: any, previousNodes: K[]): T;
+}
 
 export class DeserializationError extends Error {}
 
-export class SerializationRegistryService {
-    private static registry: Map<string, SerializableClass<any, any>> = new Map();
+const registry = new Map<string, SerializableClass<any, any>>();
 
-    static register<T extends Serializable>(tag: string, cls: SerializableClass<T, any>):void {
-        this.registry.set(tag, cls);
-    }
+export const SerializationRegistryService = {
+    register<T extends Serializable>(
+        tag: string,
+        cls: SerializableClass<T, any>,
+    ): void {
+        registry.set(tag, cls);
+    },
 
-    static deserialize<T>(data: any, nodes: T[] = []): T {
+    deserialize<T>(data: any, nodes: T[] = []): T {
         const { tag, ...properties } = data;
-        const cls = this.registry.get(tag);
+        const cls = registry.get(tag);
 
         if (!cls) {
             throw new Error(`No class registered for tag: ${tag}`);
         }
 
         return cls.fromSerializable(properties, nodes);
-    }
+    },
 
-    static batchDeserialize<T>(dataList: any[]): T[] {
+    batchDeserialize<T>(dataList: any[]): T[] {
         const result: T[] = [];
         const waitlist: any[] = [];
 
@@ -46,6 +52,5 @@ export class SerializationRegistryService {
         }
 
         return result;
-    }
-}
-
+    },
+};

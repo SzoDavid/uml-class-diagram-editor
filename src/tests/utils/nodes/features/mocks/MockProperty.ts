@@ -1,4 +1,4 @@
-import {Property} from '../../../../../utils/nodes/features/Property.ts';
+import { Property } from '../../../../../utils/nodes/features/Property.ts';
 
 export class MockProperty extends Property {
     constructor(name: string) {

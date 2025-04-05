@@ -1,8 +1,12 @@
-import {InvalidNodeParameterCause, PropertyModifier, Visibility} from '../types.ts';
-import {MultiplicityRange} from './MultiplicityRange.ts';
-import {Validator} from '../../Validator.ts';
-import {DecoratedFeature, Decorator} from './DecoratedFeature.ts';
-import {FeatureWithVisibility} from './FeatureWithVisibility.ts';
+import {
+    InvalidNodeParameterCause,
+    PropertyModifier,
+    Visibility,
+} from '../types.ts';
+import { MultiplicityRange } from './MultiplicityRange.ts';
+import { Validator } from '../../Validator.ts';
+import { DecoratedFeature, Decorator } from './DecoratedFeature.ts';
+import { FeatureWithVisibility } from './FeatureWithVisibility.ts';
 
 /**
  * Based on chapter 9.5.4 of UML 2.5.1 specification.
@@ -11,7 +15,7 @@ import {FeatureWithVisibility} from './FeatureWithVisibility.ts';
  *  [‘,’ <prop-modifier >]* ’}
  */
 export class Property implements DecoratedFeature, FeatureWithVisibility {
-    visibility: Visibility|null;
+    visibility: Visibility | null;
     isDerived: boolean;
     name: string;
     type: string;
@@ -22,18 +26,20 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     redefines: string;
     subsets: string;
 
-    omitVisibility: boolean = true;
+    omitVisibility = true;
 
-    constructor(name: string,
-                type: string = '',
-                visibility: Visibility|null = null,
-                isDerived: boolean = false,
-                multiplicity: MultiplicityRange = new MultiplicityRange(null, null),
-                defaultValue: string = '',
-                isStatic: boolean = false,
-                modifiers: PropertyModifier[] = [],
-                redefines: string = '',
-                subsets: string = '') {
+    constructor(
+        name: string,
+        type = '',
+        visibility: Visibility | null = null,
+        isDerived = false,
+        multiplicity: MultiplicityRange = new MultiplicityRange(null, null),
+        defaultValue = '',
+        isStatic = false,
+        modifiers: PropertyModifier[] = [],
+        redefines = '',
+        subsets = '',
+    ) {
         this.visibility = visibility;
         this.name = name;
         this.type = type;
@@ -57,7 +63,8 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     get postfix(): string {
         let postfix = '';
         if (this.type) postfix += `: ${this.type}`;
-        if (this.multiplicity.upper) postfix += `[${this.multiplicity.toString()}]`;
+        if (this.multiplicity.upper)
+            postfix += `[${this.multiplicity.toString()}]`;
         if (this.defaultValue) postfix += ` = ${this.defaultValue}`;
 
         const mods = [];
@@ -83,20 +90,39 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '') errors.push({parameter: 'name', message: 'error.name.required'});
-        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
+        if (this.name === '')
+            errors.push({ parameter: 'name', message: 'error.name.required' });
+        else if (!Validator.isAlphanumeric(this.name))
+            errors.push({
+                parameter: 'name',
+                message: 'error.name.alphanumeric',
+            });
 
         if (this.type && !Validator.isAlphanumericWithBrackets(this.type)) {
-            errors.push({parameter: 'type', message: 'error.type_alphanumeric'});
+            errors.push({
+                parameter: 'type',
+                message: 'error.type_alphanumeric',
+            });
         }
 
-        if (this.defaultValue && !Validator.isAlphanumericWithBrackets(this.defaultValue)) {
-            errors.push({parameter: 'defaultValue', message: 'error.default_value_alphanumeric'});
+        if (
+            this.defaultValue &&
+            !Validator.isAlphanumericWithBrackets(this.defaultValue)
+        ) {
+            errors.push({
+                parameter: 'defaultValue',
+                message: 'error.default_value_alphanumeric',
+            });
         }
 
         if (this.multiplicity) {
             const multiErrors = this.multiplicity.validate();
-            if (multiErrors.length > 0) errors.push({parameter: 'multiplicity', message: 'error.multiplicity_range.invalid', context: multiErrors});
+            if (multiErrors.length > 0)
+                errors.push({
+                    parameter: 'multiplicity',
+                    message: 'error.multiplicity_range.invalid',
+                    context: multiErrors,
+                });
         }
 
         return errors;
@@ -113,7 +139,7 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
             this.isStatic,
             [...this.modifiers],
             this.redefines,
-            this.subsets
+            this.subsets,
         );
     }
 
@@ -123,12 +149,14 @@ export class Property implements DecoratedFeature, FeatureWithVisibility {
             data.type,
             data.visibility,
             data.isDerived,
-            data.multiplicity ? MultiplicityRange.fromSerializable(data.multiplicity) : undefined,
+            data.multiplicity
+                ? MultiplicityRange.fromSerializable(data.multiplicity)
+                : undefined,
             data.defaultValue,
             data.isStatic,
             [...data.modifiers],
             data.redefines,
-            data.subsets
+            data.subsets,
         );
     }
 }

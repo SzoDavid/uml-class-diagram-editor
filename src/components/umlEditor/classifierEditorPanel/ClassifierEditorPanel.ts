@@ -1,30 +1,37 @@
-import {ClickContext, ErrorContext, NodeData} from '../../../utils/types.ts';
-import {ref, watch, defineComponent} from 'vue';
-import {ClassNode, ClassStereotype} from '../../../utils/nodes/classifier/ClassNode.ts';
-import {InvalidNodeParameterCause, Visibility} from '../../../utils/nodes/types.ts';
-import {Property} from '../../../utils/nodes/features/Property.ts';
-import {MultiplicityRange} from '../../../utils/nodes/features/MultiplicityRange.ts';
-import {Operation} from '../../../utils/nodes/features/Operation.ts';
-import {Parameter} from '../../../utils/nodes/features/Parameter.ts';
-import {useI18n} from 'vue-i18n';
-import {ClassifierNode} from '../../../utils/nodes/classifier/ClassifierNode.ts';
-import {DataTypeNode} from '../../../utils/nodes/classifier/DataTypeNode.ts';
-import {findError} from '../../../utils/functions.ts';
+import { ClickContext, ErrorContext, NodeData } from '../../../utils/types.ts';
+import { ref, watch, defineComponent } from 'vue';
+import {
+    ClassNode,
+    ClassStereotype,
+} from '../../../utils/nodes/classifier/ClassNode.ts';
+import {
+    InvalidNodeParameterCause,
+    Visibility,
+} from '../../../utils/nodes/types.ts';
+import { Property } from '../../../utils/nodes/features/Property.ts';
+import { MultiplicityRange } from '../../../utils/nodes/features/MultiplicityRange.ts';
+import { Operation } from '../../../utils/nodes/features/Operation.ts';
+import { Parameter } from '../../../utils/nodes/features/Parameter.ts';
+import { useI18n } from 'vue-i18n';
+import { ClassifierNode } from '../../../utils/nodes/classifier/ClassifierNode.ts';
+import { DataTypeNode } from '../../../utils/nodes/classifier/DataTypeNode.ts';
+import { findError } from '../../../utils/functions.ts';
 
 interface ClassifierEditorPanelProperties {
-    classifierData: NodeData<ClassifierNode>
+    classifierData: NodeData<ClassifierNode>;
 }
 
-interface ClassifierEditorPanelEmits {
-    (e: 'save', data: NodeData<ClassifierNode>): void;
-}
+type ClassifierEditorPanelEmits = (
+    e: 'save',
+    data: NodeData<ClassifierNode>,
+) => void;
 
 export default defineComponent({
     props: {
         classifierData: {
             type: Object as () => NodeData<ClassNode>,
             required: true,
-        }
+        },
     },
     emits: ['save'],
     computed: {
@@ -39,9 +46,12 @@ export default defineComponent({
         },
         Visibility() {
             return Visibility;
-        }
+        },
     },
-    setup(props: ClassifierEditorPanelProperties, { emit }: { emit: ClassifierEditorPanelEmits}) {
+    setup(
+        props: ClassifierEditorPanelProperties,
+        { emit }: { emit: ClassifierEditorPanelEmits },
+    ) {
         const { t } = useI18n();
 
         const data = ref<NodeData<ClassifierNode>>(props.classifierData);
@@ -53,23 +63,26 @@ export default defineComponent({
             (newClassifierData) => {
                 data.value = newClassifierData;
             },
-            { immediate: true }
+            { immediate: true },
         );
 
         watch(
-            data, 
+            data,
             (value) => {
                 if (!value) return;
                 errors = value.instance.validate();
             },
-            { immediate: true, deep: true }
+            { immediate: true, deep: true },
         );
 
         const onSave = () => {
             emit('save', data.value as NodeData<ClassifierNode>);
         };
 
-        const onAddClicked = (context: ClickContext, parentIndex: string | number = '') => {
+        const onAddClicked = (
+            context: ClickContext,
+            parentIndex: string | number = '',
+        ) => {
             if (data.value === null || data.value.type !== 'classifier') return;
 
             switch (context) {
@@ -90,13 +103,19 @@ export default defineComponent({
 
                     const param = new Parameter('', '');
                     param.multiplicity = new MultiplicityRange(null);
-                    data.value.instance.operations[parentIndex].params.push(param);
+                    data.value.instance.operations[parentIndex].params.push(
+                        param,
+                    );
                     break;
                 }
             }
         };
 
-        const onRemoveClicked = (context: ClickContext, index: string | number, parentIndex: string | number = '') => {
+        const onRemoveClicked = (
+            context: ClickContext,
+            index: string | number,
+            parentIndex: string | number = '',
+        ) => {
             if (typeof index !== 'number') return;
 
             if (data.value === null || data.value.type !== 'classifier') return;
@@ -110,15 +129,23 @@ export default defineComponent({
                     break;
                 case 'param':
                     if (typeof parentIndex !== 'number') return;
-                    data.value.instance.operations[parentIndex].params.splice(index, 1);
+                    data.value.instance.operations[parentIndex].params.splice(
+                        index,
+                        1,
+                    );
                     break;
             }
         };
 
-        const onCollapseClicked = (context: ClickContext, index: string|number, parentIndex: string|number = '') => {
+        const onCollapseClicked = (
+            context: ClickContext,
+            index: string | number,
+            parentIndex: string | number = '',
+        ) => {
             if (typeof index !== 'number') return null;
 
-            if (data.value === null || data.value.type !== 'classifier') return null;
+            if (data.value === null || data.value.type !== 'classifier')
+                return null;
 
             let element = null;
             switch (context) {
@@ -130,7 +157,9 @@ export default defineComponent({
                     break;
                 case 'param':
                     if (typeof parentIndex !== 'number') return;
-                    element = document.getElementById(`parameter${parentIndex}${index}`);
+                    element = document.getElementById(
+                        `parameter${parentIndex}${index}`,
+                    );
                     break;
             }
 
@@ -140,7 +169,8 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'classifier') return null;
+            if (data.value === null || data.value.type !== 'classifier')
+                return null;
 
             const error = findError(errors, context);
 
@@ -155,7 +185,7 @@ export default defineComponent({
             onRemoveClicked,
             onCollapseClicked,
             getError,
-            t
+            t,
         };
-    }
+    },
 });

@@ -10,6 +10,6 @@ export default defineConfig({
             reporter: ['html', 'text'],
             include: ['**/src/utils/**', '**/src/services/**'],
             exclude: ['**/tests'],
-        }
+        },
     },
 });

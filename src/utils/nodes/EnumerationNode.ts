@@ -1,8 +1,8 @@
-import {InvalidNodeParameterCause} from './types.ts';
-import {Validator} from '../Validator.ts';
-import {PositionalNode} from './PositionalNode.ts';
-import {Serializable} from './Serializable.ts';
-import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
+import { InvalidNodeParameterCause } from './types.ts';
+import { Validator } from '../Validator.ts';
+import { PositionalNode } from './PositionalNode.ts';
+import { Serializable } from './Serializable.ts';
+import { SerializationRegistryService } from '../../services/SerializationRegistryService.ts';
 
 const CLASS_TAG = 'EnumerationNode';
 
@@ -10,7 +10,7 @@ export class EnumerationNode extends PositionalNode implements Serializable {
     name: string;
     values: string[];
 
-    constructor(name: string, x: number, y: number, values: string[]=[]) {
+    constructor(name: string, x: number, y: number, values: string[] = []) {
         super(x, y);
         this.name = name;
         this.values = values;
@@ -21,7 +21,7 @@ export class EnumerationNode extends PositionalNode implements Serializable {
             this.name,
             this.x,
             this.y,
-            this.values
+            this.values,
         );
 
         clone.isSelected = this.isSelected;
@@ -42,12 +42,27 @@ export class EnumerationNode extends PositionalNode implements Serializable {
     validate(): InvalidNodeParameterCause[] {
         const errors: InvalidNodeParameterCause[] = [];
 
-        if (this.name === '') errors.push({parameter: 'name', message: 'error.name.required'});
-        else if (!Validator.isAlphanumeric(this.name)) errors.push({parameter: 'name', message: 'error.name.alphanumeric'});
+        if (this.name === '')
+            errors.push({ parameter: 'name', message: 'error.name.required' });
+        else if (!Validator.isAlphanumeric(this.name))
+            errors.push({
+                parameter: 'name',
+                message: 'error.name.alphanumeric',
+            });
 
         this.values.forEach((value, i) => {
-            if (value === '') errors.push({parameter: 'values', message: 'error.value.required', index: i});
-            else if (!Validator.isAlphanumeric(value)) errors.push({parameter: 'values', message: 'error.value.alphanumeric', index: i});
+            if (value === '')
+                errors.push({
+                    parameter: 'values',
+                    message: 'error.value.required',
+                    index: i,
+                });
+            else if (!Validator.isAlphanumeric(value))
+                errors.push({
+                    parameter: 'values',
+                    message: 'error.value.alphanumeric',
+                    index: i,
+                });
         });
 
         return errors;
@@ -63,12 +78,17 @@ export class EnumerationNode extends PositionalNode implements Serializable {
             y: this.y,
             width: this.width,
             height: this.height,
-            values: [...this.values]
+            values: [...this.values],
         };
     }
 
     static fromSerializable(data: any): EnumerationNode {
-        const node = new EnumerationNode(data.name, data.x, data.y, data.values);
+        const node = new EnumerationNode(
+            data.name,
+            data.x,
+            data.y,
+            data.values,
+        );
 
         node.width = data.width;
         node.height = data.height;

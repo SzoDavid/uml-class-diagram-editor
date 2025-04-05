@@ -1,6 +1,6 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {validateStringKeys} from '../../helpers.ts';
-import {EnumerationNode} from '../../../utils/nodes/EnumerationNode.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { validateStringKeys } from '../../helpers.ts';
+import { EnumerationNode } from '../../../utils/nodes/EnumerationNode.ts';
 
 describe('UCDE-EnumerationNode', () => {
     let enumNode: EnumerationNode;
@@ -31,7 +31,10 @@ describe('UCDE-EnumerationNode', () => {
 
     describe('UCDE-EN-0300-copy', () => {
         test('UCDE-EN-0301 GIVEN another EnumerationNode WHEN copy() THEN copy values correctly', () => {
-            const anotherNode = new EnumerationNode('AnotherNode', 30, 40, ['value1', 'value2']);
+            const anotherNode = new EnumerationNode('AnotherNode', 30, 40, [
+                'value1',
+                'value2',
+            ]);
             enumNode.copy(anotherNode);
             expect(enumNode.name).toBe('AnotherNode');
             expect(enumNode.x).toBe(30);
@@ -48,8 +51,21 @@ describe('UCDE-EnumerationNode', () => {
 
         describe('UCDE-EN-0402 GIVEN invalid name WHEN validate() THEN expected valid error should be returned', () => {
             test.each([
-                { name: '', expectedErrors: [{parameter: 'name', message: 'error.name.required' }]},
-                { name: 'Invalid name!', expectedErrors: [{parameter: 'name', message: 'error.name.alphanumeric' }]}
+                {
+                    name: '',
+                    expectedErrors: [
+                        { parameter: 'name', message: 'error.name.required' },
+                    ],
+                },
+                {
+                    name: 'Invalid name!',
+                    expectedErrors: [
+                        {
+                            parameter: 'name',
+                            message: 'error.name.alphanumeric',
+                        },
+                    ],
+                },
             ])('UCDE-EN-0402 {name: $name}', ({ name, expectedErrors }) => {
                 expect(validateStringKeys(expectedErrors)).toBe(true);
 
@@ -60,14 +76,35 @@ describe('UCDE-EnumerationNode', () => {
 
         describe('UCDE-EN-0403 GIVEN invalid values WHEN validate() THEN expected valid error should be returned', () => {
             test.each([
-                { values: [''], expectedErrors: [{parameter: 'values', index: 0, message: 'error.value.required'}] },
-                { values: ['valid', 'Invalid value!'], expectedErrors: [{parameter: 'values', index: 1, message: 'error.value.alphanumeric'}] }
-            ])('UCDE-EN-0403 {values: $values}', ({ values, expectedErrors}) => {
-                expect(validateStringKeys(expectedErrors)).toBe(true);
+                {
+                    values: [''],
+                    expectedErrors: [
+                        {
+                            parameter: 'values',
+                            index: 0,
+                            message: 'error.value.required',
+                        },
+                    ],
+                },
+                {
+                    values: ['valid', 'Invalid value!'],
+                    expectedErrors: [
+                        {
+                            parameter: 'values',
+                            index: 1,
+                            message: 'error.value.alphanumeric',
+                        },
+                    ],
+                },
+            ])(
+                'UCDE-EN-0403 {values: $values}',
+                ({ values, expectedErrors }) => {
+                    expect(validateStringKeys(expectedErrors)).toBe(true);
 
-                enumNode.values = values;
-                expect(enumNode.validate()).toEqual(expectedErrors);
-            });
+                    enumNode.values = values;
+                    expect(enumNode.validate()).toEqual(expectedErrors);
+                },
+            );
         });
     });
 });

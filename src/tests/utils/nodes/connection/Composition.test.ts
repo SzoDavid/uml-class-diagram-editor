@@ -1,14 +1,14 @@
-import {beforeEach, describe, expect, test} from 'vitest';
-import {Composition} from '../../../../utils/nodes/connection/Composition.ts';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { Composition } from '../../../../utils/nodes/connection/Composition.ts';
 
 describe('UCDE-Composition', () => {
     let composition: Composition;
 
     beforeEach(() => {
         composition = new Composition([
-            {x: 0, y: 0},
-            {x: 0, y: 5},
-            {x:5, y: 5}
+            { x: 0, y: 0 },
+            { x: 0, y: 5 },
+            { x: 5, y: 5 },
         ]);
     });
 
@@ -31,10 +31,10 @@ describe('UCDE-Composition', () => {
     describe('UCDE-CO-0200-Copy', () => {
         test('UCDE-CO-0201 GIVEN another composition WHEN copy() THEN copy values correctly', () => {
             const anotherComposition = new Composition([
-                {x: 1, y: 1},
-                {x: 1, y: 2},
-                {x: 2, y: 2},
-                {x: 3, y: 3}
+                { x: 1, y: 1 },
+                { x: 1, y: 2 },
+                { x: 2, y: 2 },
+                { x: 3, y: 3 },
             ]);
 
             anotherComposition.startName = 'startName';
@@ -44,7 +44,9 @@ describe('UCDE-Composition', () => {
             expect(composition.parts).toHaveLength(3);
             expect(composition.parts[0].startPoint.x).toBe(1);
             expect(composition.parts[0].startPoint.y).toBe(1);
-            expect(composition.parts[0].endPoint).toBe(composition.parts[1].startPoint);
+            expect(composition.parts[0].endPoint).toBe(
+                composition.parts[1].startPoint,
+            );
             expect(composition.startName).toBe('startName');
             expect(composition.endName).toBe('endName');
         });

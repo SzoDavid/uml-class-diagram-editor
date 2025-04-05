@@ -1,7 +1,7 @@
 type Listener<T> = (data: T) => void;
 
 export class TriggerService {
-    private triggers: Map<string, Listener<any>[]> = new Map();
+    private triggers = new Map<string, Listener<any>[]>();
 
     public register<T>(triggerName: string, listener: Listener<T>): void {
         if (!this.triggers.has(triggerName)) {
@@ -15,7 +15,7 @@ export class TriggerService {
         if (listeners) {
             this.triggers.set(
                 triggerName,
-                listeners.filter((l) => l !== listener)
+                listeners.filter((l) => l !== listener),
             );
         }
     }

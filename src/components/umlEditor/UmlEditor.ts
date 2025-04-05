@@ -1,36 +1,40 @@
-import {inject, onBeforeUnmount, onMounted, ref} from 'vue';
-import {useI18n} from 'vue-i18n';
+import { inject, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ClassifierEditorPanel from './classifierEditorPanel/ClassifierEditorPanel.vue';
 import CommentEditorPanel from './commentEditorPanel/CommentEditorPanel.vue';
 import ConnectionEditorPanel from './connectionEditorPanel/ConnectionEditorPanel.vue';
 import EnumerationEditorPanel from './enumerationEditorPanel/EnumerationEditorPanel.vue';
 import PrimitiveEditorPanel from './primitiveEditorPanel/PrimitiveEditorPanel.vue';
-import {useSettingsService} from '../../services/SettingsService.ts';
-import {EmitType, UmlEditorService, UmlEditorTool} from '../../services/UmlEditorService.ts';
-import {DataContext} from '../../utils/types.ts';
-import {Renderer} from '../../services/renderer/Renderer.ts';
-import {Node} from '../../utils/nodes/Node.ts';
-import {ClassNode} from '../../utils/nodes/classifier/ClassNode.ts';
-import {NodeType} from '../../utils/nodes/types.ts';
-import {ClassifierNode} from '../../utils/nodes/classifier/ClassifierNode.ts';
-import {InterfaceNode} from '../../utils/nodes/classifier/InterfaceNode.ts';
-import {DataTypeNode} from '../../utils/nodes/classifier/DataTypeNode.ts';
-import {PrimitiveTypeNode} from '../../utils/nodes/PrimitiveTypeNode.ts';
-import {EnumerationNode} from '../../utils/nodes/EnumerationNode.ts';
-import {CommentNode} from '../../utils/nodes/CommentNode.ts';
-import {Connection} from '../../utils/nodes/connection/Connection.ts';
+import { useSettingsService } from '../../services/SettingsService.ts';
+import {
+    EmitType,
+    UmlEditorService,
+    UmlEditorTool,
+} from '../../services/UmlEditorService.ts';
+import { DataContext } from '../../utils/types.ts';
+import { Renderer } from '../../services/renderer/Renderer.ts';
+import { Node } from '../../utils/nodes/Node.ts';
+import { ClassNode } from '../../utils/nodes/classifier/ClassNode.ts';
+import { NodeType } from '../../utils/nodes/types.ts';
+import { ClassifierNode } from '../../utils/nodes/classifier/ClassifierNode.ts';
+import { InterfaceNode } from '../../utils/nodes/classifier/InterfaceNode.ts';
+import { DataTypeNode } from '../../utils/nodes/classifier/DataTypeNode.ts';
+import { PrimitiveTypeNode } from '../../utils/nodes/PrimitiveTypeNode.ts';
+import { EnumerationNode } from '../../utils/nodes/EnumerationNode.ts';
+import { CommentNode } from '../../utils/nodes/CommentNode.ts';
+import { Connection } from '../../utils/nodes/connection/Connection.ts';
 import {
     BasicConnectionPoint,
     ConnectionPoint,
-    LooseConnectionPoint
+    LooseConnectionPoint,
 } from '../../utils/nodes/connection/ConnectionPoint.ts';
-import {ConnectionPart} from '../../utils/nodes/connection/ConnectionPart.ts';
-import {Generalization} from '../../utils/nodes/connection/Generalization.ts';
-import {Association} from '../../utils/nodes/connection/Association.ts';
-import {Aggregation} from '../../utils/nodes/connection/Aggregation.ts';
-import {Composition} from '../../utils/nodes/connection/Composition.ts';
-import {SerializationRegistryService} from '../../services/SerializationRegistryService.ts';
-import {TriggerService} from '../../services/TriggerService.ts';
+import { ConnectionPart } from '../../utils/nodes/connection/ConnectionPart.ts';
+import { Generalization } from '../../utils/nodes/connection/Generalization.ts';
+import { Association } from '../../utils/nodes/connection/Association.ts';
+import { Aggregation } from '../../utils/nodes/connection/Aggregation.ts';
+import { Composition } from '../../utils/nodes/connection/Composition.ts';
+import { SerializationRegistryService } from '../../services/SerializationRegistryService.ts';
+import { TriggerService } from '../../services/TriggerService.ts';
 
 export default {
     components: {
@@ -38,7 +42,7 @@ export default {
         CommentEditorPanel,
         EnumerationEditorPanel,
         ClassifierEditorPanel,
-        PrimitiveEditorPanel
+        PrimitiveEditorPanel,
     },
     computed: {
         NodeType() {
@@ -46,23 +50,27 @@ export default {
         },
         UmlEditorTool() {
             return UmlEditorTool;
-        }
+        },
     },
     setup() {
         const { t } = useI18n();
         const { settings } = useSettingsService();
 
-        const triggerService: TriggerService | undefined = inject('triggerService');
+        const triggerService: TriggerService | undefined =
+            inject('triggerService');
 
-        const childEditorPanel = ref<typeof ConnectionEditorPanel |
-                                                                        typeof CommentEditorPanel |
-                                                                        typeof EnumerationEditorPanel |
-                                                                        typeof ClassifierEditorPanel |
-                                                                        typeof PrimitiveEditorPanel | null>(null);
+        const childEditorPanel = ref<
+            | typeof ConnectionEditorPanel
+            | typeof CommentEditorPanel
+            | typeof EnumerationEditorPanel
+            | typeof ClassifierEditorPanel
+            | typeof PrimitiveEditorPanel
+            | null
+        >(null);
         const umlCanvas = ref<HTMLCanvasElement | null>(null);
         const selectedNode = ref<Node | null>(null);
         const data = ref<DataContext<Node>>(null);
-        const tool = ref<UmlEditorTool|null>(null);
+        const tool = ref<UmlEditorTool | null>(null);
         const scale = ref<number>(100);
         const canvasWidth = ref(1100);
         const editorWidth = ref(100);
@@ -71,14 +79,17 @@ export default {
 
         onMounted(() => {
             if (umlCanvas.value === null) {
-                console.error('UmlEditorService can\'t be mounted');
+                console.error("UmlEditorService can't be mounted");
                 return;
             }
 
             const save = localStorage.getItem('file');
 
             const canvas = umlCanvas.value as HTMLCanvasElement;
-            editor = new UmlEditorService(canvas, new Renderer(canvas, settings.renderer));
+            editor = new UmlEditorService(
+                canvas,
+                new Renderer(canvas, settings.renderer),
+            );
             tool.value = editor.tool;
 
             window.addEventListener('resize', () => resizeCanvas(canvas));
@@ -93,7 +104,12 @@ export default {
             });
 
             editor.emitter.on('toolChange', (newTool: EmitType) => {
-                if (newTool === null || typeof newTool === 'object' || !(newTool in UmlEditorTool)) return;
+                if (
+                    newTool === null ||
+                    typeof newTool === 'object' ||
+                    !(newTool in UmlEditorTool)
+                )
+                    return;
 
                 tool.value = newTool;
             });
@@ -106,9 +122,12 @@ export default {
 
             if (save) {
                 const deserializable = JSON.parse(save);
-                editor.nodes = SerializationRegistryService.batchDeserialize<Node>(deserializable);
+                editor.nodes =
+                    SerializationRegistryService.batchDeserialize<Node>(
+                        deserializable,
+                    );
             }
-            
+
             triggerService?.register('refreshEditor', onRefresh);
         });
 
@@ -120,11 +139,18 @@ export default {
         });
 
         const resizeCanvas = (canvas: HTMLCanvasElement) => {
-            const container = canvas.parentElement!;
+            if (!canvas.parentElement) {
+                throw new Error('Parent element for canvas is missing');
+            }
+
+            const container = canvas.parentElement;
             const { width, height } = container.getBoundingClientRect();
             const scale = window.devicePixelRatio || 1;
 
-            if (canvas.width !== width * scale || canvas.height !== height * scale) {
+            if (
+                canvas.width !== width * scale ||
+                canvas.height !== height * scale
+            ) {
                 canvas.width = width * scale;
                 canvas.height = height * scale;
 
@@ -144,7 +170,7 @@ export default {
             const onMouseMove = (moveEvent: MouseEvent) => {
                 if (isResizing.value) {
                     if (umlCanvas.value === null) {
-                        console.error('UmlEditorService can\'t be mounted');
+                        console.error("UmlEditorService can't be mounted");
                         return;
                     }
 
@@ -177,38 +203,85 @@ export default {
                 return;
             }
 
-            if ((data.type === 'classifier' && selectedNode.value instanceof ClassifierNode) ||
-                (data.type === 'primitive' && selectedNode.value instanceof PrimitiveTypeNode) ||
-                (data.type === 'comment' && selectedNode.value instanceof CommentNode) ||
-                (data.type === 'connection' && (selectedNode.value instanceof Connection || selectedNode.value instanceof ConnectionPart || selectedNode.value instanceof ConnectionPoint)) ||
-                (data.type === 'enumeration' && selectedNode.value instanceof EnumerationNode)) {
-
+            if (
+                (data.type === 'classifier' &&
+                    selectedNode.value instanceof ClassifierNode) ||
+                (data.type === 'primitive' &&
+                    selectedNode.value instanceof PrimitiveTypeNode) ||
+                (data.type === 'comment' &&
+                    selectedNode.value instanceof CommentNode) ||
+                (data.type === 'connection' &&
+                    (selectedNode.value instanceof Connection ||
+                        selectedNode.value instanceof ConnectionPart ||
+                        selectedNode.value instanceof ConnectionPoint)) ||
+                (data.type === 'enumeration' &&
+                    selectedNode.value instanceof EnumerationNode)
+            ) {
                 //TODO: cry
-                if (selectedNode.value instanceof ClassNode && data.instance instanceof ClassNode) {
+                if (
+                    selectedNode.value instanceof ClassNode &&
+                    data.instance instanceof ClassNode
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof InterfaceNode && data.instance instanceof InterfaceNode) {
+                } else if (
+                    selectedNode.value instanceof InterfaceNode &&
+                    data.instance instanceof InterfaceNode
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof DataTypeNode && data.instance instanceof DataTypeNode) {
+                } else if (
+                    selectedNode.value instanceof DataTypeNode &&
+                    data.instance instanceof DataTypeNode
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof PrimitiveTypeNode && data.instance instanceof PrimitiveTypeNode) {
+                } else if (
+                    selectedNode.value instanceof PrimitiveTypeNode &&
+                    data.instance instanceof PrimitiveTypeNode
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof EnumerationNode && data.instance instanceof EnumerationNode) {
+                } else if (
+                    selectedNode.value instanceof EnumerationNode &&
+                    data.instance instanceof EnumerationNode
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof CommentNode && data.instance instanceof CommentNode) {
+                } else if (
+                    selectedNode.value instanceof CommentNode &&
+                    data.instance instanceof CommentNode
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof Aggregation && data.instance instanceof Aggregation) {
+                } else if (
+                    selectedNode.value instanceof Aggregation &&
+                    data.instance instanceof Aggregation
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof Association && data.instance instanceof Association) {
+                } else if (
+                    selectedNode.value instanceof Association &&
+                    data.instance instanceof Association
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof Composition && data.instance instanceof Composition) {
+                } else if (
+                    selectedNode.value instanceof Composition &&
+                    data.instance instanceof Composition
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof Generalization && data.instance instanceof Generalization) {
+                } else if (
+                    selectedNode.value instanceof Generalization &&
+                    data.instance instanceof Generalization
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof ConnectionPart && data.instance instanceof ConnectionPart) {
+                } else if (
+                    selectedNode.value instanceof ConnectionPart &&
+                    data.instance instanceof ConnectionPart
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof LooseConnectionPoint && data.instance instanceof LooseConnectionPoint) {
+                } else if (
+                    selectedNode.value instanceof LooseConnectionPoint &&
+                    data.instance instanceof LooseConnectionPoint
+                ) {
                     selectedNode.value.copy(data.instance);
-                } else if (selectedNode.value instanceof BasicConnectionPoint && data.instance instanceof BasicConnectionPoint) {
+                } else if (
+                    selectedNode.value instanceof BasicConnectionPoint &&
+                    data.instance instanceof BasicConnectionPoint
+                ) {
                     selectedNode.value.copy(data.instance);
                 } else {
                     console.error('Not matching node types');
@@ -240,27 +313,31 @@ export default {
             if (node instanceof ClassifierNode) {
                 data.value = {
                     type: 'classifier',
-                    instance: node.clone()
+                    instance: node.clone(),
                 };
             } else if (node instanceof PrimitiveTypeNode) {
                 data.value = {
                     type: 'primitive',
-                    instance: node.clone()
+                    instance: node.clone(),
                 };
             } else if (node instanceof EnumerationNode) {
                 data.value = {
                     type: 'enumeration',
-                    instance: node.clone()
+                    instance: node.clone(),
                 };
             } else if (node instanceof CommentNode) {
                 data.value = {
                     type: 'comment',
-                    instance: node.clone()
+                    instance: node.clone(),
                 };
-            } else if (node instanceof Connection || node instanceof ConnectionPart || node instanceof ConnectionPoint) {
+            } else if (
+                node instanceof Connection ||
+                node instanceof ConnectionPart ||
+                node instanceof ConnectionPoint
+            ) {
                 data.value = {
                     type: 'connection',
-                    instance: node.clone()
+                    instance: node.clone(),
                 };
             }
         };
@@ -276,11 +353,15 @@ export default {
                     data.value = { type: 'editor' };
                     break;
                 case UmlEditorTool.ADD:
-                    data.value = { type: 'addOption', instance: editor.addConfig };
+                    data.value = {
+                        type: 'addOption',
+                        instance: editor.addConfig,
+                    };
                     break;
                 case UmlEditorTool.REMOVE:
                     data.value = null;
-                    break;}
+                    break;
+            }
         };
 
         const onKeyPress = (event: KeyboardEvent) => {
@@ -318,7 +399,7 @@ export default {
             editor.nodes = nodes;
             editor.render();
         };
-        
+
         return {
             umlCanvas,
             data,
@@ -333,8 +414,11 @@ export default {
             onToolSelected,
             onScaleSet,
             onScaleReset,
-            requestRender: () => {editor.render(); setSelectedNode(null); },
-            t
+            requestRender: () => {
+                editor.render();
+                setSelectedNode(null);
+            },
+            t,
         };
-    }
+    },
 };

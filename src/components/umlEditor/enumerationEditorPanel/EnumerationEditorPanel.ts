@@ -1,27 +1,31 @@
-import {defineComponent, ref, watch} from 'vue';
-import {ErrorContext, NodeData} from '../../../utils/types.ts';
-import {useI18n} from 'vue-i18n';
-import {InvalidNodeParameterCause} from '../../../utils/nodes/types.ts';
-import {EnumerationNode} from '../../../utils/nodes/EnumerationNode.ts';
-import {findError} from '../../../utils/functions.ts';
+import { defineComponent, ref, watch } from 'vue';
+import { ErrorContext, NodeData } from '../../../utils/types.ts';
+import { useI18n } from 'vue-i18n';
+import { InvalidNodeParameterCause } from '../../../utils/nodes/types.ts';
+import { EnumerationNode } from '../../../utils/nodes/EnumerationNode.ts';
+import { findError } from '../../../utils/functions.ts';
 
 interface EnumerationEditorPanelProperties {
-    enumerationData: NodeData<EnumerationNode>
+    enumerationData: NodeData<EnumerationNode>;
 }
 
-interface EnumerationEditorPanelEmits {
-    (e: 'save', data: NodeData<EnumerationNode>): void;
-}
+type EnumerationEditorPanelEmits = (
+    e: 'save',
+    data: NodeData<EnumerationNode>,
+) => void;
 
 export default defineComponent({
     props: {
         enumerationData: {
             type: Object as () => NodeData<EnumerationNode>,
-            required: true
-        }
+            required: true,
+        },
     },
     emits: ['save'],
-    setup(props: EnumerationEditorPanelProperties, { emit }: { emit: EnumerationEditorPanelEmits }) {
+    setup(
+        props: EnumerationEditorPanelProperties,
+        { emit }: { emit: EnumerationEditorPanelEmits },
+    ) {
         const { t } = useI18n();
 
         const data = ref<NodeData<EnumerationNode>>(props.enumerationData);
@@ -33,7 +37,7 @@ export default defineComponent({
             (newData) => {
                 data.value = newData;
             },
-            { immediate: true }
+            { immediate: true },
         );
 
         watch(
@@ -42,7 +46,7 @@ export default defineComponent({
                 if (!value) return;
                 errors = value.instance.validate();
             },
-            { immediate: true, deep: true }
+            { immediate: true, deep: true },
         );
 
         const addValue = () => {
@@ -54,7 +58,8 @@ export default defineComponent({
         };
 
         const getError = (context: ErrorContext) => {
-            if (data.value === null || data.value.type !== 'enumeration') return null;
+            if (data.value === null || data.value.type !== 'enumeration')
+                return null;
 
             const error = findError(errors, context);
 
@@ -67,11 +72,12 @@ export default defineComponent({
         };
 
         return {
-            t, data,
+            t,
+            data,
             addValue,
             removeValue,
             onSave,
-            getError
+            getError,
         };
-    }
+    },
 });

@@ -1,20 +1,31 @@
-import {ClassifierNode} from './ClassifierNode.ts';
-import {Property} from '../features/Property.ts';
-import {Operation} from '../features/Operation.ts';
-import {SerializationRegistryService} from '../../../services/SerializationRegistryService.ts';
+import { ClassifierNode } from './ClassifierNode.ts';
+import { Property } from '../features/Property.ts';
+import { Operation } from '../features/Operation.ts';
+import { SerializationRegistryService } from '../../../services/SerializationRegistryService.ts';
 
 const CLASS_TAG = 'DataTypeNode';
 
 export class DataTypeNode extends ClassifierNode {
+    public readonly header = 'DataType';
 
-    constructor(name: string,
-                x: number,
-                y: number,
-                properties: Property[]=[],
-                operations: Operation[]=[],
-                isNotShownPropertiesExist: boolean=false,
-                isNotShownOperationsExist: boolean=false) {
-        super(name, x, y, properties, operations, isNotShownPropertiesExist, isNotShownOperationsExist);
+    constructor(
+        name: string,
+        x: number,
+        y: number,
+        properties: Property[] = [],
+        operations: Operation[] = [],
+        isNotShownPropertiesExist = false,
+        isNotShownOperationsExist = false,
+    ) {
+        super(
+            name,
+            x,
+            y,
+            properties,
+            operations,
+            isNotShownPropertiesExist,
+            isNotShownOperationsExist,
+        );
     }
 
     public clone(): DataTypeNode {
@@ -22,10 +33,10 @@ export class DataTypeNode extends ClassifierNode {
             this.name,
             this.x,
             this.y,
-            this.properties.map(prop => prop.clone()),
-            this.operations.map(operation => operation.clone()),
+            this.properties.map((prop) => prop.clone()),
+            this.operations.map((operation) => operation.clone()),
             this.isNotShownPropertiesExist,
-            this.isNotShownOperationsExist
+            this.isNotShownOperationsExist,
         );
 
         clone.isSelected = this.isSelected;
@@ -38,10 +49,6 @@ export class DataTypeNode extends ClassifierNode {
 
     public copy(node: DataTypeNode) {
         super.copy(node);
-    }
-
-    public get header(): string {
-        return 'DataType';
     }
 
     //region Serializable members
@@ -59,7 +66,9 @@ export class DataTypeNode extends ClassifierNode {
             data.x,
             data.y,
             data.properties.map((prop: any) => Property.fromSerializable(prop)),
-            data.operations.map((operation: any) => Operation.fromSerializable(operation)),
+            data.operations.map((operation: any) =>
+                Operation.fromSerializable(operation),
+            ),
             data.isNotShownPropertiesExist,
             data.isNotShownOperationsExist,
         );

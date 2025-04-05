@@ -5,7 +5,7 @@ canvas {
 }
 
 .active {
-    background-color: #66F;
+    background-color: #66f;
 }
 
 .rm {
@@ -100,10 +100,10 @@ canvas {
     align-items: center;
 }
 
-#editor input[type=checkbox] {
+#editor input[type='checkbox'] {
     width: fit-content;
 }
 
 #editor .v-btn {
-    background-color: #66F;
+    background-color: #66f;
 }
