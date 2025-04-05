@@ -24,6 +24,7 @@ import { Generalization } from '../utils/nodes/connection/Generalization.ts';
 import { Association } from '../utils/nodes/connection/Association.ts';
 import { Aggregation } from '../utils/nodes/connection/Aggregation.ts';
 import { Composition } from '../utils/nodes/connection/Composition.ts';
+import { Realization } from '../utils/nodes/connection/Realization.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -289,6 +290,9 @@ export class UmlEditorService {
                             new Generalization([startPoint, endPoint]),
                         );
                         break;
+                    case NodeType.REALIZATION:
+                        this.addNode(new Realization([startPoint, endPoint]));
+                        break;
                     default:
                         console.error(
                             'trying to add a connection but type selected is not one',
@@ -551,6 +555,7 @@ export class UmlEditorService {
             case NodeType.ASSOCIATION:
             case NodeType.COMPOSITION:
             case NodeType.GENERALIZATION:
+            case NodeType.REALIZATION:
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;

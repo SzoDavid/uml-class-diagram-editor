@@ -16,6 +16,7 @@ import { Generalization } from '../../../utils/nodes/connection/Generalization.t
 import { Association } from '../../../utils/nodes/connection/Association.ts';
 import { Aggregation } from '../../../utils/nodes/connection/Aggregation.ts';
 import { Composition } from '../../../utils/nodes/connection/Composition.ts';
+import { Realization } from '../../../utils/nodes/connection/Realization.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>;
@@ -31,6 +32,9 @@ interface ConnectionEditorPanelEmits {
 
 export default defineComponent({
     computed: {
+        Realization() {
+            return Realization;
+        },
         ConnectionPoint() {
             return ConnectionPoint;
         },

@@ -214,6 +214,12 @@
                                                 ),
                                                 value: NodeType.GENERALIZATION,
                                             },
+                                            {
+                                                title: t(
+                                                    'node_types.connection.realization',
+                                                ),
+                                                value: NodeType.REALIZATION,
+                                            },
                                         ]"
                                     />
                                     <v-checkbox

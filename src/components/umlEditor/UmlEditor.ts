@@ -35,6 +35,7 @@ import { Aggregation } from '../../utils/nodes/connection/Aggregation.ts';
 import { Composition } from '../../utils/nodes/connection/Composition.ts';
 import { SerializationRegistryService } from '../../services/SerializationRegistryService.ts';
 import { TriggerService } from '../../services/TriggerService.ts';
+import { Realization } from '../../utils/nodes/connection/Realization.ts';
 
 export default {
     components: {
@@ -266,6 +267,11 @@ export default {
                 } else if (
                     selectedNode.value instanceof Generalization &&
                     data.instance instanceof Generalization
+                ) {
+                    selectedNode.value.copy(data.instance);
+                } else if (
+                    selectedNode.value instanceof Realization &&
+                    data.instance instanceof Realization
                 ) {
                     selectedNode.value.copy(data.instance);
                 } else if (

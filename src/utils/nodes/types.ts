@@ -52,6 +52,7 @@ export enum NodeType {
     ASSOCIATION,
     COMPOSITION,
     GENERALIZATION,
+    REALIZATION,
 }
 
 export enum AssociationNavigability {
