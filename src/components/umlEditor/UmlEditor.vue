@@ -11,21 +11,7 @@
                         @click="onToolSelected(UmlEditorTool.EDIT)"
                         :class="{ active: tool === UmlEditorTool.EDIT }"
                         v-bind="props"
-                        icon="mdi-pencil"
-                        density="comfortable"
-                        rounded="0"
-                    />
-                </template>
-            </v-tooltip>
-
-            <v-tooltip>
-                {{ t('move') }}
-                <template v-slot:activator="{ props }">
-                    <v-btn
-                        @click="onToolSelected(UmlEditorTool.MOVE)"
-                        :class="{ active: tool === UmlEditorTool.MOVE }"
-                        v-bind="props"
-                        icon="mdi-cursor-move"
+                        icon="mdi-cursor-default"
                         density="comfortable"
                         rounded="0"
                     />
@@ -67,7 +53,6 @@
                     ref="umlCanvas"
                     :class="{
                         'cursor-pointer': tool === UmlEditorTool.EDIT,
-                        'cursor-move': tool === UmlEditorTool.MOVE,
                         'cursor-crosshair':
                             tool === UmlEditorTool.ADD ||
                             tool === UmlEditorTool.REMOVE,
