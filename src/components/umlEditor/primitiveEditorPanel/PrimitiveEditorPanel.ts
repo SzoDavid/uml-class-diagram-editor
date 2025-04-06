@@ -4,6 +4,7 @@ import { ErrorContext, NodeData } from '../../../utils/types.ts';
 import { useI18n } from 'vue-i18n';
 import { InvalidNodeParameterCause } from '../../../utils/nodes/types.ts';
 import { findError } from '../../../utils/functions.ts';
+import { useSettingsService } from '../../../services/SettingsService.ts';
 
 interface PrimitiveEditorPanelProperties {
     primitiveData: NodeData<PrimitiveTypeNode>;
@@ -68,6 +69,7 @@ export default defineComponent({
             data,
             onSave,
             getError,
+            gridSize: useSettingsService().settings.renderer.options.gridSize,
         };
     },
 });

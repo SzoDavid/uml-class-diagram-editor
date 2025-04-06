@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { InvalidNodeParameterCause } from '../../../utils/nodes/types.ts';
 import { EnumerationNode } from '../../../utils/nodes/EnumerationNode.ts';
 import { findError } from '../../../utils/functions.ts';
+import { useSettingsService } from '../../../services/SettingsService.ts';
 
 interface EnumerationEditorPanelProperties {
     enumerationData: NodeData<EnumerationNode>;
@@ -78,6 +79,7 @@ export default defineComponent({
             removeValue,
             onSave,
             getError,
+            gridSize: useSettingsService().settings.renderer.options.gridSize,
         };
     },
 });

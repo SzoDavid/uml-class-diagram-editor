@@ -4,18 +4,22 @@
 <template>
     <v-expansion-panel :title="t('appearance')">
         <v-expansion-panel-text>
-            <v-text-field
-                label="x"
-                v-model.number="data.instance.x"
-                density="comfortable"
-                type="number"
-            />
-            <v-text-field
-                label="y"
-                v-model.number="data.instance.y"
-                density="comfortable"
-                type="number"
-            />
+            <div class="half-half-grid">
+                <v-text-field
+                    label="x"
+                    v-model.number="data.instance.x"
+                    density="comfortable"
+                    type="number"
+                    :step="gridSize"
+                />
+                <v-text-field
+                    label="y"
+                    v-model.number="data.instance.y"
+                    density="comfortable"
+                    type="number"
+                    :step="gridSize"
+                />
+            </div>
         </v-expansion-panel-text>
     </v-expansion-panel>
     <v-expansion-panel :title="t('detail', 2)">

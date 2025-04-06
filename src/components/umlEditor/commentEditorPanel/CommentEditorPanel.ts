@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { InvalidNodeParameterCause } from '../../../utils/nodes/types.ts';
 import { CommentNode } from '../../../utils/nodes/CommentNode.ts';
 import { findError } from '../../../utils/functions.ts';
+import { useSettingsService } from '../../../services/SettingsService.ts';
 
 interface CommentEditorPanelProperties {
     commentData: NodeData<CommentNode>;
@@ -65,6 +66,7 @@ export default defineComponent({
             data,
             onSave,
             getError,
+            gridSize: useSettingsService().settings.renderer.options.gridSize,
         };
     },
 });

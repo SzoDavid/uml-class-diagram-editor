@@ -17,6 +17,7 @@ import { Association } from '../../../utils/nodes/connection/Association.ts';
 import { Aggregation } from '../../../utils/nodes/connection/Aggregation.ts';
 import { Composition } from '../../../utils/nodes/connection/Composition.ts';
 import { Realization } from '../../../utils/nodes/connection/Realization.ts';
+import { useSettingsService } from '../../../services/SettingsService.ts';
 
 interface ConnectionEditorPanelProperties {
     connectionData: NodeData<Connection | ConnectionPart | ConnectionPoint>;
@@ -143,6 +144,7 @@ export default defineComponent({
             breakConnectionPart,
             onSave,
             getError,
+            gridSize: useSettingsService().settings.renderer.options.gridSize,
         };
     },
 });
