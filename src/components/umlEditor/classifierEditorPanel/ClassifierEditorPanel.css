@@ -30,3 +30,10 @@ p {
 .v-expansion-panels {
     margin-bottom: 5px;
 }
+
+.half-half-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 5px;
+    align-items: center;
+}
