@@ -355,9 +355,6 @@ export default {
                 case UmlEditorTool.EDIT:
                     setSelectedNode(editor.selectedNode);
                     break;
-                case UmlEditorTool.MOVE:
-                    data.value = { type: 'editor' };
-                    break;
                 case UmlEditorTool.ADD:
                     data.value = {
                         type: 'addOption',
@@ -376,11 +373,6 @@ export default {
             // TODO: rethink this mechanism
 
             switch (event.key) {
-                case 'm':
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onToolSelected(UmlEditorTool.MOVE);
-                    break;
                 case 'e':
                     event.preventDefault();
                     event.stopPropagation();
