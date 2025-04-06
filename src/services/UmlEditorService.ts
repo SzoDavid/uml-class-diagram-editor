@@ -379,6 +379,7 @@ export class UmlEditorService {
                     );
                 }
             }
+            this._emitter.emit('mouseDown', this._selectedNode);
             this.render();
             return;
         }
