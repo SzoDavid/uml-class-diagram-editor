@@ -66,13 +66,14 @@ function exportToImage() {
     }
 
     const canvas = document.createElement('canvas');
+    // Canvas is scaled up 2x to avoid aliasing issues with 1px wide lines
     canvas.setAttribute(
         'width',
-        String(rightEdge - leftEdge + 2 * imageMarginSize.value),
+        String((rightEdge - leftEdge + 2 * imageMarginSize.value) * 2),
     );
     canvas.setAttribute(
         'height',
-        String(bottomEdge - topEdge + 2 * imageMarginSize.value),
+        String((bottomEdge - topEdge + 2 * imageMarginSize.value) * 2),
     );
 
     const editor = new UmlEditorService(
@@ -81,6 +82,7 @@ function exportToImage() {
         true,
     );
     editor.nodes = nodes;
+    editor.scale = 2;
 
     window.open(canvas.toDataURL('image/png'), '_blank');
     emit('cancel');
