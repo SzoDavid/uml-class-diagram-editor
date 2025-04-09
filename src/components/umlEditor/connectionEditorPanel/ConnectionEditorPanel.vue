@@ -37,7 +37,8 @@
                     data.instance instanceof Aggregation ||
                     data.instance instanceof Generalization ||
                     data.instance instanceof Composition ||
-                    data.instance instanceof Realization
+                    data.instance instanceof Realization ||
+                    data.instance instanceof Usage
                 "
             >
                 <p
@@ -52,7 +53,8 @@
                     v-if="
                         data.instance instanceof Generalization ||
                         data.instance instanceof Composition ||
-                        data.instance instanceof Realization
+                        data.instance instanceof Realization ||
+                        data.instance instanceof Usage
                     "
                 >
                     <v-checkbox
@@ -60,6 +62,43 @@
                         :label="t('reversed')"
                         v-model="data.instance.reversed"
                     />
+
+                    <v-card
+                        v-if="data.instance instanceof Usage"
+                        :title="t('label_offset')"
+                        variant="tonal"
+                        density="compact"
+                    >
+                        <v-card-text>
+                            <v-text-field
+                                label="x"
+                                v-model.number="data.instance.nameOffset.x"
+                                density="comfortable"
+                                :rules="[
+                                    () =>
+                                        getError({
+                                            parameter: 'nameOffset',
+                                            child: { parameter: 'x' },
+                                        }) ?? true,
+                                ]"
+                                type="number"
+                            />
+
+                            <v-text-field
+                                label="y"
+                                v-model.number="data.instance.nameOffset.y"
+                                density="comfortable"
+                                :rules="[
+                                    () =>
+                                        getError({
+                                            parameter: 'nameOffset',
+                                            child: { parameter: 'y' },
+                                        }) ?? true,
+                                ]"
+                                type="number"
+                            />
+                        </v-card-text>
+                    </v-card>
                 </template>
                 <template v-else-if="data.instance instanceof Association">
                     <v-text-field
@@ -813,7 +852,8 @@
                 v-else-if="
                     data.instance instanceof ConnectionPoint &&
                     (data.instance.parent instanceof Generalization ||
-                        data.instance.parent instanceof Realization)
+                        data.instance.parent instanceof Realization ||
+                        data.instance.parent instanceof Usage)
                 "
             >
                 <template v-if="data.instance.isStartPoint">
