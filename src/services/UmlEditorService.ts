@@ -224,69 +224,74 @@ export class UmlEditorService {
         if (this._isAddingConnection) {
             this._isAddingConnection = false;
 
-            // Only add connection if its length is larger than the given constant
-            if (
-                Math.abs(
-                    Math.sqrt(
+            const connectionLength = Math.abs(
+                Math.sqrt(
+                    Math.pow(
+                        this._secondaryDragOffsetX - this._dragOffsetX,
+                        2,
+                    ) +
                         Math.pow(
-                            this._secondaryDragOffsetX - this._dragOffsetX,
+                            this._secondaryDragOffsetY - this._dragOffsetY,
                             2,
-                        ) +
-                            Math.pow(
-                                this._secondaryDragOffsetY - this._dragOffsetY,
-                                2,
-                            ),
-                    ),
-                ) > EditorConstants.minConnectionLength
-            ) {
-                const nodeAtStart = this.getNodeAtPosition(
-                    this._dragOffsetX,
-                    this._dragOffsetY,
-                );
-                const nodeAtEnd = this.getNodeAtPosition(
-                    this._secondaryDragOffsetX,
-                    this._secondaryDragOffsetY,
-                );
+                        ),
+                ),
+            );
 
-                const startPoint: PositionalNode | Point =
-                    nodeAtStart instanceof PositionalNode
-                        ? nodeAtStart
-                        : { x: this._dragOffsetX, y: this._dragOffsetY };
-                const endPoint: PositionalNode | Point =
-                    nodeAtEnd instanceof PositionalNode
-                        ? nodeAtEnd
-                        : {
-                              x: this._secondaryDragOffsetX,
-                              y: this._secondaryDragOffsetY,
-                          };
+            // Only add connection if its length is larger than the given constant
+            if (connectionLength < EditorConstants.minConnectionLength) {
+                this.render();
+                return;
+            }
 
-                switch (this.addConfig.type) {
-                    case NodeType.AGGREGATION:
-                        this.addNode(new Aggregation([startPoint, endPoint]));
-                        break;
-                    case NodeType.ASSOCIATION:
-                        this.addNode(new Association([startPoint, endPoint]));
-                        break;
-                    case NodeType.COMPOSITION:
-                        this.addNode(new Composition([startPoint, endPoint]));
-                        break;
-                    case NodeType.GENERALIZATION:
-                        this.addNode(
-                            new Generalization([startPoint, endPoint]),
-                        );
-                        break;
-                    case NodeType.REALIZATION:
-                        this.addNode(new Realization([startPoint, endPoint]));
-                        break;
-                    default:
-                        console.error(
-                            'trying to add a connection but type selected is not one',
-                        );
-                }
+            const nodeAtStart = this.getNodeAtPosition(
+                this._dragOffsetX,
+                this._dragOffsetY,
+                false,
+                true,
+            );
+            const nodeAtEnd = this.getNodeAtPosition(
+                this._secondaryDragOffsetX,
+                this._secondaryDragOffsetY,
+                false,
+                true,
+            );
 
-                if (!this.addConfig.keepAdding) {
-                    this.tool = UmlEditorTool.EDIT;
-                }
+            const startPoint: PositionalNode | Point =
+                nodeAtStart instanceof PositionalNode
+                    ? nodeAtStart
+                    : { x: this._dragOffsetX, y: this._dragOffsetY };
+            const endPoint: PositionalNode | Point =
+                nodeAtEnd instanceof PositionalNode
+                    ? nodeAtEnd
+                    : {
+                          x: this._secondaryDragOffsetX,
+                          y: this._secondaryDragOffsetY,
+                      };
+
+            switch (this.addConfig.type) {
+                case NodeType.AGGREGATION:
+                    this.addNode(new Aggregation([startPoint, endPoint]));
+                    break;
+                case NodeType.ASSOCIATION:
+                    this.addNode(new Association([startPoint, endPoint]));
+                    break;
+                case NodeType.COMPOSITION:
+                    this.addNode(new Composition([startPoint, endPoint]));
+                    break;
+                case NodeType.GENERALIZATION:
+                    this.addNode(new Generalization([startPoint, endPoint]));
+                    break;
+                case NodeType.REALIZATION:
+                    this.addNode(new Realization([startPoint, endPoint]));
+                    break;
+                default:
+                    console.error(
+                        'trying to add a connection but type selected is not one',
+                    );
+            }
+
+            if (!this.addConfig.keepAdding) {
+                this.tool = UmlEditorTool.EDIT;
             }
         } else if (this._selectedNode) {
             this._selectedNode.isDragging = false;
@@ -685,15 +690,21 @@ export class UmlEditorService {
      * @param x - The X-coordinate of the mouse event, relative to the canvas.
      * @param y - The Y-coordinate of the mouse event, relative to the canvas.
      * @param ignoreConnections - If set to true, only returns non collection nodes.
+     * @param transformed - Are the coordinates already transformed.
      * @returns The node or connection part under the given coordinates, or `null` if none is found.
      */
     private getNodeAtPosition(
         x: number,
         y: number,
         ignoreConnections = false,
+        transformed = false,
     ): Node | null {
-        const transformedX = (x - this._panOffsetX) / this._scale;
-        const transformedY = (y - this._panOffsetY) / this._scale;
+        const transformedX = transformed
+            ? x
+            : (x - this._panOffsetX) / this._scale;
+        const transformedY = transformed
+            ? y
+            : (y - this._panOffsetY) / this._scale;
 
         for (let i = this._nodes.length - 1; i >= 0; i--) {
             const node = this._nodes[i];
