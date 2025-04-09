@@ -205,6 +205,12 @@
                                                 ),
                                                 value: NodeType.REALIZATION,
                                             },
+                                            {
+                                                title: t(
+                                                    'node_types.connection.usage',
+                                                ),
+                                                value: NodeType.USAGE,
+                                            },
                                         ]"
                                     />
                                     <v-checkbox

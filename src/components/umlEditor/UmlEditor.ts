@@ -36,6 +36,7 @@ import { Composition } from '../../utils/nodes/connection/Composition.ts';
 import { SerializationRegistryService } from '../../services/SerializationRegistryService.ts';
 import { TriggerService } from '../../services/TriggerService.ts';
 import { Realization } from '../../utils/nodes/connection/Realization.ts';
+import { Usage } from '../../utils/nodes/connection/Usage.ts';
 
 export default {
     components: {
@@ -272,6 +273,11 @@ export default {
                 } else if (
                     selectedNode.value instanceof Realization &&
                     data.instance instanceof Realization
+                ) {
+                    selectedNode.value.copy(data.instance);
+                } else if (
+                    selectedNode.value instanceof Usage &&
+                    data.instance instanceof Usage
                 ) {
                     selectedNode.value.copy(data.instance);
                 } else if (

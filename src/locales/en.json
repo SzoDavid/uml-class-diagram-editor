@@ -123,7 +123,8 @@
             "association": "Association",
             "composition": "Composition",
             "generalization": "Generalization",
-            "realization": "Realization"
+            "realization": "Realization",
+            "usage": "Usage"
         },
         "datatype": "Datatype",
         "enumeration": "Enumeration",

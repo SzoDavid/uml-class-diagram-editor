@@ -25,6 +25,7 @@ import { Association } from '../utils/nodes/connection/Association.ts';
 import { Aggregation } from '../utils/nodes/connection/Aggregation.ts';
 import { Composition } from '../utils/nodes/connection/Composition.ts';
 import { Realization } from '../utils/nodes/connection/Realization.ts';
+import { Usage } from '../utils/nodes/connection/Usage.ts';
 
 export enum UmlEditorTool {
     EDIT,
@@ -283,6 +284,9 @@ export class UmlEditorService {
                     break;
                 case NodeType.REALIZATION:
                     this.addNode(new Realization([startPoint, endPoint]));
+                    break;
+                case NodeType.USAGE:
+                    this.addNode(new Usage([startPoint, endPoint]));
                     break;
                 default:
                     console.error(
@@ -547,6 +551,7 @@ export class UmlEditorService {
             case NodeType.COMPOSITION:
             case NodeType.GENERALIZATION:
             case NodeType.REALIZATION:
+            case NodeType.USAGE:
                 this._isAddingConnection = true;
                 this._dragOffsetX = transformedX;
                 this._dragOffsetY = transformedY;
