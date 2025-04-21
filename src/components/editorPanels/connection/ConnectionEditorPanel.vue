@@ -1,5 +1,5 @@
 <script lang="ts" src="./ConnectionEditorPanel.ts" />
-<style scoped src="./ConnectionEditorPanel.css" />
+<style scoped src="../EditorPanel.css" />
 
 <template>
     <template v-if="data.instance instanceof BasicConnectionPoint">

@@ -1,10 +1,10 @@
 import { inject, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import ClassifierEditorPanel from './classifierEditorPanel/ClassifierEditorPanel.vue';
-import CommentEditorPanel from './commentEditorPanel/CommentEditorPanel.vue';
-import ConnectionEditorPanel from './connectionEditorPanel/ConnectionEditorPanel.vue';
-import EnumerationEditorPanel from './enumerationEditorPanel/EnumerationEditorPanel.vue';
-import PrimitiveEditorPanel from './primitiveEditorPanel/PrimitiveEditorPanel.vue';
+import ClassifierEditorPanel from '../editorPanels/classifier/ClassifierEditorPanel.vue';
+import CommentEditorPanel from '../editorPanels/comment/CommentEditorPanel.vue';
+import ConnectionEditorPanel from '../editorPanels/connection/ConnectionEditorPanel.vue';
+import EnumerationEditorPanel from '../editorPanels/enumeration/EnumerationEditorPanel.vue';
+import PrimitiveEditorPanel from '../editorPanels/primitive/PrimitiveEditorPanel.vue';
 import { useSettingsService } from '../../services/SettingsService.ts';
 import {
     EmitType,
@@ -14,29 +14,16 @@ import {
 import { DataContext } from '../../utils/types.ts';
 import { Renderer } from '../../services/renderer/Renderer.ts';
 import { Node } from '../../utils/nodes/Node.ts';
-import { ClassNode } from '../../utils/nodes/classifier/ClassNode.ts';
 import { NodeType } from '../../utils/nodes/types.ts';
 import { ClassifierNode } from '../../utils/nodes/classifier/ClassifierNode.ts';
-import { InterfaceNode } from '../../utils/nodes/classifier/InterfaceNode.ts';
-import { DataTypeNode } from '../../utils/nodes/classifier/DataTypeNode.ts';
 import { PrimitiveTypeNode } from '../../utils/nodes/PrimitiveTypeNode.ts';
 import { EnumerationNode } from '../../utils/nodes/EnumerationNode.ts';
 import { CommentNode } from '../../utils/nodes/CommentNode.ts';
 import { Connection } from '../../utils/nodes/connection/Connection.ts';
-import {
-    BasicConnectionPoint,
-    ConnectionPoint,
-    LooseConnectionPoint,
-} from '../../utils/nodes/connection/ConnectionPoint.ts';
+import { ConnectionPoint } from '../../utils/nodes/connection/ConnectionPoint.ts';
 import { ConnectionPart } from '../../utils/nodes/connection/ConnectionPart.ts';
-import { Generalization } from '../../utils/nodes/connection/Generalization.ts';
-import { Association } from '../../utils/nodes/connection/Association.ts';
-import { Aggregation } from '../../utils/nodes/connection/Aggregation.ts';
-import { Composition } from '../../utils/nodes/connection/Composition.ts';
 import { SerializationRegistryService } from '../../services/SerializationRegistryService.ts';
 import { TriggerService } from '../../services/TriggerService.ts';
-import { Realization } from '../../utils/nodes/connection/Realization.ts';
-import { Usage } from '../../utils/nodes/connection/Usage.ts';
 
 export default {
     components: {
@@ -219,85 +206,9 @@ export default {
                 (data.type === 'enumeration' &&
                     selectedNode.value instanceof EnumerationNode)
             ) {
-                //TODO: cry
-                if (
-                    selectedNode.value instanceof ClassNode &&
-                    data.instance instanceof ClassNode
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof InterfaceNode &&
-                    data.instance instanceof InterfaceNode
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof DataTypeNode &&
-                    data.instance instanceof DataTypeNode
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof PrimitiveTypeNode &&
-                    data.instance instanceof PrimitiveTypeNode
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof EnumerationNode &&
-                    data.instance instanceof EnumerationNode
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof CommentNode &&
-                    data.instance instanceof CommentNode
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof Aggregation &&
-                    data.instance instanceof Aggregation
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof Association &&
-                    data.instance instanceof Association
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof Composition &&
-                    data.instance instanceof Composition
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof Generalization &&
-                    data.instance instanceof Generalization
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof Realization &&
-                    data.instance instanceof Realization
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof Usage &&
-                    data.instance instanceof Usage
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof ConnectionPart &&
-                    data.instance instanceof ConnectionPart
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof LooseConnectionPoint &&
-                    data.instance instanceof LooseConnectionPoint
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else if (
-                    selectedNode.value instanceof BasicConnectionPoint &&
-                    data.instance instanceof BasicConnectionPoint
-                ) {
-                    selectedNode.value.copy(data.instance);
-                } else {
-                    console.error('Not matching node types');
-                }
+                // @ts-expect-error The selected node is treated as a Node,
+                // but with the check above, it is ensured that the types are matching
+                selectedNode.value.copy(data.instance);
 
                 editor.render();
                 setSelectedNode(selectedNode.value);

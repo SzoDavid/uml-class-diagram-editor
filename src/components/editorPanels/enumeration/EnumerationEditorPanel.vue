@@ -1,5 +1,5 @@
 <script lang="ts" src="./EnumerationEditorPanel.ts" />
-<style scoped src="./EnumerationEditorPanel.css" />
+<style scoped src="../EditorPanel.css" />
 
 <template>
     <v-expansion-panel :title="t('appearance')">

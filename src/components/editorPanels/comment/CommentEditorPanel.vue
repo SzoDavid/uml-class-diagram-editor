@@ -1,5 +1,5 @@
-<script lang="ts" src="./PrimitiveEditorPanel.ts" />
-<style scoped src="./PrimitiveEditorPanel.css" />
+<script lang="ts" src="./CommentEditorPanel.ts" />
+<style scoped src="../EditorPanel.css" />
 
 <template>
     <v-expansion-panel :title="t('appearance')">
@@ -20,16 +20,22 @@
                     :step="gridSize"
                 />
             </div>
+
+            <v-text-field
+                :label="t('width')"
+                v-model.number="data.instance.width"
+                type="number"
+                density="comfortable"
+                :step="gridSize"
+            />
         </v-expansion-panel-text>
     </v-expansion-panel>
     <v-expansion-panel :title="t('detail', 2)">
         <v-expansion-panel-text>
-            <v-text-field
-                :label="t('name')"
-                v-model.trim="data.instance.name"
-                :rules="[() => getError({ parameter: 'name' }) ?? true]"
-                density="comfortable"
-                type="text"
+            <v-textarea
+                :label="t('node_types.comment')"
+                v-model="data.instance.text"
+                :rules="[() => getError({ parameter: 'text' }) ?? true]"
             />
         </v-expansion-panel-text>
     </v-expansion-panel>
