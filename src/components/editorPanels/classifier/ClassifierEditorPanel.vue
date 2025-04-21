@@ -1,5 +1,5 @@
 <script lang="ts" src="./ClassifierEditorPanel.ts" />
-<style scoped src="./ClassifierEditorPanel.css" />
+<style scoped src="../EditorPanel.css" />
 
 <template>
     <v-expansion-panel :title="t('appearance')">
