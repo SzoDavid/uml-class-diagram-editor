@@ -1,10 +1,10 @@
 import { inject, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import ClassifierEditorPanel from '../editorPanels/classifier/ClassifierEditorPanel.vue';
-import CommentEditorPanel from '../editorPanels/comment/CommentEditorPanel.vue';
-import ConnectionEditorPanel from '../editorPanels/connection/ConnectionEditorPanel.vue';
-import EnumerationEditorPanel from '../editorPanels/enumeration/EnumerationEditorPanel.vue';
-import PrimitiveEditorPanel from '../editorPanels/primitive/PrimitiveEditorPanel.vue';
+import ClassifierEditorPanel from '../panels/classifier/ClassifierEditorPanel.vue';
+import CommentEditorPanel from '../panels/comment/CommentEditorPanel.vue';
+import ConnectionEditorPanel from '../panels/connection/ConnectionEditorPanel.vue';
+import EnumerationEditorPanel from '../panels/enumeration/EnumerationEditorPanel.vue';
+import PrimitiveEditorPanel from '../panels/primitive/PrimitiveEditorPanel.vue';
 import { useSettingsService } from '../../services/SettingsService.ts';
 import {
     EmitType,
@@ -24,9 +24,11 @@ import { ConnectionPoint } from '../../utils/nodes/connection/ConnectionPoint.ts
 import { ConnectionPart } from '../../utils/nodes/connection/ConnectionPart.ts';
 import { SerializationRegistryService } from '../../services/SerializationRegistryService.ts';
 import { TriggerService } from '../../services/TriggerService.ts';
+import AddNodePanel from '../panels/addNode/AddNodePanel.vue';
 
 export default {
     components: {
+        AddNodePanel,
         ConnectionEditorPanel,
         CommentEditorPanel,
         EnumerationEditorPanel,
