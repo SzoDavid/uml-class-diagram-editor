@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AddConfig } from '../../../services/UmlEditorService.ts';
 import NodeTypeLabel from '../../common/NodeTypeLabel.vue';
-import { NodeType } from '@/utils/nodes/types.ts';
+import { NodeType } from '../../../utils/nodes/types.ts';
 import classImg from '@/assets/images/nodes/class.png';
 import interfaceImg from '@/assets/images/nodes/interface.png';
 import dataTypeImg from '@/assets/images/nodes/dataType.png';
@@ -16,9 +16,6 @@ import compositionImg from '@/assets/images/nodes/composition.png';
 import generalizationImg from '@/assets/images/nodes/generalization.png';
 import realizationImg from '@/assets/images/nodes/realization.png';
 import usageImg from '@/assets/images/nodes/usage.png';
-import { srcObject } from 'vuetify/lib/components/VImg/VImg';
-
-// TODO: crop images
 
 const props = defineProps<{ addConfig: AddConfig }>();
 const { t } = useI18n();
@@ -107,7 +104,7 @@ const types = [
                             data.type = type.value;
                         }
                     "
-                    :imgSrc="<srcObject>type.imgSrc"
+                    :imgSrc="<string>type.imgSrc"
                     class="card"
                 />
             </div>

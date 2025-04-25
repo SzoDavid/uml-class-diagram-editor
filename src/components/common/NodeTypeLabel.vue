@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { srcObject } from 'vuetify/lib/components/VImg/VImg';
-
-defineProps<{ name: string; isSelected: boolean; imgSrc: srcObject }>();
+defineProps<{ name: string; isSelected: boolean; imgSrc: string }>();
 </script>
 
 <template>
