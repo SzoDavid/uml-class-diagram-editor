@@ -123,7 +123,8 @@
             "association": "Asszociáció",
             "composition": "Kompozíció",
             "generalization": "Öröklődés",
-            "realization": "Realizáció"
+            "realization": "Realizáció",
+            "usage": "Használat"
         },
         "datatype": "Adattípus",
         "enumeration": "Enumeration",

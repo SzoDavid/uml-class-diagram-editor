@@ -13,6 +13,7 @@ import { Composition } from '../../utils/nodes/connection/Composition.ts';
 import { LooseConnectionPoint } from '../../utils/nodes/connection/ConnectionPoint.ts';
 import { GeometryUtils } from '../../utils/GeometryUtils.ts';
 import { Realization } from '../../utils/nodes/connection/Realization.ts';
+import { Usage } from '../../utils/nodes/connection/Usage.ts';
 
 export class ConnectionRenderer {
     private _nr: NodeRenderer;
@@ -33,7 +34,7 @@ export class ConnectionRenderer {
             if (this._nr.rc.showInvalidity) invalid = true;
         }
 
-        if (node instanceof Realization) {
+        if (node instanceof Realization || node instanceof Usage) {
             this._nr.ctx.setLineDash([10, 5]);
         }
 
@@ -107,6 +108,8 @@ export class ConnectionRenderer {
             this.handleAggregation(connection, startPart, endPart, isInvalid);
         } else if (connection instanceof Composition) {
             this.handleComposition(connection, startPart, endPart, isInvalid);
+        } else if (connection instanceof Usage) {
+            this.handleUsage(connection, startPart, endPart, isInvalid);
         } else if (
             connection instanceof Generalization ||
             connection instanceof Realization
@@ -200,67 +203,11 @@ export class ConnectionRenderer {
 
         this.renderEndTexts(connection, startPart, endPart, isInvalid);
 
-        if (!connection.associationName) return;
-
-        if (connection.parts.length % 2 === 1) {
-            const midPart =
-                connection.parts[Math.floor(connection.parts.length / 2)];
-            const midPoint = {
-                x:
-                    (midPart.startPoint.x + midPart.endPoint.x) / 2 +
-                    connection.nameOffset.x,
-                y:
-                    (midPart.startPoint.y + midPart.endPoint.y) / 2 +
-                    connection.nameOffset.y,
-            };
-
-            const angle = GeometryUtils.normalizeRadians(midPart.angle);
-            const isSelected = connection.isSelected || midPart.isSelected;
-
-            if (
-                (angle > Math.PI / 4 && angle < (3 * Math.PI) / 4) ||
-                (angle > (5 * Math.PI) / 4 && angle < (7 * Math.PI) / 4)
-            ) {
-                this._nr.drawText(
-                    connection.associationName,
-                    midPoint.x + 10,
-                    midPoint.y - this._nr.rc.lineHeight / 2,
-                    -1,
-                    {
-                        isSelected: isSelected,
-                        textAlign: 'left',
-                        isInvalid: isInvalid,
-                    },
-                );
-            } else {
-                this._nr.drawText(
-                    connection.associationName,
-                    midPoint.x,
-                    midPoint.y - this._nr.rc.lineHeight / 2 - 10,
-                    -1,
-                    {
-                        isSelected: isSelected,
-                        textAlign: 'center',
-                        isInvalid: isInvalid,
-                    },
-                );
-            }
-        } else {
-            const midPart =
-                connection.parts[Math.floor(connection.parts.length / 2)];
-            const midPoint = midPart.startPoint;
-            const isSelected = connection.isSelected || midPoint.isSelected;
-
-            this._nr.drawText(
+        if (connection.associationName) {
+            this.renderMiddleText(
+                connection,
                 connection.associationName,
-                midPoint.x,
-                midPoint.y - this._nr.rc.lineHeight / 2 - 10,
-                -1,
-                {
-                    isSelected: isSelected,
-                    textAlign: 'center',
-                    isInvalid: isInvalid,
-                },
+                isInvalid,
             );
         }
     }
@@ -313,6 +260,31 @@ export class ConnectionRenderer {
                 isInvalid,
             );
         }
+    }
+
+    private handleUsage(
+        connection: Usage,
+        startPart: ConnectionPart,
+        endPart: ConnectionPart,
+        isInvalid: boolean,
+    ): void {
+        if (connection.reversed) {
+            this.renderTriangle(
+                startPart.startPoint,
+                startPart.angle,
+                connection.isSelected || startPart.startPoint.isSelected,
+                isInvalid,
+            );
+        } else {
+            this.renderTriangle(
+                endPart.endPoint,
+                endPart.angle + Math.PI,
+                connection.isSelected || endPart.endPoint.isSelected,
+                isInvalid,
+            );
+        }
+
+        this.renderMiddleText(connection, '«use»', isInvalid);
     }
 
     // TODO: move constants to settings
@@ -615,5 +587,73 @@ export class ConnectionRenderer {
                     isInvalid: isInvalid,
                 },
             );
+    }
+
+    private renderMiddleText(
+        connection: Association | Usage,
+        text: string,
+        isInvalid: boolean,
+    ): void {
+        if (connection.parts.length % 2 === 1) {
+            const midPart =
+                connection.parts[Math.floor(connection.parts.length / 2)];
+            const midPoint = {
+                x:
+                    (midPart.startPoint.x + midPart.endPoint.x) / 2 +
+                    connection.nameOffset.x,
+                y:
+                    (midPart.startPoint.y + midPart.endPoint.y) / 2 +
+                    connection.nameOffset.y,
+            };
+
+            const angle = GeometryUtils.normalizeRadians(midPart.angle);
+            const isSelected = connection.isSelected || midPart.isSelected;
+
+            if (
+                (angle > Math.PI / 4 && angle < (3 * Math.PI) / 4) ||
+                (angle > (5 * Math.PI) / 4 && angle < (7 * Math.PI) / 4)
+            ) {
+                this._nr.drawText(
+                    text,
+                    midPoint.x + 10,
+                    midPoint.y - this._nr.rc.lineHeight / 2,
+                    -1,
+                    {
+                        isSelected: isSelected,
+                        textAlign: 'left',
+                        isInvalid: isInvalid,
+                    },
+                );
+            } else {
+                this._nr.drawText(
+                    text,
+                    midPoint.x,
+                    midPoint.y - this._nr.rc.lineHeight / 2 - 10,
+                    -1,
+                    {
+                        isSelected: isSelected,
+                        textAlign: 'center',
+                        isInvalid: isInvalid,
+                    },
+                );
+            }
+        } else {
+            const midPart =
+                connection.parts[Math.floor(connection.parts.length / 2)];
+            const midPoint = midPart.startPoint;
+            const isSelected = connection.isSelected || midPoint.isSelected;
+
+            this._nr.drawText(
+                text,
+                midPoint.x,
+                midPoint.y - this._nr.rc.lineHeight / 2 - 10,
+                -1,
+                {
+                    isSelected: isSelected,
+                    textAlign: 'center',
+                    isInvalid: isInvalid,
+                },
+            );
+        }
     }
 }

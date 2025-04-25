@@ -93,10 +93,10 @@ describe('UCDE-UmlEditorService', () => {
     });
 
     describe('UCDE-UES-0500-onMouseMove', () => {
-        test('UCDE-UES-0501 GIVEN a node is added and tool is set to MOVE WHEN mouse events occur THEN the node should be selected and moved', () => {
+        test('UCDE-UES-0501 GIVEN a node is added and tool is set to EDIT WHEN mouse events occur THEN the node should be selected and moved', () => {
             const node = new ClassNode('TestClass', 100, 100);
             editorService.addNode(node);
-            editorService.tool = UmlEditorTool.MOVE;
+            editorService.tool = UmlEditorTool.EDIT;
 
             const mouseDownEvent = simulateMouseEvent('mousedown', 100, 100);
             canvas.dispatchEvent(mouseDownEvent);
@@ -109,7 +109,7 @@ describe('UCDE-UmlEditorService', () => {
 
             expect(node.x).toBe(150);
             expect(node.y).toBe(150);
-            expect(renderer.render).toHaveBeenCalledTimes(6); // init, add node, set tool, mouse down, deselect all other, mouse move
+            expect(renderer.render).toHaveBeenCalledTimes(5); // init, add node, set tool, mouse down, mouse move
         });
     });
 

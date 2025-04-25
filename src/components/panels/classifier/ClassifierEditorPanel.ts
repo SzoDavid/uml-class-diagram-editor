@@ -16,6 +16,7 @@ import { useI18n } from 'vue-i18n';
 import { ClassifierNode } from '../../../utils/nodes/classifier/ClassifierNode.ts';
 import { DataTypeNode } from '../../../utils/nodes/classifier/DataTypeNode.ts';
 import { findError } from '../../../utils/functions.ts';
+import { useSettingsService } from '../../../services/SettingsService.ts';
 
 interface ClassifierEditorPanelProperties {
     classifierData: NodeData<ClassifierNode>;
@@ -186,6 +187,7 @@ export default defineComponent({
             onCollapseClicked,
             getError,
             t,
+            gridSize: useSettingsService().settings.renderer.options.gridSize,
         };
     },
 });
