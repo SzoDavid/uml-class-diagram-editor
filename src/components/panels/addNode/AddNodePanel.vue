@@ -126,8 +126,6 @@ const types = [
 }
 
 .card {
-    min-width: 200px;
-    max-width: 250px;
-    flex-shrink: 0;
+    width: 125px;
 }
 </style>

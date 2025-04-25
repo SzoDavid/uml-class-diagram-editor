@@ -5,12 +5,8 @@ defineProps<{ name: string; isSelected: boolean; imgSrc: srcObject }>();
 </script>
 
 <template>
-    <v-card
-        :title="name"
-        density="compact"
-        border-rounded
-        :class="{ selected: isSelected }"
-    >
+    <v-card density="compact" border-rounded :class="{ selected: isSelected }">
+        <v-card-title>{{ name }}</v-card-title>
         <v-card-text>
             <v-img cover :src="imgSrc" />
         </v-card-text>
@@ -24,10 +20,26 @@ defineProps<{ name: string; isSelected: boolean; imgSrc: srcObject }>();
     border-width: medium;
     border-color: #444;
     background-color: #333;
+    border-radius: 8px;
 }
 
 .v-card:hover {
     border-color: #66f;
+}
+
+.v-card-title {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 4px 0;
+}
+
+.v-card-text {
+    padding: 4px;
+}
+
+.v-img {
+    border-radius: 4px;
 }
 
 .selected {
